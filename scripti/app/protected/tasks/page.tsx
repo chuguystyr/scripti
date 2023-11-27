@@ -1,5 +1,5 @@
 import { protector } from "@/lib/protection";
-import Tasks from "./tasks";
+import Tasks from "./Tasks";
 import { cookies } from "next/headers";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
