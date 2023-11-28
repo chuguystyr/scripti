@@ -3,23 +3,16 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { signUp } from "@/utils/serverActions";
 import SubmitButton from "@/components/SubmitButton";
-import { authContext } from "@/utils/authContext";
 
 const SignUp = () => {
   const [state, formAction] = useFormState(signUp, { message: "" });
   const router = useRouter();
-  const { setAuthenticated } = useContext(authContext);
   useEffect(() => {
     if (state.message === "User created") {
-      setAuthenticated(true);
-      router.push("/login", {
-        query: {
-          message: "after signup",
-        },
-      });
+      router.push("/login?message='after signup");
     }
   }, [state]);
   return (
@@ -29,7 +22,7 @@ const SignUp = () => {
         className="flex flex-col bg-white p-4 shadow-xl rounded-md gap-4"
       >
         <h1 className="text-center font-bold ">Scripti | Sign Up </h1>
-        {state.message && (
+        {state.message && state.message !== 'User created' && (
           <p className="text-center text-red-500">{state.message}</p>
         )}
         <label htmlFor="name">Name</label>

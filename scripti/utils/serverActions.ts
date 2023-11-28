@@ -28,7 +28,10 @@ export const signUp = async (prevState: any, form: FormData) => {
     });
     await newUser.save();
     return { message: "User created" };
-  } catch (error) {
+  } catch (error:any) {
+    if (error.code === 11000) {
+      return { message: "This username is already taken" };
+    }
     console.log(error);
     return { message: "Something went wrong" };
   }
