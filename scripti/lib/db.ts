@@ -15,7 +15,7 @@ async function connectDB() {
   }
   try {
     const dbInstance = await mongoose.connect(DATABASE_URL!);
-    console.log("Database connected successfully");
+    cachedDb = dbInstance;
     return dbInstance;
   } catch (error) {
     console.error("Database connection failed", error);
