@@ -1,5 +1,5 @@
-import Link from 'next/link';
 'use client'
+import Link from 'next/link';
 const Error = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-900">
