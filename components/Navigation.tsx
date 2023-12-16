@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import Logo from "@/public/Logo.png";
+import Logo from "public/Logo.png";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);

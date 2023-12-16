@@ -1,17 +1,5 @@
-type Props = {
-  [key: string]: {
-    course: string;
-    type: string;
-    teacher: string;
-    link: string;
-    room: string;
-    lecturesLink: string;
-    practicesLink: string;
-    teacherLectures: string;
-    teacherPractices: string;
-  };
-};
-const Schedule = (props: Props) => {
+import Schedule from "types/Schedule";
+const Schedule:React.FC<Schedule> = (props) => {
   const times = [
     "10:00 - 11:20",
     "11:50 - 13:10",

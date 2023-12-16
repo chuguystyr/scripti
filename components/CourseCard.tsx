@@ -3,7 +3,7 @@ import Link from "next/link";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { FaEdit, FaWindowClose } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { editCourse, deleteCourse } from "@/utils/serverActions";
+import { editCourse, deleteCourse } from "utils/serverActions";
 import { useFormState } from "react-dom";
 import SubmitButton from "./SubmitButton";
 import { useRouter } from "next/navigation";

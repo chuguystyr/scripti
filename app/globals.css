@@ -12,6 +12,7 @@ body {
   padding: 0;
   background-color: rgb(209, 209, 209);
   width: 100vw;
+  height: 100vh;
 }
 
 .btn-filled {
@@ -35,4 +36,8 @@ body {
 
 .input {
   @apply border-none rounded-lg hover:outline-none focus:outline-none p-2;
+}
+
+#quote {
+  text-overflow: ellipsis;
 }

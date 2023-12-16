@@ -88,7 +88,7 @@ const Account = ({ data }: { data: any }) => {
               name="newPassword"
               type="password"
             />
-            <button className="btn-filled">Change Password</button>
+            <button className="btn-filled">Change</button>
           </form>
           <button className="btn-outlined  block mx-auto" onClick={logout}>
             Logout

@@ -6,6 +6,145 @@ import dbConnect from "lib/db";
 import User from "models/User";
 import { cookies } from "next/headers";
 import { protector } from "lib/protection";
+import { ObjectId } from "mongodb";
+
+// Set of actions to get data from database
+
+export const getAccount = async () => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if (user.hasOwnProperty("message")) {
+    return { message: "Unathorised" };
+  }
+  const userId = user as { id: string };
+  await dbConnect();
+  try {
+    const result = await User.findOne(
+      { _id: userId.id },
+      { _id: 0, name: 1, email: 1, username: 1 },
+    ).lean();
+    if (result) {
+      return result;
+    }
+    return { message: "Something went wrong" };
+  } catch (error) {
+    return { message: "Something went wrong" };
+  }
+};
+
+export const getTasks = async () => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if (user.hasOwnProperty("message")) {
+    return { message: "Unathorised" };
+  }
+  const userId = user as { id: string };
+  await dbConnect();
+  try {
+    const result = await User.aggregate([
+      { $match: { _id: new ObjectId(userId.id) } },
+      {
+        $project: {
+          _id: 0,
+          tasks: {
+            $filter: {
+              input: "$tasks",
+              as: "task",
+              cond: { $ne: ["$$task.status", "done"] },
+            },
+          },
+          done: {
+            $size: {
+              $filter: {
+                input: "$tasks",
+                as: "task",
+                cond: { $eq: ["$$task.status", "done"] },
+              },
+            },
+          }
+        },
+      },
+    ]);
+    return result[0];
+  } catch (error) {
+    console.log(error);
+    return { message: "Something went wrong" };
+  }
+};
+
+export const getSchedule = async () => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if (user.hasOwnProperty("message")) {
+    return { message: "Unathorised" };
+  }
+  const userId = user as { id: string };
+  const date = new Date();
+  const day = date.toLocaleDateString("uk-UA", { weekday: "long" });
+  await dbConnect();
+  try {
+    const result = await User.aggregate([
+      { $match: { _id: userId.id } },
+      { $unwind: "$schedules" },
+      {
+        $match: {
+          $and: [
+            { "schedules.from": { $lte: new Date().toLocaleDateString("de") } },
+            { "schedules.to": { $gte: new Date().toLocaleDateString("de") } },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          currentDaySchedule: day,
+        },
+      },
+      {
+        $project: {
+          schedule: {
+            $map: {
+              input: { $objectToArray: "$currentDaySchedule" },
+              as: "day",
+              in: {
+                k: "$$day.k",
+                v: {
+                  $mergeObjects: [
+                    "$$day.v",
+                    {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$courses",
+                            as: "course",
+                            cond: { $eq: ["$$course.title", "$$day.v.course"] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          schedule: {
+            $arrayToObject: "$schedule",
+          },
+        },
+      },
+    ]);
+    if (result.length === 0) {
+      return { schedule: null };
+    } else {
+      return result[0].schedule;
+    }
+  } catch (err) {
+    console.log(err);
+    return { message: "Something went wrong" };
+  }
+};
 
 // Set of actions to handle auth-related staff
 
