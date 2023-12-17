@@ -85,6 +85,6 @@ export const useSetSchedule = () => {
 
   return {
     data: { inputs, days, times, suggestions, currentField, blurred },
-    actions: { handleInputChange, handleInputFocus, setBlurred,  formAction },
+    actions: { handleInputChange, handleInputFocus, setBlurred, formAction },
   };
 };

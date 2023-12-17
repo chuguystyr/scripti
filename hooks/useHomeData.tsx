@@ -22,11 +22,11 @@ export const useHomeData = () => {
       setTasks((prev) => ({ ...prev, tasks, done }));
       const { schedule } = await getSchedule();
       setSchedule(schedule);
-      const account  = await getAccount();
+      const account = await getAccount();
       if (!("message" in account)) {
         const { name } = account;
         setName(name);
-      };
+      }
     };
     getHomeData();
   }, []);

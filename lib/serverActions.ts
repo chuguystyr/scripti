@@ -18,10 +18,11 @@ export const getAccount = async () => {
   const { id } = user;
   await dbConnect();
   try {
-    const result:{name:string, username:string, email:string}|null = await User.findOne(
-      { _id: id },
-      { _id: 0, name: 1, email: 1, username: 1 },
-    ).lean();
+    const result: { name: string; username: string; email: string } | null =
+      await User.findOne(
+        { _id: id },
+        { _id: 0, name: 1, email: 1, username: 1 },
+      ).lean();
     if (result) {
       return result;
     }
@@ -78,10 +79,7 @@ export const getAllTasks = async () => {
   const { id } = user;
   await dbConnect();
   try {
-    const result = await User.findOne(
-      { _id: id },
-      { _id: 0, tasks: 1 },
-    );
+    const result = await User.findOne({ _id: id }, { _id: 0, tasks: 1 });
     if (result) {
       return result.tasks;
     } else {
@@ -90,7 +88,7 @@ export const getAllTasks = async () => {
   } catch (error) {
     return { error: "Something went wrong." };
   }
-}
+};
 
 export const getSchedule = async () => {
   const user = await protector(cookies().get("_scrpt")!.value);
@@ -176,7 +174,10 @@ export const getCourses = async () => {
   const { id } = user;
   await dbConnect();
   try {
-    const courses:{courses:[]}|null = await User.findOne({ _id: id }, { courses: 1 }).lean();
+    const courses: { courses: [] } | null = await User.findOne(
+      { _id: id },
+      { courses: 1 },
+    ).lean();
     if (!courses) {
       return { message: "No courses found" };
     }

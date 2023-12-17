@@ -48,6 +48,13 @@ export const useAccount = () => {
   const { email, username, name } = accountInfo || {};
   return {
     data: { email, username, name, show, edited },
-    actions: { logout, deleteAccount, setShow, changeHandler, formActionInfo, formActionPassword },
+    actions: {
+      logout,
+      deleteAccount,
+      setShow,
+      changeHandler,
+      formActionInfo,
+      formActionPassword,
+    },
   };
 };

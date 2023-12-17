@@ -3,8 +3,8 @@ import CourseCard from "components/CourseCard";
 import SetCourse from "components/SetCourse";
 import { useCourses } from "hooks/useCourses";
 
-const Courses:React.FC<{}> = () => {
-    const {courses, show, setShow} = useCourses();
+const Courses: React.FC<{}> = () => {
+  const { courses, show, setShow } = useCourses();
   return (
     <>
       {courses.length === 0 ?

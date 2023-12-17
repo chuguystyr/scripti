@@ -7,7 +7,7 @@ import { useSetSchedule } from "hooks/useSetSchedule";
 const SetSchedule: React.FC<{}> = () => {
   const {
     data: { inputs, days, times, suggestions, currentField, blurred },
-    actions: { handleInputChange, handleInputFocus, setBlurred,  formAction },
+    actions: { handleInputChange, handleInputFocus, setBlurred, formAction },
   } = useSetSchedule();
   return (
     <>
@@ -64,7 +64,7 @@ const SetSchedule: React.FC<{}> = () => {
             />
           </tbody>
         </table>
-        <SubmitButton text="Submit"/>
+        <SubmitButton text="Submit" />
       </form>
     </>
   );

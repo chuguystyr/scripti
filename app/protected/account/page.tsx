@@ -6,7 +6,14 @@ import { useAccount } from "hooks/useAccount";
 const Account: React.FC<{}> = () => {
   const {
     data: { name, username, email, show, edited },
-    actions: { logout, deleteAccount, setShow, changeHandler, formActionInfo, formActionPassword },
+    actions: {
+      logout,
+      deleteAccount,
+      setShow,
+      changeHandler,
+      formActionInfo,
+      formActionPassword,
+    },
   } = useAccount();
   return (
     <div className="grid grid-cols-2">
@@ -32,8 +39,7 @@ const Account: React.FC<{}> = () => {
               value={edited.username}
               name="username"
               className="input bg-slate-300"
-              onChange={() => changeHandler("username")
-              }
+              onChange={() => changeHandler("username")}
             />
             <input
               placeholder="Email"
