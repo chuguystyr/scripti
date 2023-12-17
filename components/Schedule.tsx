@@ -1,5 +1,5 @@
 import Schedule from "types/Schedule";
-const Schedule:React.FC<Schedule> = (props) => {
+const Schedule: React.FC<Schedule> = (props) => {
   const times = [
     "10:00 - 11:20",
     "11:50 - 13:10",

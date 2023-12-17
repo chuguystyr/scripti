@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-export const protector = async (token: string) => {
+export const protector:(token:string) => Promise<{id: string}| {message: string}> = async (token) => {
   if (!token) {
     return { message: "Unathorised" };
   }

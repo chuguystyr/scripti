@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaEdit, FaWindowClose, FaCheckCircle } from "react-icons/fa";
 import { RiDeleteBin7Fill } from "react-icons/ri";
-import { editTask, checkTask, deleteTask } from "utils/serverActions";
+import { editTask, checkTask, deleteTask } from "lib/serverActions";
 import { useFormState } from "react-dom";
 interface Props {
   title: string;
@@ -13,7 +13,7 @@ interface Props {
   description: string;
   id: string;
 }
-
+// TODO: rewrite
 const TaskCard = (props: Props) => {
   const router = useRouter();
   const [editable, setEditable] = useState(false);

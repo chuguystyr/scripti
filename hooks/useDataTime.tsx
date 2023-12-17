@@ -17,5 +17,5 @@ export const useDateTime = () => {
       clearInterval(timer);
     };
   }, []);
-    return { time, dayMonth };
+  return { time, dayMonth };
 };

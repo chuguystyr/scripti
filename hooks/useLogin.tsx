@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { useSearchParams } from "next/navigation";
 import { authContext } from "utils/authContext";
-import { login } from "utils/serverActions";
+import { login } from "lib/serverActions";
 
 export const useLogin = () => {
   const [state, formAction] = useFormState(login, { message: "" });

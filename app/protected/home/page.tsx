@@ -11,7 +11,12 @@ import { useHomeData } from "hooks/useHomeData";
 
 const Home: React.FC<{}> = () => {
   const { time, dayMonth } = useDateTime();
-  const { name, schedule, tasks: {done, tasks}, quote } = useHomeData();
+  const {
+    name,
+    schedule,
+    tasks: { done, tasks },
+    quote,
+  } = useHomeData();
   const statistics = {
     inProgress:
       tasks.filter((task) => task.status === "in progress").length ?? 0,

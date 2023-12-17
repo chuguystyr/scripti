@@ -1,10 +1,10 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect } from "react";
-import { setTask } from "utils/serverActions";
+import { setTask } from "lib/serverActions";
 import SubmitButton from "components/SubmitButton";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-
+// TODO: rewrite
 const SetTask = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
   const [state, formAction] = useFormState(setTask, { message: "" });
   const router = useRouter();
