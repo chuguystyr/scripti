@@ -7,7 +7,7 @@ const Tasks: React.FC<{}> = () => {
   const { tasks, show, setShow } = useTasks();
   return (
     <>
-      {!tasks || tasks.length ?
+      {!tasks || tasks.length === 0 ?
         <>
           {!show && (
             <>
