@@ -7,8 +7,6 @@ import SetTask from "components/SetTask";
 import { useDateTime } from "hooks/useDataTime";
 import { useHomeData } from "hooks/useHomeData";
 
-// TODO: possibly get rid of useState here
-
 const Home: React.FC<{}> = () => {
   const { time, dayMonth } = useDateTime();
   const {

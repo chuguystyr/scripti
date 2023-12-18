@@ -1,19 +1,10 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { setTask } from "lib/serverActions";
+import { Dispatch, SetStateAction } from "react";
 import SubmitButton from "components/SubmitButton";
-import { useRouter } from "next/navigation";
-import { useFormState } from "react-dom";
-// TODO: rewrite
-const SetTask = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
-  const [state, formAction] = useFormState(setTask, { message: "" });
-  const router = useRouter();
-  useEffect(() => {
-    if (state.message) {
-      router.refresh();
-      close((prev) => !prev);
-    }
-  }, [state, router, close]);
+import { useSet } from "hooks/useSet";
+
+const SetTask:React.FC<{close:Dispatch<SetStateAction<boolean>>}> = ({close}) => {
+  const formAction = useSet(close, "task");
   return (
     <form
       className="z-20 absolute mx-[47%] flex flex-col m-auto bg-white rounded-md shadow-lg p-5 gap-3"

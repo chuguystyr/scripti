@@ -1,30 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { FaEdit, FaWindowClose, FaCheckCircle } from "react-icons/fa";
 import { RiDeleteBin7Fill } from "react-icons/ri";
-import { editTask, checkTask, deleteTask } from "lib/serverActions";
-import { useFormState } from "react-dom";
-interface Props {
-  title: string;
-  date: string;
-  course: string;
-  status: string;
-  description: string;
-  id: string;
-}
-// TODO: rewrite
-const TaskCard = (props: Props) => {
-  const router = useRouter();
-  const [editable, setEditable] = useState(false);
-  const [data, setData] = useState<Props>(props);
-  const [state, formAction] = useFormState(editTask, { message: "" });
-  useEffect(() => {
-    if (state.message) {
-      setEditable(false);
-      router.refresh();
-    }
-  }, [state, router]);
+import Task from "types/Task";
+import { useTaskCard } from "hooks/useTaskCard";
+
+const TaskCard: React.FC<Task> = (props) => {
+  const {
+    data: { editable, data},
+    actions: { setEditable, setData, formAction, checkTask, deleteTask },
+  } = useTaskCard(props);
   return (
     <div className="card w-fit h-fit">
       {!editable ?
@@ -37,17 +21,11 @@ const TaskCard = (props: Props) => {
             />
             <FaCheckCircle
               className="inline cursor-pointer self-center"
-              onClick={() => {
-                checkTask(props.id);
-                router.refresh();
-              }}
+              onClick={() => checkTask(props.id)}
             />
             <RiDeleteBin7Fill
               className="inline cursor-pointer self-center"
-              onClick={() => {
-                deleteTask(props.id);
-                router.refresh();
-              }}
+              onClick={() => deleteTask(props.id)}
             />
           </div>
           <h2>
