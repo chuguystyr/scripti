@@ -3,7 +3,9 @@ import { Dispatch, SetStateAction } from "react";
 import SubmitButton from "./SubmitButton";
 import { useSet } from "hooks/useSet";
 
-const SetCourse:React.FC<{close:Dispatch<SetStateAction<boolean>>}> = ({close}) => {
+const SetCourse: React.FC<{ close: Dispatch<SetStateAction<boolean>> }> = ({
+  close,
+}) => {
   const formAction = useSet(close, "course");
   return (
     <form

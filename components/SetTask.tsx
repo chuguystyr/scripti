@@ -3,7 +3,9 @@ import { Dispatch, SetStateAction } from "react";
 import SubmitButton from "components/SubmitButton";
 import { useSet } from "hooks/useSet";
 
-const SetTask:React.FC<{close:Dispatch<SetStateAction<boolean>>}> = ({close}) => {
+const SetTask: React.FC<{ close: Dispatch<SetStateAction<boolean>> }> = ({
+  close,
+}) => {
   const formAction = useSet(close, "task");
   return (
     <form

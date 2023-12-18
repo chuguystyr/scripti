@@ -6,7 +6,7 @@ import { useTaskCard } from "hooks/useTaskCard";
 
 const TaskCard: React.FC<Task> = (props) => {
   const {
-    data: { editable, data},
+    data: { editable, data },
     actions: { setEditable, setData, formAction, checkTask, deleteTask },
   } = useTaskCard(props);
   return (

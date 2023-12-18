@@ -1,4 +1,8 @@
-import { editCourse, deleteTask as del, checkTask as check } from "lib/serverActions";
+import {
+  editCourse,
+  deleteTask as del,
+  checkTask as check,
+} from "lib/serverActions";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useFormState } from "react-dom";
@@ -21,6 +25,9 @@ export const useTaskCard = (props: Task) => {
   const deleteTask = (id: string) => {
     del(id);
     router.refresh();
-  }
-  return { data:{ editable, data }, actions:{ setEditable,  setData,  formAction, checkTask, deleteTask} };
+  };
+  return {
+    data: { editable, data },
+    actions: { setEditable, setData, formAction, checkTask, deleteTask },
+  };
 };

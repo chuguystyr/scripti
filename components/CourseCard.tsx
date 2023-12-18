@@ -5,8 +5,11 @@ import { FaEdit, FaWindowClose } from "react-icons/fa";
 import SubmitButton from "./SubmitButton";
 import Course from "types/Course";
 import { useCourseCard } from "hooks/useCourseCard";
-const CourseCard:React.FC<Course> = (props) => {
-  const {data: { editable, data }, actions: { setEditable, setData, formAction, deleteCourse }} = useCourseCard(props);
+const CourseCard: React.FC<Course> = (props) => {
+  const {
+    data: { editable, data },
+    actions: { setEditable, setData, formAction, deleteCourse },
+  } = useCourseCard(props);
   return (
     <div className="card w-fit h-fit p-4 bg-white shadow rounded">
       {!editable ?

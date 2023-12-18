@@ -18,6 +18,9 @@ export const useCourseCard = (props: Course) => {
   const deleteCourse = (id: string) => {
     del(id);
     router.refresh();
-  }
-  return { data:{ editable, data }, actions:{ setEditable,  setData,  formAction, deleteCourse} };
+  };
+  return {
+    data: { editable, data },
+    actions: { setEditable, setData, formAction, deleteCourse },
+  };
 };
