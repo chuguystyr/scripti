@@ -9,16 +9,8 @@ const SetSchedule: React.FC<{}> = () => {
   return (
     <>
       <form action={formAction}>
-        <input
-          name="from"
-          className="input"
-          placeholder="from: 30.10.2023"
-        />
-        <input
-          name="to"
-          className="input ml-5"
-          placeholder="to: 10.11.2023"
-        />
+        <input name="from" className="input" placeholder="from: 30.10.2023" />
+        <input name="to" className="input ml-5" placeholder="to: 10.11.2023" />
         <table className="mx-auto border-separate border-spacing-x-2 border-spacing-y-4">
           <thead>
             <tr>
