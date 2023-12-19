@@ -2,33 +2,14 @@
 import Link from "next/link";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { FaEdit, FaWindowClose } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { editCourse, deleteCourse } from "@/utils/serverActions";
-import { useFormState } from "react-dom";
 import SubmitButton from "./SubmitButton";
-import { useRouter } from "next/navigation";
-
-interface Props {
-  title: string;
-  teacherLectures: string;
-  lecturesLink: string;
-  teacherPractices: string;
-  practicesLink: string;
-  controlForm: string;
-  notes: string;
-  id: string;
-}
-
-const CourseCard = (props: Props) => {
-  const router = useRouter();
-  const [editable, setEditable] = useState(false);
-  const [data, setData] = useState<Props>(props);
-  const [state, formAction] = useFormState(editCourse, { message: "" });
-  useEffect(() => {
-    if (state.message) {
-      setEditable(false);
-    }
-  }, [state]);
+import Course from "types/Course";
+import { useCourseCard } from "hooks/useCourseCard";
+const CourseCard: React.FC<Course> = (props) => {
+  const {
+    data: { editable, data },
+    actions: { setEditable, setData, formAction, deleteCourse },
+  } = useCourseCard(props);
   return (
     <div className="card w-fit h-fit p-4 bg-white shadow rounded">
       {!editable ?
@@ -43,10 +24,7 @@ const CourseCard = (props: Props) => {
             />
             <RiDeleteBin7Fill
               className="cursor-pointer"
-              onClick={() => {
-                deleteCourse(props.id);
-                router.refresh();
-              }}
+              onClick={() => deleteCourse(props.id)}
             />
           </div>
           <div className="flex justify-between items-center mb-2">

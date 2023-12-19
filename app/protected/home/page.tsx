@@ -1,157 +1,106 @@
-import { protector } from "lib/protection";
-import User from "models/User";
-import Home from "app/protected/home/Home";
-import { cookies } from "next/headers";
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import Schedule from "components/Schedule";
+import TaskCard from "components/TaskCard";
+import SetTask from "components/SetTask";
+import { useDateTime } from "hooks/useDataTime";
+import { useHomeData } from "hooks/useHomeData";
 
-type HomeData = {
-  name: string;
-  done: number;
-  schedule: {
-    [key: string]: {
-      course: string;
-      type: string;
-      teacher: string;
-      link: string;
-      room: string;
-      lecturesLink: string;
-      practicesLink: string;
-      teacherLectures: string;
-      teacherPractices: string;
-    };
+const Home: React.FC<{}> = () => {
+  const { time, dayMonth } = useDateTime();
+  const {
+    name,
+    schedule,
+    tasks: { done, tasks },
+    quote,
+  } = useHomeData();
+  const statistics = {
+    inProgress:
+      tasks.filter((task) => task.status === "in progress").length ?? 0,
+    waiting: tasks.filter((task) => task.status === "new").length ?? 0,
+    done: done,
   };
-  tasks: Array<{
-    title: string;
-    date: string;
-    course: string;
-    status: string;
-    description: string;
-    id: string;
-  }>;
+  const [newTaskClicked, setNewTaskClicked] = useState(false);
+  return (
+    <main className="flex flex-col md:flex-row gap-5 md:gap-10">
+      {newTaskClicked && <SetTask close={setNewTaskClicked} />}
+      <section id="left" className="md:w-1/2">
+        <section
+          className="flex flex-col md:flex-row justify-between"
+          id="greeting"
+        >
+          <div className="card h-[15vh] w-fit">
+            <h2>Hello, {name}</h2>
+            <p>
+              {dayMonth} | {time}
+            </p>
+          </div>
+          <div className="card h-[15vh] md:w-[55%] overflow-clip hover:h-fit hover:cursor-pointer">
+            <p id="quote">
+              {quote.text}{" "}
+              <span className="block text-end font-semibold">
+                {quote.author}
+              </span>
+            </p>
+          </div>
+        </section>
+        <section className="card mt-10 md:w-[44.7vw]" id="schedule">
+          {schedule ?
+            <Schedule {...schedule} />
+          : <p className="text-center">
+              You don&apos;t have any classes set today. Happy weekend!
+              <br />
+              If you need to add schedule please click{" "}
+              <Link
+                className="font-semibold hover:underline underline-offset-4"
+                href="/protected/setSchedule"
+              >
+                here
+              </Link>
+            </p>
+          }
+        </section>
+      </section>
+      <section id="right" className="md:w-1/2">
+        <section id="statistics" className="flex md:flex-row gap-5 md:gap-10">
+          {
+            <>
+              <p className="card text-center w-1/3 md:h-[15vh] md:w-[15vw]">
+                New <br />
+                {statistics.waiting}
+              </p>
+              <p className="card text-center w-1/3 md:h-[15vh] md:w-[15vw]">
+                In progress <br />
+                {statistics.inProgress}
+              </p>
+              <p className="card text-center w-1/3 md:h-[15vh] md:w-[15vw]">
+                Done <br />
+                {statistics.done}
+              </p>
+            </>
+          }
+        </section>
+        <section className="mt-10 h-[55vh] flex flex-wrap gap-3" id="tasks">
+          {tasks && tasks.length === 0 && (
+            <p className="card h-fit block mx-auto text-center">
+              Doddy is free!
+              <br />
+              If you need to add a task please click{" "}
+              <button
+                className="font-semibold hover:underline underline-offset-4"
+                onClick={() => setNewTaskClicked(true)}
+              >
+                here
+              </button>
+            </p>
+          )}
+          {tasks &&
+            tasks.length !== 0 &&
+            tasks.map((task, index) => <TaskCard key={index} {...task} />)}
+        </section>
+      </section>
+    </main>
+  );
 };
-
-const getData = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value);
-  if (user.hasOwnProperty("message")) {
-    return { message: "Unathorised" };
-  }
-  const userId = user as { id: string };
-  const date = new Date();
-  const day = date.toLocaleDateString("uk-UA", { weekday: "long" });
-  try {
-    const result = await User.aggregate([
-      { $match: { _id: userId.id } },
-      { $unwind: "$schedules" },
-      {
-        $match: {
-          $and: [
-            { "schedules.from": { $lte: new Date().toLocaleDateString("de") } },
-            { "schedules.to": { $gte: new Date().toLocaleDateString("de") } },
-          ],
-        },
-      },
-      {
-        $addFields: {
-          currentDaySchedule: day,
-        },
-      },
-      {
-        $project: {
-          schedule: {
-            $map: {
-              input: { $objectToArray: "$currentDaySchedule" },
-              as: "day",
-              in: {
-                k: "$$day.k",
-                v: {
-                  $mergeObjects: [
-                    "$$day.v",
-                    {
-                      $arrayElemAt: [
-                        {
-                          $filter: {
-                            input: "$courses",
-                            as: "course",
-                            cond: { $eq: ["$$course.title", "$$day.v.course"] },
-                          },
-                        },
-                        0,
-                      ],
-                    },
-                  ],
-                },
-              },
-            },
-          },
-          _id: 0,
-          name: 1,
-          done: {
-            $size: {
-              $filter: {
-                input: "$tasks",
-                as: "task",
-                cond: { $eq: ["$$task.status", "done"] },
-              },
-            },
-          },
-          tasks: {
-            $filter: {
-              input: "$tasks",
-              as: "task",
-              cond: { $ne: ["$$task.status", "done"] },
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          schedule: {
-            $arrayToObject: "$schedule",
-          },
-          tasks: 1,
-          name: 1,
-          done: 1,
-        },
-      },
-    ]);
-    if (result.length === 0) {
-      const user = await User.findOne({ _id: userId.id }, { _id: 0, name: 1 });
-      if (!user) return { message: "Did not find user" };
-      const data = {
-        schedule: null,
-        tasks: [],
-        done: 0,
-        name: user.name,
-      };
-      return data;
-    } else {
-      const data = {
-        schedule: result[0].schedule,
-        tasks: result[0].tasks,
-        name: result[0].name,
-        done: result[0].done,
-      };
-      return data;
-    }
-  } catch (err) {
-    console.log(err);
-    return { message: "Something went wrong" };
-  }
-};
-
-const getQuote = async () => {
-  const response = await fetch("https://api.quotable.io/random");
-  const data = await response.json();
-  return { text: data.content, author: data.author };
-};
-
-const Page = async () => {
-  const data = await getData();
-  if (data.hasOwnProperty("message")) {
-    const { message } = data as { message: string };
-    return { message };
-  }
-  const { text, author } = await getQuote();
-  return <Home data={data as HomeData} quote={{ text, author }} />;
-};
-
-export default Page;
+export default Home;

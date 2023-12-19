@@ -1,34 +1,62 @@
-import { protector } from "lib/protection";
-import Tasks from "./Tasks";
-import { cookies } from "next/headers";
-import dbConnect from "lib/db";
-import User from "models/User";
+"use client";
+import TaskCard from "components/TaskCard";
+import SetTask from "components/SetTask";
+import { useTasks } from "hooks/useTasks";
 
-const Page = async () => {
-  const tasks = await getData();
-  return <Tasks tasks={tasks} />;
+const Tasks: React.FC<{}> = () => {
+  const { tasks, show, setShow } = useTasks();
+  return (
+    <>
+      {!tasks || tasks.length === 0 ?
+        <>
+          {!show && (
+            <>
+              <p className="text-center">
+                Looks like you&apos;re first time here. Let&apos;s add some
+                tasks
+              </p>
+              <button
+                type="button"
+                className="block btn-filled mx-auto mt-5"
+                onClick={() => setShow((prev) => !prev)}
+              >
+                Add Task
+              </button>
+            </>
+          )}
+          {show && <SetTask close={setShow} />}
+        </>
+      : <>
+          <div className="flex flex-col md:flex-row items-center my-4">
+            <input
+              type="text"
+              className="py-2 px-4 rounded-md border border-gray-300 w-full mr-5 md:w-auto"
+              placeholder="Search"
+            />
+            <div className="w-[20vw] flex gap-3 mt-3 md:mt-0">
+              <button type="button" className="btn-filled">
+                Search
+              </button>
+              <button
+                type="button"
+                className="btn-filled"
+                onClick={() => setShow((prev) => !prev)}
+              >
+                Add Task
+              </button>
+              {show && <SetTask close={setShow} />}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {tasks &&
+              tasks.map((task) => {
+                return <TaskCard key={task.id} {...task} />;
+              })}
+          </div>
+        </>
+      }
+    </>
+  );
 };
 
-export default Page;
-
-const getData = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value);
-  if (user.hasOwnProperty("message")) {
-    return { message: "Unathorised" };
-  }
-  const userId = user as { id: string };
-  await dbConnect();
-  try {
-    const result = await User.findOne(
-      { _id: userId!.id },
-      { _id: 0, tasks: 1 },
-    );
-    if (result) {
-      return result.tasks;
-    } else {
-      return { message: "No tasks found" };
-    }
-  } catch (error) {
-    return { error: "Something went wrong." };
-  }
-};
+export default Tasks;
