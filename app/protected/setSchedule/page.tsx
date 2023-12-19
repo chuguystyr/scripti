@@ -1,7 +1,4 @@
 "use client";
-import Link from "next/link";
-import Image from "next/image";
-import Logo from "public/Logo.png";
 import SubmitButton from "components/SubmitButton";
 import { useSetSchedule } from "hooks/useSetSchedule";
 const SetSchedule: React.FC<{}> = () => {
@@ -12,24 +9,14 @@ const SetSchedule: React.FC<{}> = () => {
   return (
     <>
       <form action={formAction}>
-        <Link href="/home">
-          <Image
-            src={Logo}
-            width={512}
-            height={206}
-            alt="logo"
-            className="inline w-40 h-30 rounded-xl ml-5 mt-5"
-            priority
-          />
-        </Link>
         <input
           name="from"
-          className="input mt-5 ml-5"
+          className="input"
           placeholder="from: 30.10.2023"
         />
         <input
           name="to"
-          className="input mt-5 ml-5"
+          className="input ml-5"
           placeholder="to: 10.11.2023"
         />
         <table className="mx-auto border-separate border-spacing-x-2 border-spacing-y-4">
@@ -70,8 +57,6 @@ const SetSchedule: React.FC<{}> = () => {
   );
 };
 
-SetSchedule.displayName = "SetSchedule";
-
 export default SetSchedule;
 
 const TableRows = ({
@@ -104,7 +89,7 @@ const TableRows = ({
                 <input
                   type="text"
                   name={`${day}${index}`}
-                  className="input"
+                  className="input w-[100%]"
                   placeholder="Type to search courses..."
                   onChange={(e) =>
                     handleInputChange(

@@ -7,14 +7,19 @@ import { useDebounce } from "./useDebounce";
 
 export const useSetSchedule = () => {
   const router = useRouter();
-  const [courses, setCourses] = useState<Course[] | null>(null);
   const [state, formAction] = useFormState(setSchedule, { message: "" });
+  if (state.message?.length! > 0) router.push("/protected/home");
+
+  const [courses, setCourses] = useState<Course[] | null>(null);
+  if (Array.isArray(courses) && courses.length === 0)
+    router.push("/protected/courses?message=no courses");
+
   const times = [
-    "10:00 - 11:20",
-    "11:50 - 13:10",
-    "13:20 - 14:40",
-    "16:15 - 17:35",
-    "17:45 - 19:05",
+    "10:00  11:20",
+    "11:50 13:10",
+    "13:20  14:40",
+    "16:15  17:35",
+    "17:45  19:05",
   ];
   const days = [
     "Monday",
@@ -50,19 +55,17 @@ export const useSetSchedule = () => {
       },
     }));
   };
+
   useEffect(() => {
-    if (state.message?.length! > 0) router.push("/protected/home");
     const getData = async () => {
       const courses = await getCourses();
       if ("message" in courses) throw new Error(courses.message);
-      if (Array.isArray(courses) && courses.length === 0)
-        router.push("/protected/courses?message=no courses");
       setCourses(courses);
     };
     getData();
-  });
-  const titles = courses?.map((course) => course.title);
+  }, []);
 
+  const titles = courses?.map((course) => course.title);
   const [currentField, setCurrentField] = useState<string>("");
   const [blurred, setBlurred] = useState<string>("");
   const handleInputFocus = (fieldName: string) => {
@@ -71,15 +74,14 @@ export const useSetSchedule = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const currentFieldValue =
     currentField ? inputs[currentField as keyof typeof inputs]["course"] : "";
-  const debouncedCurrentFieldValue = useDebounce(currentFieldValue, 100);
+  const debouncedCurrentFieldValue = useDebounce(currentFieldValue, 500);
+
   useEffect(() => {
     if (titles && debouncedCurrentFieldValue) {
       const filteredSuggestions = titles.filter((title) =>
         title.toLowerCase().includes(debouncedCurrentFieldValue.toLowerCase()),
       );
       setSuggestions(filteredSuggestions);
-    } else {
-      setSuggestions([]);
     }
   }, [inputs, currentField, debouncedCurrentFieldValue, titles]);
 
