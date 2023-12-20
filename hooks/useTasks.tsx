@@ -11,6 +11,6 @@ export const useTasks = () => {
       setTasks(tasks);
     };
     getData();
-  }, []);
+  }, [show]);
   return { tasks, show, setShow };
 };

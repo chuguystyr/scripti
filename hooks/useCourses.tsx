@@ -10,6 +10,6 @@ export const useCourses = () => {
       if (!("message" in courses)) setCourses(courses);
     }
     fetchCourses();
-  }, []);
+  }, [show]);
   return { courses, show, setShow };
 };

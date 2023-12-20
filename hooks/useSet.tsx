@@ -12,7 +12,6 @@ export const useSet = (
   const router = useRouter();
   useEffect(() => {
     if (state.message) {
-      router.refresh();
       close((prev) => !prev);
     }
   }, [state, router, close]);
