@@ -26,16 +26,20 @@ const Login: React.FC<{}> = () => {
         <label htmlFor="username">Username</label>
         <input
           type="text"
+          id="username"
           name="username"
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder="john_smith"
+          autoComplete="on"
         />
         <label htmlFor="password">Password</label>
         <input
           type="password"
+          id="password"
           name="password"
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder=""
+          autoComplete="on"
         />
         <SubmitButton text="Log in" />
         <p className="text-center text-sm">

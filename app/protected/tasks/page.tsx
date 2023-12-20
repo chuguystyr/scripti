@@ -30,6 +30,8 @@ const Tasks: React.FC<{}> = () => {
           <div className="flex flex-col md:flex-row items-center my-4">
             <input
               type="text"
+              name="search"
+              id="search"
               className="py-2 px-4 rounded-md border border-gray-300 w-full mr-5 md:w-auto"
               placeholder="Search"
             />

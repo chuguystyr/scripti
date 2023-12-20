@@ -19,30 +19,38 @@ const SignUp = () => {
         <label htmlFor="name">Name</label>
         <input
           type="text"
+          id="name"
           name="name"
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder="John"
+          autoComplete="on"
         />
         <label htmlFor="username">Username</label>
         <input
           type="text"
+          id="username"
           name="username"
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder="john_smith"
+          autoComplete="on"
         />
         <label htmlFor="email">Email</label>
         <input
           type="email"
+          id="email"
           name="email"
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder="john_smith@gmail.com"
+          autoComplete="on"
         />
         <label htmlFor="password">Password</label>
         <input
           type="password"
+          id="password"
           name="password"
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder=""
+          autoComplete="on"
         />
         <SubmitButton text="Sign Up" />
         <p className="text-center text-sm">
