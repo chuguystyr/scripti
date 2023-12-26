@@ -1,4 +1,4 @@
-import { getCourses, setSchedule } from "lib/serverActions";
+import { getCourses, setSchedule } from "server/serverActions";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Course from "types/Course";

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Task from "../types/Task";
-import { getAllTasks } from "lib/serverActions";
+import { getAllTasks } from "server/serverActions";
 
 export const useTasks = () => {
   const [show, setShow] = useState(false);

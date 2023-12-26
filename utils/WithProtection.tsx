@@ -1,22 +1,13 @@
-"use client";
-import { FC, ReactElement, useEffect, useContext } from "react";
-import { useRouter } from "next/navigation";
-import { authContext } from "./authContext";
+import { ReactElement } from "react";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-interface ProtectorProps {
-  children: ReactElement;
-}
-
-const WithProtection: FC<ProtectorProps> = ({ children }) => {
-  const router = useRouter();
-  const { isAuthenticated } = useContext(authContext);
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login");
-    }
-  }, [isAuthenticated]);
-
-  return isAuthenticated ? children : null;
+const WithProtection: React.FC<{ children: ReactElement }> = ({ children }) => {
+  const isAuthenticated = cookies().get("_scrpt")?.value;
+  if (!isAuthenticated) {
+    redirect("/login");
+  }
+  return <>{children}</>;
 };
 
 export default WithProtection;

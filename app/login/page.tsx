@@ -1,28 +1,41 @@
-"use client";
 import Link from "next/link";
 import SubmitButton from "components/SubmitButton";
-import { useLogin } from "hooks/useLogin";
-const Login: React.FC<{}> = () => {
-  const { state, formAction, message } = useLogin();
+import { login } from "server/actions/auth";
+const Login: React.FC<{
+  searchParams?: { [key: string]: string | string[] | undefined };
+}> = ({ searchParams }) => {
+  let message = "";
+  switch (searchParams?.error) {
+    case "fields":
+      message = `Please fill in\nall fields`;
+      break;
+    case "credentials":
+      message = "Invalid credentials";
+      break;
+    case "internal":
+      message = `Something went wrong.\nPlease try again`;
+      break;
+  }
+  if (searchParams?.status === "signed up") {
+    message = `Thanks for signing up.\nEnjoy the app.`;
+  }
   return (
-    <div className="w-[100vw] h-[100vh] bg-zinc-300 flex items-center justify-center">
+    <main className="w-[100vw] h-[100vh] bg-zinc-300 flex items-center justify-center">
       <form
-        action={formAction}
+        action={login}
         className="flex flex-col bg-white p-4 shadow-xl rounded-md gap-4"
       >
         <h1 className="text-center font-bold ">Scripti | Log in </h1>
-        {state.message && state.message !== "User logged in" && (
+        {searchParams?.error && (
           <p className="text-center w-[15vw] block mx-auto text-red-500">
-            {state.message}
+            {message}
           </p>
         )}
-        {message ?
+        {searchParams?.status && (
           <p className="text-center w-[15vw] block mx-auto text-green-500">
-            Thanks for signing up.
-            <br />
-            Enjoy the app.
+            {message}
           </p>
-        : null}
+        )}
         <label htmlFor="username">Username</label>
         <input
           type="text"
@@ -49,7 +62,9 @@ const Login: React.FC<{}> = () => {
           </Link>
         </p>
       </form>
-    </div>
+    </main>
   );
 };
 export default Login;
+
+// TODO: client-side validation && its styling

@@ -4,9 +4,6 @@ export const metadata = {
 };
 
 import "app/globals.css";
-import { AuthProvider } from "utils/authContext";
-import { Suspense } from "react";
-import Loader from "app/loading";
 
 export default function RootLayout({
   children,
@@ -15,11 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <AuthProvider>
-          <Suspense fallback={<Loader />}>{children}</Suspense>
-        </AuthProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

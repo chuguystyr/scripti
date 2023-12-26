@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const Main = () => {
+const Main: React.FC<{}> = () => {
   return (
     <div className="w-[100vw] h-[100vh] bg-gradient-to-r from-gray-200 to-gray-300">
       <nav className="flex flex-row p-3 md:p-5 justify-between items-center">

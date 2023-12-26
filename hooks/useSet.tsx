@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useFormState } from "react-dom";
-import { setCourse, setTask } from "lib/serverActions";
+import { setCourse, setTask } from "server/serverActions";
 
 export const useSet = (
   close: Dispatch<SetStateAction<boolean>>,

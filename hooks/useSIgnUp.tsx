@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { useEffect } from "react";
-import { signUp } from "lib/serverActions";
+import { signUp } from "server/serverActions";
 
 export const useSignUp = () => {
   const [state, formAction] = useFormState(signUp, { message: "" });

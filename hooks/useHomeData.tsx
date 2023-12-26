@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getTasks, getSchedule, getAccount } from "lib/serverActions";
+import { getTasks, getSchedule, getAccount } from "server/serverActions";
 import Task from "types/Task";
 import Schedule from "types/Schedule";
 import User from "types/User";
