@@ -22,7 +22,7 @@ const Main: React.FC<{}> = () => {
           </li>
         </ul>
       </nav>
-      <div className="text-center px-4 md:px-10">
+      <main className="text-center px-4 md:px-10">
         <h1 className="text-4xl md:text-6xl font-bold font-mono mb-3">
           Another approach <br />
           to planning your studies
@@ -31,7 +31,7 @@ const Main: React.FC<{}> = () => {
           Get everything you need at hand any time: from schedules and tasks to
           notes
         </h2>
-        <div className="mt-8 md:mt-10">
+        <section className="mt-8 md:mt-10">
           <h3 className="text-2xl md:text-3xl font-semibold mb-3">
             Why Choose Our App?
           </h3>
@@ -39,7 +39,7 @@ const Main: React.FC<{}> = () => {
             Streamline your study process with a comprehensive tool designed for
             student success.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+          <article className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
             <div className="bg-white p-4 rounded-lg shadow-md">
               <h4 className="text-xl font-semibold">Efficient Scheduling</h4>
               <p>Organize your classes, assignments, and exams with ease.</p>
@@ -48,12 +48,12 @@ const Main: React.FC<{}> = () => {
               <h4 className="text-xl font-semibold">Task Management</h4>
               <p>Keep track of your daily tasks and long-term goals.</p>
             </div>
-          </div>
+          </article>
           <Link href="/signup" className="btn-outlined">
             Get Started
           </Link>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 };

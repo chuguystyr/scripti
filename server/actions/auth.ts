@@ -7,13 +7,13 @@ import User from "models/User";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export const signUp = async (prevState: any, form: FormData) => {
+export const signUp = async (form: FormData) => {
   const name = form.get("name")!.toString();
   const username = form.get("username")!.toString();
   const email = form.get("email")!.toString();
   const password = form.get("password")!.toString();
   if (!name || !username || !email || !password) {
-    return { message: "Please fill all fields" };
+    redirect("/signup?error=fields");
   }
   try {
     await dbConnect();
@@ -25,14 +25,14 @@ export const signUp = async (prevState: any, form: FormData) => {
       password: hashedPassword,
     });
     await newUser.save();
-    return { message: "User created" };
   } catch (error: any) {
     if (error.code === 11000) {
-      return { message: "This username is already taken" };
+      redirect("/signup?error=username");
     }
     console.log(error);
-    return { message: "Something went wrong" };
+    redirect("/signup?error=internal");
   }
+  redirect("/login?status=signed up");
 };
 
 export const login = async (form: FormData) => {

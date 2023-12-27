@@ -1,20 +1,31 @@
-"use client";
-
 import Link from "next/link";
 import SubmitButton from "components/SubmitButton";
-import { useSignUp } from "hooks/useSIgnUp";
+import { signUp } from "server/actions/auth";
 
-const SignUp = () => {
-  const { state, formAction } = useSignUp();
+const SignUp: React.FC<{
+  searchParams?: { [key: string]: string | string[] | undefined };
+}> = ({ searchParams }) => {
+  let message = "";
+  switch (searchParams?.error) {
+    case "fields":
+      message = `Please fill in\nall fields`;
+      break;
+    case "username":
+      message = `This username is already taken`;
+      break;
+    case "internal":
+      message = `Something went wrong.\nPlease try again`;
+      break;
+  }
   return (
-    <div className="w-[100vw] h-[100vh] bg-zinc-300 flex items-center justify-center">
+    <main className="w-[100vw] h-[100vh] bg-zinc-300 flex items-center justify-center">
       <form
-        action={formAction}
+        action={signUp}
         className="flex flex-col bg-white p-4 shadow-xl rounded-md gap-4"
       >
         <h1 className="text-center font-bold ">Scripti | Sign Up </h1>
-        {state.message && state.message !== "User created" && (
-          <p className="text-center text-red-500">{state.message}</p>
+        {searchParams?.error && (
+          <p className="text-center text-red-500">{message}</p>
         )}
         <label htmlFor="name">Name</label>
         <input
@@ -60,7 +71,9 @@ const SignUp = () => {
           </Link>
         </p>
       </form>
-    </div>
+    </main>
   );
 };
 export default SignUp;
+
+// TODO: client-side validation && its styling
