@@ -1,6 +1,6 @@
 import Link from "next/link";
 import SubmitButton from "components/SubmitButton";
-import { login } from "server/actions/auth";
+import { login } from "server/actions/account";
 const Login: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined };
 }> = ({ searchParams }) => {

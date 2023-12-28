@@ -6,6 +6,7 @@ import dbConnect from "server/db";
 import User from "models/User";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { protector } from "server/protection";
 
 export const signUp = async (form: FormData) => {
   const name = form.get("name")!.toString();
@@ -68,4 +69,23 @@ export const login = async (form: FormData) => {
   cookies().set("_scrpt", token, { maxAge: 60 * 60 * 3 });
   console.log("Here");
   redirect("/protected/home");
+};
+
+export const getAccount = async () => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  const { id } = user;
+  try {
+    await dbConnect();
+    const result: { name: string; username: string; email: string } | null =
+      await User.findOne(
+        { _id: id },
+        { _id: 0, name: 1, email: 1, username: 1 },
+      ).lean();
+    if (result) {
+      return result;
+    }
+  } catch (error) {
+    throw new Error("Internal");
+  }
+  throw new Error("Internal");
 };
