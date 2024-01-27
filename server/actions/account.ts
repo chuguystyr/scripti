@@ -4,7 +4,7 @@ import { compare, hash } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dbConnect from "server/db";
 import User from "models/User";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { protector } from "server/protection";
 
@@ -88,4 +88,111 @@ export const getAccount = async () => {
     throw new Error("Internal");
   }
   throw new Error("Internal");
+};
+
+export const openEdit = async () => {
+  redirect('/protected/account?edit=true')
+}
+
+export const closeEdit = async () => {
+  redirect('/protected/account')
+}
+
+export const editAccount = async (form: FormData) => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if ("message" in user) {
+    return { message: "Unathorised" };
+  }
+  const { id } = user;
+  const data = Object.fromEntries(form.entries());
+  if (!data.name || !data.username || !data.email) {
+    return { message: "Bad request" };
+  }
+  await dbConnect();
+  try {
+    const result = await User.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          name: data.name,
+          username: data.username,
+          email: data.email,
+        },
+      },
+      { new: true },
+    );
+    if (!result) {
+      return { message: "Invalid credentials" };
+    }
+    return { message: "Account updated" };
+  } catch (error) {
+    console.log(error);
+    return { message: "Something went wrong" };
+  }
+};
+
+export const changePassword = async (form: FormData) => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if ("message" in user) {
+    return { message: "Unathorised" };
+  }
+  const { id } = user;
+  const oldPassword = form.get("oldPassword")!.toString();
+  const newPassword = form.get("newPassword")!.toString();
+  if (!oldPassword || !newPassword) {
+    return { message: "Please fill all fields" };
+  }
+  await dbConnect();
+  try {
+    const user = await User.findOne({ _id: id }, { password: 1 });
+    if (!user) {
+      return { message: "Invalid credentials" };
+    }
+    const isMatch = await compare(oldPassword, user.password);
+    if (!isMatch) {
+      return { message: "Invalid credetials" };
+    }
+    const hashedPassword = await hash(newPassword, 12);
+    const result = await User.findOneAndUpdate(
+      { _id: id },
+      { $set: { password: hashedPassword } },
+      { new: true },
+    );
+    if (!result) {
+      return { message: "Invalid credentials" };
+    }
+    return { message: "Password changed" };
+  } catch (error) {
+    console.log(error);
+    return { message: "Something went wrong" };
+  }
+};
+
+export const logout = async () => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if ("message" in user) {
+    return { message: "Unathorised" };
+  }
+  cookies().set("_scrpt", "", { maxAge: 0 });
+  return { message: "User logged out" };
+};
+
+export const deleteAccount = async () => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if ("message" in user) {
+    return { message: "Unathorised" };
+  }
+  const { id } = user;
+  await dbConnect();
+  try {
+    const result = await User.findOneAndDelete({ _id: id });
+    if (!result) {
+      return { message: "Invalid credentials" };
+    }
+    cookies().set("_scrpt", "", { maxAge: 0 });
+    return { message: "Account deleted" };
+  } catch (error) {
+    console.log(error);
+    return { message: "Something went wrong" };
+  }
 };
