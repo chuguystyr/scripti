@@ -1,9 +1,9 @@
-import { editTask } from "lib/serverActions";
+import { editTask } from "server/serverActions";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useFormState } from "react-dom";
 import Course from "types/Course";
-import { deleteCourse as del } from "lib/serverActions";
+import { deleteCourse as del } from "server/serverActions";
 
 export const useCourseCard = (props: Course) => {
   const router = useRouter();

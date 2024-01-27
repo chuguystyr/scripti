@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useFormState } from "react-dom";
-import { getAccount } from "lib/serverActions";
+import { getAccount } from "server/serverActions";
 import {
   logout,
   deleteAccount,
   editAccount,
   changePassword,
-} from "lib/serverActions";
+} from "server/serverActions";
 export const useAccount = () => {
   const [accountInfo, setAccountInfo] = useState<{
     email: string;

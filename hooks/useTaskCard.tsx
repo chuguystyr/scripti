@@ -2,7 +2,7 @@ import {
   editCourse,
   deleteTask as del,
   checkTask as check,
-} from "lib/serverActions";
+} from "server/serverActions";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useFormState } from "react-dom";

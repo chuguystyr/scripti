@@ -2,11 +2,12 @@
 
 import { compare, hash } from "bcryptjs";
 import jwt from "jsonwebtoken";
-import dbConnect from "lib/db";
+import dbConnect from "server/db";
 import User from "models/User";
 import { cookies } from "next/headers";
-import { protector } from "lib/protection";
+import { protector } from "server/protection";
 import { ObjectId } from "mongodb";
+import { redirect } from "next/navigation";
 
 // Set of actions to get data from database
 
@@ -188,61 +189,6 @@ export const getCourses = async () => {
 };
 
 // Set of actions to handle auth-related staff
-
-export const signUp = async (prevState: any, form: FormData) => {
-  const name = form.get("name")!.toString();
-  const username = form.get("username")!.toString();
-  const email = form.get("email")!.toString();
-  const password = form.get("password")!.toString();
-  if (!name || !username || !email || !password) {
-    return { message: "Please fill all fields" };
-  }
-  try {
-    await dbConnect();
-    const hashedPassword = await hash(password, 12);
-    const newUser = new User({
-      name,
-      username,
-      email,
-      password: hashedPassword,
-    });
-    await newUser.save();
-    return { message: "User created" };
-  } catch (error: any) {
-    if (error.code === 11000) {
-      return { message: "This username is already taken" };
-    }
-    console.log(error);
-    return { message: "Something went wrong" };
-  }
-};
-
-export const login = async (prevState: any, form: FormData) => {
-  const username = form.get("username")!.toString();
-  const password = form.get("password")!.toString();
-  if (!username || !password) {
-    return { message: "Please fill all fields" };
-  }
-  await dbConnect();
-  try {
-    const user = await User.findOne({ username: username }, { password: 1 });
-    if (!user) {
-      return { message: "Invalid credentials" };
-    }
-    const isMatch = await compare(password, user.password);
-    if (!isMatch) {
-      return { message: "Invalid credetials" };
-    }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
-      expiresIn: "3h",
-    });
-    cookies().set("_scrpt", token, { maxAge: 60 * 60 * 3 });
-    return { message: "User logged in" };
-  } catch (error) {
-    console.log(error);
-    return { message: "Something went wrong" };
-  }
-};
 
 // Set of actions to handle course-related staff
 

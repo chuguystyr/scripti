@@ -1,9 +1,7 @@
 import jwt from "jsonwebtoken";
-export const protector: (
-  token: string,
-) => Promise<{ id: string } | { message: string }> = async (token) => {
+export const protector = async (token: string) => {
   if (!token) {
-    return { message: "Unathorised" };
+    throw new Error("Unathorised");
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
@@ -11,6 +9,6 @@ export const protector: (
     };
     return decoded;
   } catch (error) {
-    return { message: "Unathorised" };
+    throw new Error("Unathorised");
   }
 };

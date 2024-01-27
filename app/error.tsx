@@ -1,20 +1,34 @@
 "use client";
 import Link from "next/link";
-const Error = () => {
+const Error: React.FC<{
+  error: Error & { digest?: string };
+  reset: () => void;
+}> = ({ error, reset }) => {
+  const data = { number: 0, text: "" };
+  switch (error.message) {
+    case "Unauthorized":
+      data.number = 401;
+      data.text =
+        "You don't have access to this page. Please login to continue.";
+      break;
+    case "Internal":
+      data.number = 500;
+      data.text = "Something went wrong. Please try again later.";
+      break;
+  }
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-900">
-      <h1 className="text-6xl font-bold text-gray-800">
-        Oops, an error occured
-      </h1>
-      <p className="mt-3 text-xl">
-        Sorry for the trouble
-        <br />
-        We are already taking action.
-      </p>
-      <Link href="/" className="mt-5 btn-outlined-gray">
-        Go back home
-      </Link>
-    </div>
+    <main className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-6xl font-bold animate-bounce">{data.number}</h1>
+      <p className="text-xl text-center mt-5 px-2">{data.text}</p>
+      {data.number === 401 ?
+        <Link href="/login" className="mt-5 btn-outlined">
+          Log in
+        </Link>
+      : <button onClick={reset} className="mt-5 btn-outlined">
+          Reload page
+        </button>
+      }
+    </main>
   );
 };
 
