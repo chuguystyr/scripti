@@ -20,13 +20,13 @@ const Account: React.FC<{
         <h1 className="text-2xl font-bold my-4 text-center">Accont info</h1>
         {searchParams?.edit ?
           <>
-            <form action={closeEdit}>
+            <form action={closeEdit} className="flex justify-center">
               <button type="submit">
-                <FaWindowClose className="self-center hover:cursor-pointer" />
+                <FaWindowClose className="hover:cursor-pointer" />
               </button>
             </form>
             <form
-              className="flex flex-col w-[20vw] self-center p-2 gap-4 bg-white"
+              className="mt-2 mx-auto flex flex-col w-[20vw] p-2 gap-4 bg-white"
               action={editAccount}
             >
               <input
@@ -51,7 +51,7 @@ const Account: React.FC<{
             </form>
           </>
         : <div className="mx-auto card flex flex-col w-fit">
-            <form action={openEdit}>
+            <form action={openEdit} className="flex justify-end">
               <button type="submit">
                 <FaEdit className="self-end hover:cursor-pointer" />
               </button>

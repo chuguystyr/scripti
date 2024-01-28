@@ -7,6 +7,7 @@ import User from "models/User";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { protector } from "server/protection";
+import { revalidatePath } from "next/cache";
 
 export const signUp = async (form: FormData) => {
   const name = form.get("name")!.toString();
@@ -124,10 +125,13 @@ export const editAccount = async (form: FormData) => {
     if (!result) {
       return { message: "Invalid credentials" };
     }
+    revalidatePath('/protected/account', "page");
     return { message: "Account updated" };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
+  } finally {
+    redirect('/protected/account')
   }
 };
 
@@ -174,7 +178,7 @@ export const logout = async () => {
     return { message: "Unathorised" };
   }
   cookies().set("_scrpt", "", { maxAge: 0 });
-  return { message: "User logged out" };
+  redirect("/");
 };
 
 export const deleteAccount = async () => {
