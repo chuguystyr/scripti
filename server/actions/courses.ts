@@ -60,3 +60,84 @@ export const setCourse = async (form: FormData) => {
     return { message: "Something went wrong" };
   }
 };
+
+export const editCourse = async (form: FormData) => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if ("message" in user) {
+    return { message: "Unathorised" };
+  }
+  const userId = user.id;
+  const title = form.get("title")!.toString();
+  const controlForm = form.get("controlForm")!.toString();
+  const teacherLectures = form.get("teacherLectures")!.toString();
+  const lecturesLink = form.get("lecturesLink")!.toString();
+  const teacherPractices = form.get("teacherPractices")!.toString();
+  const practicesLink = form.get("practicesLink")!.toString();
+  const notes = form.get("notes")!.toString();
+  const id = form.get("id")!.toString();
+
+  if (!title || !controlForm || !teacherLectures || !id) {
+    return { message: "Please fill all fields" };
+  }
+  await dbConnect();
+  try {
+    const course = await User.findOneAndUpdate(
+      { _id: user.id },
+      {
+        $set: {
+          "courses.$[elem]": {
+            title,
+            controlForm,
+            teacherLectures,
+            lecturesLink,
+            teacherPractices,
+            practicesLink,
+            notes,
+          },
+        },
+      },
+      { arrayFilters: [{ "elem.id": id }], new: true },
+    );
+    if (!course) {
+      return { message: "Invalid credentials" };
+    }
+    revalidatePath("/protected/courses", "page");
+    return { message: "Course updated" };
+  } catch (error) {
+    console.log(error);
+    return { message: "Something went wrong" };
+  }
+};
+
+export const deleteCourse = async (form: FormData) => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if ("message" in user) {
+    return { message: "Unathorised" };
+  }
+  const id = form.get("id")!.toString();
+  if (!user || !id) {
+    return { message: "Bad request" };
+  }
+  await dbConnect();
+  try {
+    const result = await User.findOneAndUpdate(
+      { _id: user.id },
+      { $pull: { courses: { id } } },
+    );
+    if (!result) {
+      return { message: "Invalid credentials" };
+    }
+    return { message: "Course deleted" };
+  } catch (error) {
+    console.log(error);
+    return { message: "Something went wrong" };
+  }
+};
+
+export const openEditCourse = () => {
+  redirect("/protected/courses?edit=true");
+}
+
+export const closeEditCourse = () => {
+  redirect("/protected/courses");
+}

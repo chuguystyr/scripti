@@ -55,7 +55,7 @@ const Courses: React.FC<{
             {Array.isArray(courses) &&
               courses.length !== 0 &&
               courses.map((course, index) => {
-                return <CourseCard key={index} {...course} />;
+                return <CourseCard key={index} course={course} />;
               })}
           </div>
         </>
