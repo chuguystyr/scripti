@@ -3,7 +3,7 @@ import { setCourse } from "server/actions/courses";
 
 const SetCourse: React.FC<{ close: () => never }> = ({ close }) => {
   return (
-    <div className="z-20 absolute bg-white rounded-md shadow-lg p-5 gap-3">
+    <div className="z-30 absolute bg-white rounded-md shadow-lg p-5 gap-3">
       <form
         action={setCourse}
       >
