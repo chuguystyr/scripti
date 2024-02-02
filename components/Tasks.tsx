@@ -1,6 +1,7 @@
-import { getTasks } from "server/actions/tasks";
+import { getTasks, openAddTaskAtHome } from "server/actions/tasks";
 import TaskCard from "components/TaskCard";
 import SetTask from "components/SetTask";
+import { closeAddTaskAtHome } from "server/actions/tasks";
 
 const Tasks = async () => {
   const { tasks, done } = await getTasks();
@@ -24,7 +25,7 @@ const Tasks = async () => {
           Done <br />
           {done}
         </p>
-        <SetTask />
+        <SetTask close={closeAddTaskAtHome} />
       </section>
       <section className="mt-10 h-[55vh] flex flex-wrap gap-3" id="tasks">
         {tasks && tasks.length === 0 && (
@@ -32,12 +33,11 @@ const Tasks = async () => {
             Doddy is free!
             <br />
             If you need to add a task please click{" "}
-            <button
-              className="font-semibold hover:underline underline-offset-4"
-              //   onClick={() => setNewTaskClicked(true)}
-            >
-              here
-            </button>
+            <form action={openAddTaskAtHome}>
+              <button className="font-semibold hover:underline underline-offset-4">
+                here
+              </button>
+            </form>
           </p>
         )}
         {tasks &&
