@@ -15,29 +15,31 @@ body {
   height: 100vh;
 }
 
-.btn-filled {
-  @apply text-white self-center transition-all  bg-black w-[50%] rounded-lg p-2 hover:w-[100%];
-}
-.btn-filled:disabled {
-  @apply bg-gray-500 cursor-not-allowed;
-}
-
-.btn-outlined {
-  @apply py-1 px-2 md:p-1 border-2 border-black rounded-md hover:text-white hover:bg-black transition-all duration-500;
-}
-
-.btn-outlined-gray {
-  @apply bg-white text-black border border-gray-300 py-2 px-4 rounded-md w-[50%] hover:bg-gray-200 hover:w-[100%] transition-all duration-100;
-}
-
-.card {
-  @apply bg-white p-4 rounded-lg shadow-md;
-}
-
-.input {
-  @apply border-none rounded-lg hover:outline-none focus:outline-none p-2;
-}
-
-#quote {
-  text-overflow: ellipsis;
+@layer components {
+  .btn-filled {
+    @apply text-white self-center transition-all  bg-black w-[50%] rounded-lg p-2 hover:w-[100%];
+  }
+  .btn-filled:disabled {
+    @apply bg-gray-500 cursor-not-allowed;
+  }
+  
+  .btn-outlined {
+    @apply py-1 px-2 md:p-1 border-2 border-black rounded-md hover:text-white hover:bg-black transition-all duration-500;
+  }
+  
+  .btn-outlined-gray {
+    @apply bg-white text-black border border-gray-300 py-2 px-4 rounded-md w-[50%] hover:bg-gray-200 hover:w-[100%] transition-all duration-100;
+  }
+  
+  .card {
+    @apply bg-white p-4 rounded-lg shadow-md;
+  }
+  
+  .input {
+    @apply border-none rounded-lg hover:outline-none focus:outline-none p-2;
+  }
+  
+  #quote {
+    text-overflow: ellipsis;
+  }
 }
