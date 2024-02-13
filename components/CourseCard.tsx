@@ -1,42 +1,51 @@
-"use client";
 import Link from "next/link";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { FaEdit, FaWindowClose } from "react-icons/fa";
 import SubmitButton from "./SubmitButton";
 import Course from "types/Course";
-import { useCourseCard } from "hooks/useCourseCard";
-const CourseCard: React.FC<Course> = (props) => {
-  const {
-    data: { editable, data },
-    actions: { setEditable, setData, formAction, deleteCourse },
-  } = useCourseCard(props);
+import {
+  editCourse,
+  deleteCourse,
+  openEditCourse,
+  closeEditCourse,
+} from "server/actions/courses";
+const CourseCard: React.FC<{
+  course: Course;
+  searchParams?: { [key: string]: string | string[] | undefined };
+}> = ({ course, searchParams }) => {
   return (
     <div className="card w-fit h-fit p-4 bg-white shadow rounded">
-      {!editable ?
+      {!searchParams?.edit ?
         <>
           <div className="flex justify-between">
             <h1 className="text-center text-lg font-bold mb-3">
-              {props.title}
+              {course.title}
             </h1>
-            <FaEdit
+            <form
               className="inline-block ml-[15vw] cursor-pointer"
-              onClick={() => setEditable(true)}
-            />
-            <RiDeleteBin7Fill
-              className="cursor-pointer"
-              onClick={() => deleteCourse(props.id)}
-            />
+              action={openEditCourse}
+            >
+              <button type="submit">
+                <FaEdit />
+              </button>
+            </form>
+            <form action={deleteCourse} className="cursor-pointer">
+              <input type="text" name="id" value={course.id} hidden />
+              <button type="submit">
+                <RiDeleteBin7Fill />
+              </button>
+            </form>
           </div>
           <div className="flex justify-between items-center mb-2">
             <span className="block mx-auto font-mono font-semibold">
-              {props.controlForm}
+              {course.controlForm}
             </span>
           </div>
           <div className="grid grid-cols-[1fr_2fr_0.5fr] gap-2 mb-2">
             <span>Lectures</span>
-            <span>{props.teacherLectures}</span>
+            <span>{course.teacherLectures}</span>
             <Link
-              href={props.lecturesLink}
+              href={course.lecturesLink}
               className="text-blue-600 hover:text-blue-800"
             >
               Link
@@ -44,100 +53,89 @@ const CourseCard: React.FC<Course> = (props) => {
           </div>
           <div className="grid grid-cols-[1fr_2fr_0.5fr] gap-2 mb-2">
             <span>Practices</span>
-            <span>{props.teacherPractices}</span>
+            <span>{course.teacherPractices}</span>
             <Link
-              href={props.practicesLink}
+              href={course.practicesLink}
               className="text-blue-600 hover:text-blue-800"
             >
               Link
             </Link>
           </div>
-          {props.notes && (
+          {course.notes && (
             <div className="grid grid-cols-[1fr_2fr_0.5fr] gap-2 mb-2">
               <span>Notes</span>
-              <p className="col-span-2">{props.notes}</p>
+              <p className="col-span-2">{course.notes}</p>
             </div>
           )}
         </>
-      : <form
-          action={formAction}
-          className="z-20 absolute  flex flex-col bg-white rounded-md shadow-lg p-5 gap-3"
-        >
-          <FaWindowClose
-            className="cursor-pointer block mx-auto mb-1 text-gray-600 hover:text-gray-800"
-            onClick={() => setEditable(false)}
-          />
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              className="text-center font-bold p-2 rounded border border-gray-300 w-full"
-              type="text"
-              placeholder="Course Title"
-              value={data.title}
-              onChange={(e) => setData({ ...data, title: e.target.value })}
-              name="title"
-            />
-            <select
-              className="p-2 rounded border border-gray-300 w-full text-center"
-              value={data.controlForm}
-              onChange={(e) =>
-                setData({ ...data, controlForm: e.target.value })
-              }
-              name="controlForm"
+      : <>
+          <form action={closeEditCourse} className="z-20">
+            <button
+              type="submit"
+              className="cursor-pointer block mx-auto mb-1 text-gray-600 hover:text-gray-800"
             >
-              <option value="exam">Exam</option>
-              <option value="offset">Offset</option>
-            </select>
-            <input
-              className="p-2 rounded border border-gray-300 w-full text-center"
-              type="text"
-              value={data.teacherLectures}
-              onChange={(e) =>
-                setData({ ...data, teacherLectures: e.target.value })
-              }
-              placeholder="Teacher of Lectures"
-              name="teacherLectures"
-            />
-            <input
-              className="text-center p-2 rounded border border-gray-300 w-full"
-              type="text"
-              placeholder="Lectures Link"
-              value={data.lecturesLink}
-              onChange={(e) =>
-                setData({ ...data, lecturesLink: e.target.value })
-              }
-              name="lecturesLink"
-            />
-            <input
-              className="text-center p-2 rounded border border-gray-300 w-full"
-              type="text"
-              placeholder="Teacher Practices"
-              value={data.teacherPractices}
-              onChange={(e) =>
-                setData({ ...data, teacherPractices: e.target.value })
-              }
-              name="teacherPractices"
-            />
-            <input
-              className="text-center p-2 rounded border border-gray-300 w-full"
-              type="text"
-              placeholder="Practices Link"
-              value={data.practicesLink}
-              onChange={(e) =>
-                setData({ ...data, practicesLink: e.target.value })
-              }
-              name="practicesLink"
-            />
-            <textarea
-              className="p-2 rounded border border-gray-300 w-full"
-              placeholder="Notes about the course"
-              value={data.notes}
-              onChange={(e) => setData({ ...data, notes: e.target.value })}
-              name="notes"
-            ></textarea>
-            <input type="text" name="id" value={props.id} hidden />
-            <SubmitButton text="Save" />
-          </div>
-        </form>
+              <FaWindowClose />
+            </button>
+          </form>
+          <form
+            action={editCourse}
+            className="z-20 absolute  flex flex-col bg-white rounded-md shadow-lg p-5 gap-3"
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                className="text-center font-bold p-2 rounded border border-gray-300 w-full"
+                type="text"
+                placeholder="Course Title"
+                defaultValue={course.title}
+                name="title"
+              />
+              <select
+                className="p-2 rounded border border-gray-300 w-full text-center"
+                defaultValue={course.controlForm}
+                name="controlForm"
+              >
+                <option value="exam">Exam</option>
+                <option value="offset">Offset</option>
+              </select>
+              <input
+                className="p-2 rounded border border-gray-300 w-full text-center"
+                type="text"
+                defaultValue={course.teacherLectures}
+                placeholder="Teacher of Lectures"
+                name="teacherLectures"
+              />
+              <input
+                className="text-center p-2 rounded border border-gray-300 w-full"
+                type="text"
+                placeholder="Lectures Link"
+                defaultValue={course.lecturesLink}
+                name="lecturesLink"
+              />
+              <input
+                className="text-center p-2 rounded border border-gray-300 w-full"
+                type="text"
+                placeholder="Teacher Practices"
+                defaultValue={course.teacherPractices}
+                name="teacherPractices"
+              />
+              <input
+                className="text-center p-2 rounded border border-gray-300 w-full"
+                type="text"
+                placeholder="Practices Link"
+                defaultValue={course.practicesLink}
+                name="practicesLink"
+              />
+              <textarea
+                className="p-2 rounded border border-gray-300 w-full"
+                placeholder="Notes about the course"
+                defaultValue={course.notes}
+                name="notes"
+              ></textarea>
+              <input type="text" name="id" value={course.id} hidden />
+              <SubmitButton text="Save" />
+            </div>
+          </form>
+        </>
       }
     </div>
   );
