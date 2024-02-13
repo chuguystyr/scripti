@@ -1,30 +1,29 @@
-"use client";
 import TaskCard from "components/TaskCard";
 import SetTask from "components/SetTask";
-import { useTasks } from "hooks/useTasks";
+import { closeAddTask, getAllTasks, openAddTask } from "server/actions/tasks";
 
-const Tasks: React.FC<{}> = () => {
-  const { tasks, show, setShow } = useTasks();
+const Tasks: React.FC<{
+  searchParams?: { [key: string]: string | string[] | undefined };
+}> = async ({ searchParams }) => {
+  const tasks = await getAllTasks();
   return (
     <>
-      {!tasks || tasks.length === 0 ?
+      {!tasks || (Array.isArray(tasks) && tasks.length === 0) ?
         <>
-          {!show && (
+          {!searchParams?.add && (
             <>
               <p className="text-center">
                 Looks like you&apos;re first time here. Let&apos;s add some
                 tasks
               </p>
-              <button
-                type="button"
-                className="block btn-filled mx-auto mt-5"
-                onClick={() => setShow((prev) => !prev)}
-              >
-                Add Task
-              </button>
+              <form action={openAddTask} className="block mx-auto mt-5">
+                <button type="submit" className="btn-filled">
+                  Add Task
+                </button>
+              </form>
             </>
           )}
-          {show && <SetTask close={setShow} />}
+          {searchParams?.add && <SetTask close={closeAddTask} />}
         </>
       : <>
           <div className="flex flex-col md:flex-row items-center my-4">
@@ -39,18 +38,16 @@ const Tasks: React.FC<{}> = () => {
               <button type="button" className="btn-filled">
                 Search
               </button>
-              <button
-                type="button"
-                className="btn-filled"
-                onClick={() => setShow((prev) => !prev)}
-              >
-                Add Task
-              </button>
-              {show && <SetTask close={setShow} />}
+              <form action={closeAddTask}>
+                <button type="submit" className="btn-filled">
+                  Add Task
+                </button>
+              </form>
+              {searchParams?.add && <SetTask close={closeAddTask} />}
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {tasks &&
+            {Array.isArray(tasks) &&
               tasks.map((task) => {
                 return <TaskCard key={task.id} {...task} />;
               })}
