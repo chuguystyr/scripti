@@ -3,7 +3,9 @@ import TaskCard from "components/TaskCard";
 import SetTask from "components/SetTask";
 import { closeAddTaskAtHome } from "server/actions/tasks";
 
-const Tasks = async () => {
+const Tasks: React.FC<{
+  searchParams?: { [key: string]: string | string[] | undefined };
+}> = async ({ searchParams }) => {
   const { tasks, done } = await getTasks();
   const statistics = {
     inProgress:
@@ -25,8 +27,8 @@ const Tasks = async () => {
           Done <br />
           {done}
         </p>
-        <SetTask close={closeAddTaskAtHome} />
       </section>
+        {searchParams && searchParams?.add && <SetTask close={closeAddTaskAtHome} />}
       <section className="mt-10 h-[55vh] flex flex-wrap gap-3" id="tasks">
         {tasks && tasks.length === 0 && (
           <p className="card h-fit block mx-auto text-center">
@@ -43,6 +45,13 @@ const Tasks = async () => {
         {tasks &&
           tasks.length !== 0 &&
           tasks.map((task, index) => <TaskCard key={index} {...task} />)}
+        {tasks && tasks.length !== 0 && (
+          <form action={openAddTaskAtHome}>
+            <button className="font-bold btn-outlined mt-7 text-3xl text-center">
+              +
+            </button>
+          </form>
+        )}
       </section>
     </section>
   );
