@@ -3,7 +3,9 @@ import Tasks from "components/Tasks";
 import Quote from "components/Quote";
 import Name from "components/Name";
 import DateTime from "components/DateTime";
-const Home: React.FC<{}> = () => {
+const Home: React.FC<{
+  searchParams?: { [key: string]: string | string[] | undefined };
+}> = async ({searchParams}) => {
   return (
     <main className="flex flex-col md:flex-row gap-5 md:gap-10">
       <section id="left" className="md:w-1/2">
@@ -21,7 +23,7 @@ const Home: React.FC<{}> = () => {
           <Schedule />
         </section>
       </section>
-      <Tasks />
+      <Tasks searchParams={searchParams}/>
     </main>
   );
 };

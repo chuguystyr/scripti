@@ -1,12 +1,18 @@
 import SubmitButton from "components/SubmitButton";
 import { setTask } from "server/actions/tasks";
+import { FaWindowClose } from "react-icons/fa";
 const SetTask: React.FC<{
   close: () => void;
 }> = ({ close }) => {
   return (
-    <>
+    <div className="fixed top-0 left-0 right-0 bottom-0 w-full flex flex-col justify-center content-center">
+      <form action={close} className="self-center z-40">
+        <button type="submit">
+          <FaWindowClose />
+        </button>
+      </form>
       <form
-        className="z-20 absolute mx-[47%] flex flex-col m-auto bg-white rounded-md shadow-lg p-5 gap-3"
+        className="w-fit h-fit self-center flex flex-col bg-white rounded-md shadow-lg p-5 gap-3"
         action={setTask}
       >
         <label htmlFor="title" className="font-semibold">
@@ -51,15 +57,7 @@ const SetTask: React.FC<{
 
         <SubmitButton text="Save" />
       </form>
-      <form action={close} className="block mx-auto">
-      <button
-          type="submit"
-          className="btn-outlined-gray"
-        >
-          Close
-        </button>
-      </form>
-    </>
+    </div>
   );
 };
 
