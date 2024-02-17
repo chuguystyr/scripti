@@ -5,7 +5,9 @@ import { closeAddTaskAtHome } from "server/actions/tasks";
 
 const Tasks: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined };
-}> = async ({ searchParams }) => {
+  setEditable: () => Promise<never>;
+  resetEditable: () => Promise<never>;
+}> = async ({ searchParams, setEditable, resetEditable }) => {
   const { tasks, done } = await getTasks();
   const statistics = {
     inProgress:
@@ -44,7 +46,7 @@ const Tasks: React.FC<{
         )}
         {tasks &&
           tasks.length !== 0 &&
-          tasks.map((task, index) => <TaskCard key={index} {...task} />)}
+          tasks.map((task, index) => <TaskCard key={index} task={task} searchParams={searchParams} setEditable={setEditable} resetEditable={resetEditable}/>)}
         {tasks && tasks.length !== 0 && (
           <form action={openAddTaskAtHome}>
             <button className="font-bold btn-outlined mt-7 text-3xl text-center">

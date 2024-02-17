@@ -1,6 +1,6 @@
 import TaskCard from "components/TaskCard";
 import SetTask from "components/SetTask";
-import { closeAddTask, getAllTasks, openAddTask } from "server/actions/tasks";
+import { closeAddTask, getAllTasks, openAddTask, setTaskEditableAtTasks as setEditable, setTaskNonEditableAtTasks as resetEditable} from "server/actions/tasks";
 
 const Tasks: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined };
@@ -49,7 +49,7 @@ const Tasks: React.FC<{
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.isArray(tasks) &&
               tasks.map((task) => {
-                return <TaskCard key={task.id} {...task} />;
+                return <TaskCard key={task.id} task={task} searchParams={searchParams} setEditable={setEditable} resetEditable={resetEditable}/>;
               })}
           </div>
         </>
