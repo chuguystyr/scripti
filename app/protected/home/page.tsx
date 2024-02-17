@@ -3,6 +3,7 @@ import Tasks from "components/Tasks";
 import Quote from "components/Quote";
 import Name from "components/Name";
 import DateTime from "components/DateTime";
+import { setTaskEditableAtHome as setEditable, setTaskNonEditableAtHome as resetEditable } from "server/actions/tasks";
 const Home: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined };
 }> = async ({searchParams}) => {
@@ -23,7 +24,7 @@ const Home: React.FC<{
           <Schedule />
         </section>
       </section>
-      <Tasks searchParams={searchParams}/>
+      <Tasks searchParams={searchParams} setEditable={setEditable} resetEditable={resetEditable}/>
     </main>
   );
 };
