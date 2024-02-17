@@ -1,11 +1,9 @@
 import TaskCard from "components/TaskCard";
 import SetTask from "components/SetTask";
-import { closeAddTask, getAllTasks, openAddTask, setTaskEditableAtTasks as setEditable, setTaskNonEditableAtTasks as resetEditable } from "server/actions/tasks";
+import { closeAddTask, getAllTasks, openAddTask, setTaskEditableAtTasks as setEditable, setTaskNonEditableAtTasks as resetEditable} from "server/actions/tasks";
 
 const Tasks: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined };
-  setEditable: () => Promise<never>;
-  resetEditable: () => Promise<never>;
 }> = async ({ searchParams }) => {
   const tasks = await getAllTasks();
   return (
