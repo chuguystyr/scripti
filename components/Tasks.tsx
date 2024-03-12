@@ -30,7 +30,9 @@ const Tasks: React.FC<{
           {done}
         </p>
       </section>
-        {searchParams && searchParams?.add && <SetTask close={closeAddTaskAtHome} />}
+      {searchParams && searchParams?.add && (
+        <SetTask close={closeAddTaskAtHome} />
+      )}
       <section className="mt-10 h-[55vh] flex flex-wrap gap-3" id="tasks">
         {tasks && tasks.length === 0 && (
           <p className="card h-fit block mx-auto text-center">
@@ -46,7 +48,15 @@ const Tasks: React.FC<{
         )}
         {tasks &&
           tasks.length !== 0 &&
-          tasks.map((task, index) => <TaskCard key={index} task={task} searchParams={searchParams} setEditable={setEditable} resetEditable={resetEditable}/>)}
+          tasks.map((task, index) => (
+            <TaskCard
+              key={index}
+              task={task}
+              searchParams={searchParams}
+              setEditable={setEditable}
+              resetEditable={resetEditable}
+            />
+          ))}
         {tasks && tasks.length !== 0 && (
           <form action={openAddTaskAtHome}>
             <button className="font-bold btn-outlined mt-7 text-3xl text-center">

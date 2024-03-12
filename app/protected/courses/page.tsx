@@ -44,7 +44,10 @@ const Courses: React.FC<{
                 Search
               </button>
               <form action={openAddCourse}>
-                <button type="submit" className="btn-filled w-full hover:w-[120%]">
+                <button
+                  type="submit"
+                  className="btn-filled w-full hover:w-[120%]"
+                >
                   Add Course
                 </button>
               </form>
@@ -55,7 +58,13 @@ const Courses: React.FC<{
             {Array.isArray(courses) &&
               courses.length !== 0 &&
               courses.map((course, index) => {
-                return <CourseCard key={index} course={course} searchParams={searchParams} />;
+                return (
+                  <CourseCard
+                    key={index}
+                    course={course}
+                    searchParams={searchParams}
+                  />
+                );
               })}
           </div>
         </>

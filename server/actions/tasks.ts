@@ -63,19 +63,19 @@ export const getAllTasks = async () => {
 
 export const openAddTask = async () => {
   redirect("/protected/tasks?add=true");
-}
+};
 
 export const closeAddTask = async () => {
   redirect("/protected/tasks?add");
-}
+};
 
 export const openAddTaskAtHome = async () => {
   redirect("/protected/home?add=true");
-}
+};
 
 export const closeAddTaskAtHome = async () => {
   redirect("/protected/home");
-}
+};
 
 export const setTask = async (form: FormData) => {
   const user = await protector(cookies().get("_scrpt")!.value);
@@ -107,11 +107,11 @@ export const setTask = async (form: FormData) => {
 
 export const setTaskEditableAtHome = async () => {
   redirect("/protected/home?edit=true");
-}
+};
 
 export const setTaskNonEditableAtHome = async () => {
   redirect("/protected/home");
-}
+};
 
 export const checkTask = async (form: FormData) => {
   const id = form.get("id");
@@ -203,8 +203,8 @@ export const editTask = async (form: FormData) => {
 
 export const setTaskEditableAtTasks = async () => {
   redirect("/protected/tasks?edit=true");
-}
+};
 
 export const setTaskNonEditableAtTasks = async () => {
   redirect("/protected/tasks");
-}
+};

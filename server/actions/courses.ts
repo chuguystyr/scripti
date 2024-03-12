@@ -30,11 +30,11 @@ export const getCourses = async () => {
 
 export const openAddCourse = () => {
   redirect("/protected/courses?add=true");
-}
+};
 
 export const closeAddCourse = () => {
   redirect("/protected/courses");
-}
+};
 
 export const setCourse = async (form: FormData) => {
   const user = await protector(cookies().get("_scrpt")!.value);
@@ -136,8 +136,8 @@ export const deleteCourse = async (form: FormData) => {
 
 export const openEditCourse = () => {
   redirect("/protected/courses?edit=true");
-}
+};
 
 export const closeEditCourse = () => {
   redirect("/protected/courses");
-}
+};

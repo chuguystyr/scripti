@@ -84,7 +84,9 @@ const Account: React.FC<{
             <SubmitButton text="Change" />
           </form>
           <form action={logout}>
-            <button type="submit" className="btn-outlined  block mx-auto">Logout</button>
+            <button type="submit" className="btn-outlined  block mx-auto">
+              Logout
+            </button>
           </form>
           <form action={deleteAccount}>
             <button

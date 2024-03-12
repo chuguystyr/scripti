@@ -4,9 +4,7 @@ import { setCourse } from "server/actions/courses";
 const SetCourse: React.FC<{ close: () => never }> = ({ close }) => {
   return (
     <div className="z-30 absolute bg-white rounded-md shadow-lg p-5 gap-3">
-      <form
-        action={setCourse}
-      >
+      <form action={setCourse}>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label htmlFor="title" className="font-semibold">
@@ -93,14 +91,11 @@ const SetCourse: React.FC<{ close: () => never }> = ({ close }) => {
         </div>
       </form>
       <form action={close}>
-      <div className="flex justify-center gap-3 mt-4">
-      <button
-          type="submit"
-          className="btn-outlined-gray"
-        >
-          Close
-        </button>
-      </div>
+        <div className="flex justify-center gap-3 mt-4">
+          <button type="submit" className="btn-outlined-gray">
+            Close
+          </button>
+        </div>
       </form>
     </div>
   );
