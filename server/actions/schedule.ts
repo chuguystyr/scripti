@@ -78,3 +78,64 @@ export const getSchedule = async () => {
     throw new Error("Internal");
   }
 };
+
+export const setSchedule = async (prevState: any, form: FormData) => {
+  const formData = Object.fromEntries(form.entries()) as {
+    [key: string]: string;
+  };
+  if (
+    formData["from"] !== "" &&
+    formData["to"] !== "" &&
+    formData["from"] < formData["to"] &&
+    formData["from"] >
+      new Date().toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+  ) {
+    const user = await protector(cookies().get("_scrpt")!.value);
+    if ("message" in user) {
+      return { message: "Unathorised" };
+    }
+    const { id } = user;
+    const schedule = transformData(formData);
+    await dbConnect();
+    try {
+      const result = await User.findOneAndUpdate(
+        { _id: id },
+        { $push: { schedules: schedule } },
+        { new: true },
+      );
+      if (result) {
+        return { message: "Schedule set successfully" };
+      } else {
+        return { error: "Something went wrong." };
+      }
+    } catch (error) {
+      return { error: "Something went wrong." };
+    }
+  } else {
+    return { error: "Invalid data." };
+  }
+};
+
+function transformData(input: { [key: string]: string }) {
+  const schedule = JSON.parse(input.inputsData);
+  const transformed: { [key: string]: { [key: string]: {} } } = {};
+  Object.keys(schedule).forEach((key) => {
+    const match = key.match(/(^[a-zA-Z]+)(\d+)/);
+    if (match) {
+      const day = match[1];
+      const index = match[2];
+      if (schedule[key].course === "") {
+        return;
+      }
+      if (!transformed[day]) {
+        transformed[day] = {};
+      }
+      transformed[day][index] = schedule[key];
+    }
+  });
+  return { ...transformed, to: input.to, from: input.from };
+}
