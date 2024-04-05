@@ -2,16 +2,17 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import SetCourse from "components/SetCourse";
 
-vi.mock('server/actions/courses', () => ({
-  setCourse: () => {}
+vi.mock("server/actions/courses", () => ({
+  setCourse: () => {},
 }));
 
-vi.mock('react-dom', () => { return {
-  useFormStatus: () => ({
-    pending: false,
-  })
-}
-})
+vi.mock("react-dom", () => {
+  return {
+    useFormStatus: () => ({
+      pending: false,
+    }),
+  };
+});
 
 describe("SetCourse component", () => {
   const mockClose = vi.fn(() => {

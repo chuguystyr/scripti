@@ -9,6 +9,6 @@ export default defineConfig({
       ["**/__tests__/components/**/*.test.{ts,tsx}", "jsdom"],
       ["**/__tests__/pages/**/*.test.{ts,tsx}", "jsdom"],
       ["**/__tests__/server/**.test.{ts,tsx}", "node"],
-    ]
-  }
+    ],
+  },
 });

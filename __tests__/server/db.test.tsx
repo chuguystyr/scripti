@@ -3,7 +3,7 @@ import mongoose, { Mongoose } from "mongoose";
 import connectDB from "server/db";
 
 vi.spyOn(mongoose, "connect");
-const consoleErrorSpy = vi.spyOn(console, "error")
+const consoleErrorSpy = vi.spyOn(console, "error");
 describe("connectDB", () => {
   beforeEach(() => {
     process.env.DATABASE_URL = "mongodb://localhost:27017/testdb";
@@ -16,14 +16,17 @@ describe("connectDB", () => {
       "Please define the DATABASE_URL environment variable",
     );
   });
-  
+
   it("should log an error if the database connection fails", async () => {
     const connectionError = new Error("Connection failed");
     vi.mocked(mongoose.connect).mockRejectedValue(connectionError);
     await connectDB();
-    expect(consoleErrorSpy).toHaveBeenCalledWith("Database connection failed", connectionError);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Database connection failed",
+      connectionError,
+    );
   });
-  
+
   it("should establish a new database connection if no cached instance is available", async () => {
     const dbInstanceMock1 = new Mongoose();
     vi.mocked(mongoose.connect).mockResolvedValueOnce(dbInstanceMock1);
@@ -44,5 +47,4 @@ describe("connectDB", () => {
     expect(firstDBInstance).toBe(secondDBInstance);
     expect(mongoose.connect).toHaveBeenCalledTimes(1);
   });
-
 });

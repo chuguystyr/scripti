@@ -3,16 +3,17 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import SetTask from "components/SetTask";
 
 describe("SetTask component", () => {
-  vi.mock('server/actions/tasks', () => ({
-    setTask: () => {}
+  vi.mock("server/actions/tasks", () => ({
+    setTask: () => {},
   }));
 
-  vi.mock('react-dom', () => { return {
-    useFormStatus: () => ({
-      pending: false,
-    })
-  }
-  })
+  vi.mock("react-dom", () => {
+    return {
+      useFormStatus: () => ({
+        pending: false,
+      }),
+    };
+  });
 
   const mockClose = vi.fn();
 

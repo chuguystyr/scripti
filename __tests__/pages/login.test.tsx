@@ -2,16 +2,17 @@ import { describe, it, expect, beforeEach, beforeAll, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import Login from "app/login/page";
 
-vi.mock('server/actions/account', () => ({
-  login: () => {}
+vi.mock("server/actions/account", () => ({
+  login: () => {},
 }));
 
-vi.mock('react-dom', () => { return {
-  useFormStatus: () => ({
-    pending: false,
-  })
-}
-})
+vi.mock("react-dom", () => {
+  return {
+    useFormStatus: () => ({
+      pending: false,
+    }),
+  };
+});
 
 describe("login page: general structure", () => {
   beforeAll(() => {
