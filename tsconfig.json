@@ -20,6 +20,6 @@
     ],
     "baseUrl": ".",
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "postcss.config.js", "next.config.js", "vitest.config.js", "__tests__/components/submitButton.test.tsx"],
   "exclude": ["node_modules"],
 }
