@@ -92,12 +92,12 @@ export const getAccount = async () => {
 };
 
 export const openEdit = async () => {
-  redirect('/protected/account?edit=true')
-}
+  redirect("/protected/account?edit=true");
+};
 
 export const closeEdit = async () => {
-  redirect('/protected/account')
-}
+  redirect("/protected/account");
+};
 
 export const editAccount = async (form: FormData) => {
   const user = await protector(cookies().get("_scrpt")!.value);
@@ -125,13 +125,13 @@ export const editAccount = async (form: FormData) => {
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    revalidatePath('/protected/account', "page");
+    revalidatePath("/protected/account", "page");
     return { message: "Account updated" };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
   } finally {
-    redirect('/protected/account')
+    redirect("/protected/account");
   }
 };
 

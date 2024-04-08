@@ -63,19 +63,19 @@ export const getAllTasks = async () => {
 
 export const openAddTask = async () => {
   redirect("/protected/tasks?add=true");
-}
+};
 
 export const closeAddTask = async () => {
   redirect("/protected/tasks?add");
-}
+};
 
 export const openAddTaskAtHome = async () => {
   redirect("/protected/home?add=true");
-}
+};
 
 export const closeAddTaskAtHome = async () => {
   redirect("/protected/home");
-}
+};
 
 export const setTask = async (form: FormData) => {
   const user = await protector(cookies().get("_scrpt")!.value);
@@ -103,4 +103,108 @@ export const setTask = async (form: FormData) => {
     console.log(error);
     return { message: "Something went wrong" };
   }
+};
+
+export const setTaskEditableAtHome = async () => {
+  redirect("/protected/home?edit=true");
+};
+
+export const setTaskNonEditableAtHome = async () => {
+  redirect("/protected/home");
+};
+
+export const checkTask = async (form: FormData) => {
+  const id = form.get("id");
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if ("message" in user) {
+    return { message: "Unathorised" };
+  }
+  if (!user || !id) {
+    return { message: "Bad request" };
+  }
+  await dbConnect();
+  try {
+    const result = await User.findOneAndUpdate(
+      { _id: user.id },
+      {
+        $set: {
+          "tasks.$[elem].status": "done",
+        },
+      },
+      { arrayFilters: [{ "elem.id": id }], new: true },
+    );
+    if (!result) {
+      return { message: "Invalid credentials" };
+    }
+    return { message: "Task checked" };
+  } catch (error) {
+    console.log(error);
+    return { message: "Something went wrong" };
+  }
+};
+
+export const deleteTask = async (form: FormData) => {
+  const id = form.get("id");
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if ("message" in user) {
+    return { message: "Unathorised" };
+  }
+  if (!user || !id) {
+    return { message: "Bad request" };
+  }
+  await dbConnect();
+  try {
+    const result = await User.findOneAndUpdate(
+      { _id: user.id },
+      { $pull: { tasks: { id } } },
+    );
+    if (!result) {
+      return { message: "Invalid credentials" };
+    }
+    return { message: "Task deleted" };
+  } catch (error) {
+    console.log(error);
+    return { message: "Something went wrong" };
+  }
+};
+
+export const editTask = async (form: FormData) => {
+  const user = await protector(cookies().get("_scrpt")!.value);
+  if ("message" in user) {
+    return { message: "Unathorised" };
+  }
+  const { id } = user;
+  const data = Object.fromEntries(form.entries());
+  if (!data.id || !data.title || !data.date || !data.course || !data.status) {
+    return { message: "Bad request" };
+  }
+  await dbConnect();
+  try {
+    const result = await User.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          "tasks.$[elem]": {
+            data,
+          },
+        },
+      },
+      { arrayFilters: [{ "elem.id": data.id }], new: true },
+    );
+    if (!result) {
+      return { message: "Invalid credentials" };
+    }
+    return { message: "Task updated" };
+  } catch (error) {
+    console.log(error);
+    return { message: "Something went wrong" };
+  }
+};
+
+export const setTaskEditableAtTasks = async () => {
+  redirect("/protected/tasks?edit=true");
+};
+
+export const setTaskNonEditableAtTasks = async () => {
+  redirect("/protected/tasks");
 };
