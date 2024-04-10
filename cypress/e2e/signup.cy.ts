@@ -74,11 +74,15 @@ describe("testing signup functionality", () => {
     });
   });
   it("should not register a new user when password doesn't contain a special character (#SF6)", () => {
-    cy.fixture("users").then(({ noSpecialCharacterUser }) => {
-      cy.get('input[name="name"]').type(noSpecialCharacterUser.name);
-      cy.get('input[name="username"]').type(noSpecialCharacterUser.username);
-      cy.get('input[name="email"]').type(noSpecialCharacterUser.email);
-      cy.get('input[name="password"]').type(noSpecialCharacterUser.password);
+    cy.fixture("users").then(({ noSpecialCharacterPasswordUser }) => {
+      cy.get('input[name="name"]').type(noSpecialCharacterPasswordUser.name);
+      cy.get('input[name="username"]').type(
+        noSpecialCharacterPasswordUser.username,
+      );
+      cy.get('input[name="email"]').type(noSpecialCharacterPasswordUser.email);
+      cy.get('input[name="password"]').type(
+        noSpecialCharacterPasswordUser.password,
+      );
       cy.get('button[type="submit"]').click();
 
       cy.url().should("include", "/signup");

@@ -55,6 +55,7 @@ export const setCourse = async (form: FormData) => {
       return { message: "Invalid credentials" };
     }
     revalidatePath("/protected/courses", "page");
+    closeAddCourse();
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
