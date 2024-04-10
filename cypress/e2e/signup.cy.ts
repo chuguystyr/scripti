@@ -1,6 +1,6 @@
 describe("testing signup functionality", () => {
   beforeEach(() => {
-    cy.visit("https://scripti-app.vercel.app/cypress");
+    cy.visit("https://scripti-app.vercel.app/singup");
   });
   it("should register a new user when valid data is provided (#SF1)", () => {
     cy.fixture("users").then(({ correctUser }) => {
