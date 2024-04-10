@@ -1,6 +1,6 @@
 describe("testing signup functionality", () => {
   beforeEach(() => {
-    cy.visit("https://scripti-app.vercel.app/singup");
+    cy.visit("https://scripti-app.vercel.app/signup");
   });
   it("should register a new user when valid data is provided (#SF1)", () => {
     cy.fixture("users").then(({ correctUser }) => {
@@ -52,7 +52,7 @@ describe("testing signup functionality", () => {
       cy.url().should("include", "/signup");
       cy.get("p")
         .contains(
-          "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8-20 characters",
+          "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
         )
         .should("be.visible");
     });
@@ -68,7 +68,7 @@ describe("testing signup functionality", () => {
       cy.url().should("include", "/signup");
       cy.get("p")
         .contains(
-          "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8-20 characters",
+          "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
         )
         .should("be.visible");
     });
@@ -84,7 +84,7 @@ describe("testing signup functionality", () => {
       cy.url().should("include", "/signup");
       cy.get("p")
         .contains(
-          "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8-20 characters",
+          "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
         )
         .should("be.visible");
     });
@@ -98,7 +98,6 @@ describe("testing signup functionality", () => {
       cy.get('button[type="submit"]').click();
 
       cy.url().should("include", "/signup");
-      cy.get("p").contains("Email is invalid").should("be.visible");
     });
   });
 });

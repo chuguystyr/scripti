@@ -17,7 +17,7 @@ describe("testing login functionality, (#LF1)", () => {
       cy.get('button[type="submit"]').click();
 
       cy.url().should("include", "/login");
-      cy.get("p").should("have.text", "Please fill in\nall fields");
+      cy.get("p").contains("Please fill in all fields").should("be.visible");
     });
   });
   it("should not login with invalid password, (#LF3)", () => {
@@ -27,7 +27,7 @@ describe("testing login functionality, (#LF1)", () => {
       cy.get('button[type="submit"]').click();
 
       cy.url().should("include", "/login");
-      cy.get("p").should("have.text", "Invalid credentials");
+      cy.get("p").contains("Invalid credentials").should("be.visible");
     });
   });
   it("should not login with invalid username, (#LF4)", () => {
@@ -37,6 +37,7 @@ describe("testing login functionality, (#LF1)", () => {
       cy.get('button[type="submit"]').click();
 
       cy.url().should("include", "/login");
+      cy.get("p").contains("Invalid credentials").should("be.visible");
     });
   });
 });
