@@ -17,6 +17,16 @@ export const signUp = async (form: FormData) => {
   if (!name || !username || !email || !password) {
     redirect("/signup?error=fields");
   }
+  const emailRegex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+  if (!emailRegex.test(email)) {
+    redirect("/signup?error=email");
+  }
+  const passwordRegex = new RegExp(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
+  );
+  if (!passwordRegex.test(password)) {
+    redirect("/signup?error=password");
+  }
   try {
     await dbConnect();
     const hashedPassword = await hash(password, 12);

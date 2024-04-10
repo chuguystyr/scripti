@@ -1,0 +1,37 @@
+{
+  "correctUser": {
+    "name": "John",
+    "username": "john_smith",
+    "email": "john@example.com",
+    "password": "test1!passworD"
+  },
+  "shortPasswordUser": {
+    "name": "Daniel",
+    "username": "danny56",
+    "email": "dan_brown@example.com",
+    "password": "test"
+  },
+  "longPasswordUser": {
+    "name": "Oliver",
+    "username": "ollie",
+    "email": "oviver_dennison@example.com",
+    "password": "test14441484120842047"
+  },
+  "noSpecialCharacterPasswordUser": {
+    "name": "Mickey",
+    "username": "mickki",
+    "email": "mickeystanson@example.com",
+    "password": "test10passworD"
+  },
+  "invalidEmailUser": {
+    "name": "Ann",
+    "username": "ann04",
+    "email": "ann2004example.com",
+    "password": "test1!passworD"
+  },
+  "editedUser": {
+    "name": "Johnathan",
+    "email": "johnathan@example.com"
+  },
+  "newPassword": "C@rpeDiem1"
+}

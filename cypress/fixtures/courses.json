@@ -1,0 +1,14 @@
+{
+  "validCourse": {
+    "title": "QA",
+    "teacherLectures": "Trofymenko O. G.",
+    "teacherPractices": "Dyka A. I.",
+    "formOfControl": "exam",
+    "lecturesLink": "https://us04web.zoom.us/j/74930129442?pwd=YbQ5TbtuDyWda3VrmEsiq1pGCc3bCs.1",
+    "practicesLink": "https://us04web.zoom.us/j/74930129442?pwd=YbQ5TbtuDyWda3VrmEsiq1pGCc3bCs.1",
+    "notes": "Курс, спрямваний на набуття навичок з тестування та забезпечення якості прогрманих проодуктів"
+  },
+  "editData": {
+    "title": "QA and QM"
+  }
+}
