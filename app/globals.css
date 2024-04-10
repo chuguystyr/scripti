@@ -39,6 +39,14 @@ body {
     @apply border-none rounded-lg hover:outline-none focus:outline-none p-2;
   }
 
+  input:invalid {
+    border: 2px solid red;
+  }
+
+  input:valid {
+    border: 2px solid green;
+  }
+
   #quote {
     text-overflow: ellipsis;
   }
