@@ -1,0 +1,9 @@
+{
+  "validTask": {
+    "title": "QA Course paper",
+    "deadline": "new Date()",
+    "description": "Потрібно протестувати вебсайт або будь-який застосунок"
+  },
+  "invalidDeadline": "new Date(2021-01-01)",
+  "editedTitle": "QA Course thesis"
+}
