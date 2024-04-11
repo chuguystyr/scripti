@@ -66,7 +66,7 @@ export const openAddTask = async () => {
 };
 
 export const closeAddTask = async () => {
-  redirect("/protected/tasks?add");
+  redirect("/protected/tasks");
 };
 
 export const openAddTaskAtHome = async () => {
@@ -98,11 +98,11 @@ export const setTask = async (form: FormData) => {
     }
     revalidatePath("/protected/home");
     revalidatePath("/protected/tasks");
-    return { message: "Task added" };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
   }
+  closeAddTask();
 };
 
 export const setTaskEditableAtHome = async () => {
@@ -111,6 +111,10 @@ export const setTaskEditableAtHome = async () => {
 
 export const setTaskNonEditableAtHome = async () => {
   redirect("/protected/home");
+};
+
+export const closeEditTask = async () => {
+  redirect("/protected/tasks");
 };
 
 export const checkTask = async (form: FormData) => {
@@ -150,6 +154,7 @@ export const deleteTask = async (form: FormData) => {
     return { message: "Unathorised" };
   }
   if (!user || !id) {
+    console.log("Bad request");
     return { message: "Bad request" };
   }
   await dbConnect();
@@ -161,7 +166,8 @@ export const deleteTask = async (form: FormData) => {
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    return { message: "Task deleted" };
+    revalidatePath("/protected/home");
+    revalidatePath("/protected/tasks");
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
@@ -176,7 +182,7 @@ export const editTask = async (form: FormData) => {
   const { id } = user;
   const data = Object.fromEntries(form.entries());
   if (!data.id || !data.title || !data.date || !data.course || !data.status) {
-    return { message: "Bad request" };
+    redirect("/protected/tasks?edit=true&error=fields");
   }
   await dbConnect();
   try {
@@ -194,11 +200,11 @@ export const editTask = async (form: FormData) => {
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    return { message: "Task updated" };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
   }
+  closeEditTask();
 };
 
 export const setTaskEditableAtTasks = async () => {

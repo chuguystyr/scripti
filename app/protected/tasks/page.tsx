@@ -44,7 +44,7 @@ const Tasks: React.FC<{
               <button type="button" className="btn-filled">
                 Search
               </button>
-              <form action={closeAddTask}>
+              <form action={openAddTask}>
                 <button type="submit" className="btn-filled">
                   Add Task
                 </button>

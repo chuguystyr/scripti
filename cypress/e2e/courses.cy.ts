@@ -84,15 +84,16 @@ describe("testing courses functionality", () => {
       cy.get('input[name="notes"]').type(validCourse.notes);
       cy.contains("button", /^Add$/).click();
 
+      cy.get("form").find("button:has(svg)").last().click();
       cy.contains("Course with this name already exists").should("exist");
     });
   });
   it("should delete an existing course, (#CF6)", () => {
     cy.fixture("courses").then(({ validCourse }) => {
       cy.get("form").find("button:has(svg)").last().click();
-      cy.get("h1")
-        .contains(new RegExp("^" + validCourse.title + "$", "g"))
-        .should("not.exist");
+      cy.contains(new RegExp("^" + validCourse.title + "$", "g")).should(
+        "not.exist",
+      );
     });
   });
 });

@@ -1,14 +1,14 @@
 describe("testing tasks functionality", () => {
   before(() => {
     cy.login();
-    cy.get("button").contains("Tasks").click();
+    cy.get("a").contains("Tasks").click();
   });
   it("should add a new task when all fields are filled, (#TF1)", () => {
     cy.get("button").contains("Add Task").click();
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="title"]').type(validTask.title);
       cy.get('input[name="course"]').type(validTask.course);
-      cy.get('input[name="date"]').type(validTask.date);
+      cy.get('input[name="date"]').type(new Date().toISOString().split("T")[0]);
       cy.get('input[name="description"]').type(validTask.description);
       cy.get('button[type="submit"]').contains("Save").click();
 
