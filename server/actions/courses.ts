@@ -84,7 +84,6 @@ export const editCourse = async (form: FormData) => {
   const practicesLink = form.get("practicesLink")!.toString();
   const notes = form.get("notes")!.toString();
   const id = form.get("id")!.toString();
-
   if (!title || !controlForm || !teacherLectures || !id) {
     redirect("/protected/courses?edit=true&error=fields");
   }
@@ -95,6 +94,7 @@ export const editCourse = async (form: FormData) => {
       {
         $set: {
           "courses.$[elem]": {
+            id,
             title,
             controlForm,
             teacherLectures,
