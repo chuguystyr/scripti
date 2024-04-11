@@ -43,6 +43,14 @@ export const setCourse = async (form: FormData) => {
   }
   const { id } = user;
   const data = Object.fromEntries(form.entries());
+  if (
+    !data.title ||
+    !data.controlForm ||
+    !data.teacherLectures ||
+    !data.teacherPractices
+  ) {
+    redirect("/protected/courses?add=true&error=fields");
+  }
   data.id = Math.random().toString().slice(2, 12);
   await dbConnect();
   try {
@@ -78,7 +86,7 @@ export const editCourse = async (form: FormData) => {
   const id = form.get("id")!.toString();
 
   if (!title || !controlForm || !teacherLectures || !id) {
-    return { message: "Please fill all fields" };
+    redirect("/protected/courses?edit=true&error=fields");
   }
   await dbConnect();
   try {

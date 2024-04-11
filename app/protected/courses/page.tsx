@@ -28,7 +28,9 @@ const Courses: React.FC<{
               </button>
             </form>
           )}
-          {searchParams?.add && <SetCourse close={closeAddCourse} />}
+          {searchParams?.add && (
+            <SetCourse close={closeAddCourse} searchParams={searchParams} />
+          )}
         </>
       : <>
           <div className="flex flex-col md:flex-row items-center my-4">

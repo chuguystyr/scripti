@@ -1,5 +1,5 @@
 describe("testing courses functionality", () => {
-  before(() => {
+  beforeEach(() => {
     cy.login();
     cy.get("a").contains("Courses").click();
   });
@@ -15,13 +15,13 @@ describe("testing courses functionality", () => {
       cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink);
       cy.get('input[name="practicesLink"]').type(validCourse.practicesLink);
       cy.get('input[name="notes"]').type(validCourse.notes);
-      cy.get('button[type="submit"]').contains("Add").click();
+      cy.contains("button", /^Add$/).click();
 
       cy.get("h1").contains(validCourse.title).should("exist");
       cy.get("span").contains(validCourse.teacherLectures).should("exist");
       cy.get("span").contains(validCourse.teacherPractices).should("exist");
       cy.get("span").contains(validCourse.formOfControl).should("exist");
-      cy.get("a").contains("Link").should("have.length", 2);
+      cy.get("a").filter(":contains('Link')").should("have.length", 2);
       cy.get("p").contains(validCourse.notes).should("exist");
     });
   });
@@ -32,13 +32,15 @@ describe("testing courses functionality", () => {
       cy.get('input[name="teacherPractices"]').type(
         validCourse.teacherPractices,
       );
-      cy.get('input[name="controlForm"]').select(validCourse.formOfControl);
+      cy.get('select[name="controlForm"]').select(validCourse.formOfControl);
       cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink);
       cy.get('input[name="practicesLink"]').type(validCourse.practicesLink);
       cy.get('input[name="notes"]').type(validCourse.notes);
-      cy.get('button[type="submit"]').contains("Add").click();
+      cy.contains("button", /^Add$/).click();
 
       cy.contains("Please fill in all required fields").should("exist");
+
+      cy.get("form").find("button:has(svg)").last().click();
     });
   });
   it("should not add a new course with repeating title, (#CF3)", () => {
@@ -49,13 +51,15 @@ describe("testing courses functionality", () => {
       cy.get('input[name="teacherPractices"]').type(
         validCourse.teacherPractices,
       );
-      cy.get('input[name="controlForm"]').select(validCourse.formOfControl);
+      cy.get('select[name="controlForm"]').select(validCourse.formOfControl);
       cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink);
       cy.get('input[name="practicesLink"]').type(validCourse.practicesLink);
       cy.get('input[name="notes"]').type(validCourse.notes);
-      cy.get('button[type="submit"]').contains("Add").click();
+      cy.contains("button", /^Add$/).click();
 
       cy.contains("Course with this name already exists").should("exist");
+
+      cy.get("form").find("button:has(svg)").last().click();
     });
   });
   it("should edit an existing course with valid data, (#CF4)", () => {
