@@ -1,6 +1,8 @@
 describe("testing tasks functionality", () => {
   before(() => {
-    cy.login();
+    cy.fixture("users").then(({ correctUser: { username, password } }) => {
+      cy.login(username, password);
+    });
     cy.get("a").contains("Tasks").click();
   });
   it("should add a new task when all fields are filled, (#TF1)", () => {
