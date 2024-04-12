@@ -1,4 +1,4 @@
-describe("testing login functionality, (#LF1)", () => {
+describe("testing login functionality", () => {
   beforeEach(() => {
     cy.visit("https://scripti-app.vercel.app/login");
   });

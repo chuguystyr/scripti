@@ -39,15 +39,16 @@ Cypress.Commands.add("login", (username: string, password: string) => {
   cy.get('input[name="username"]').type(username);
   cy.get('input[name="password"]').type(password);
   cy.get('button[type="submit"]').click();
-  cy.waitUntil(() => {
-    cy.url().should("contain", "/protected/home");
-    cy.get("h2").contains("Hello,").should("be.visible");
-  });
+
+  cy.url().should("contain", "/protected/home");
+  cy.get("h2").contains("Hello,").should("be.visible");
 });
 
 Cypress.Commands.add("goToCoursesPage", () => {
   cy.get("a").contains("Courses").click();
-  cy.waitUntil(() => cy.get("h1").contains("Courses").should("be.visible"));
+  cy.waitUntil(() =>
+    cy.get("button").contains("Add Course").should("be.visible"),
+  );
 });
 
 Cypress.Commands.add("goToAccountPage", () => {

@@ -32,8 +32,8 @@ describe("testing account functionality", () => {
   });
   it("should not change password to an invalid password, (#AF3)", () => {
     cy.fixture("users").then(
-      ({ correctUser: { user, password }, shortPasswordUser }) => {
-        cy.login(user, password);
+      ({ correctUser: { username, password }, shortPasswordUser }) => {
+        cy.login(username, password);
         cy.goToAccountPage();
 
         cy.get("input[name='oldPassword']").type(password);

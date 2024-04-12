@@ -166,21 +166,23 @@ export const changePassword = async (form: FormData) => {
     const isMatch = await compare(oldPassword, user.password);
     if (!isMatch) {
       redirectURL = "/protected/account?error=no-match";
-    }
-    const passwordRegex = new RegExp(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
-    );
-    if (!passwordRegex.test(newPassword)) {
-      redirectURL = "/protected/account?error=password";
-    }
-    const hashedPassword = await hash(newPassword, 12);
-    const result = await User.findOneAndUpdate(
-      { _id: id },
-      { $set: { password: hashedPassword } },
-      { new: true },
-    );
-    if (!result) {
-      return { message: "Invalid credentials" };
+    } else {
+      const passwordRegex = new RegExp(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
+      );
+      if (!passwordRegex.test(newPassword)) {
+        redirectURL = "/protected/account?error=password";
+      } else {
+        const hashedPassword = await hash(newPassword, 12);
+        const result = await User.findOneAndUpdate(
+          { _id: id },
+          { $set: { password: hashedPassword } },
+          { new: true },
+        );
+        if (!result) {
+          return { message: "Invalid credentials" };
+        }
+      }
     }
   } catch (error) {
     console.log(error);
