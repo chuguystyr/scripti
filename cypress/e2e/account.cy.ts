@@ -85,7 +85,7 @@ describe("testing account functionality", () => {
       cy.visit("https://scripti-app.vercel.app/login");
       cy.get("input[name='username']").type(username);
       cy.get("input[name='password']").type(newPassword);
-      cy.get("button[type='submit']").contains("Login").click();
+      cy.get("button[type='submit']").contains("Log in").click();
       cy.get("p").contains("Invalid credentials").should("be.visible");
     });
   });
