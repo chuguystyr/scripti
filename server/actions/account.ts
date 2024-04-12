@@ -157,6 +157,7 @@ export const changePassword = async (form: FormData) => {
     return { message: "Please fill all fields" };
   }
   await dbConnect();
+  let redirectURL = null;
   try {
     const user = await User.findOne({ _id: id }, { password: 1 });
     if (!user) {
@@ -164,7 +165,13 @@ export const changePassword = async (form: FormData) => {
     }
     const isMatch = await compare(oldPassword, user.password);
     if (!isMatch) {
-      return { message: "Invalid credetials" };
+      redirectURL = "/protected/account?error=no-match";
+    }
+    const passwordRegex = new RegExp(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
+    );
+    if (!passwordRegex.test(newPassword)) {
+      redirectURL = "/protected/account?error=password";
     }
     const hashedPassword = await hash(newPassword, 12);
     const result = await User.findOneAndUpdate(
@@ -175,11 +182,12 @@ export const changePassword = async (form: FormData) => {
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    return { message: "Password changed" };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
   }
+  redirectURL = redirectURL || "/protected/account?status=password-changed";
+  redirect(redirectURL);
 };
 
 export const logout = async () => {

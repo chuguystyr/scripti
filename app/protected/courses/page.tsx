@@ -24,7 +24,7 @@ const Courses: React.FC<{
                 type="submit"
                 className="btn-filled block mx-auto w-10 mt-5"
               >
-                Add Courses
+                Add Course
               </button>
             </form>
           )}

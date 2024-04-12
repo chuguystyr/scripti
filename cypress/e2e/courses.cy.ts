@@ -1,7 +1,9 @@
 describe("testing courses functionality", () => {
   beforeEach(() => {
-    cy.login();
-    cy.get("a").contains("Courses").click();
+    cy.fixture("users").then(({ correctUser: { username, password } }) => {
+      cy.login(username, password);
+      cy.goToCoursesPage();
+    });
   });
   it("should add a new course when all fields are filled, (#CF1)", () => {
     cy.get("button").contains("Add Course").click();

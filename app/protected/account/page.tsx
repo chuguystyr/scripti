@@ -17,7 +17,7 @@ const Account: React.FC<{
   return (
     <div className="grid grid-cols-2">
       <div>
-        <h1 className="text-2xl font-bold my-4 text-center">Accont info</h1>
+        <h1 className="text-2xl font-bold my-4 text-center">Account info</h1>
         {searchParams?.edit ?
           <>
             <form action={closeEdit} className="flex justify-center">
@@ -69,6 +69,22 @@ const Account: React.FC<{
             className="flex flex-col w-[20vw] mx-auto mb-4 rounded-md p-2 gap-4 bg-white"
             action={changePassword}
           >
+            {searchParams?.error === "no-match" && (
+              <p className="text-center w-[15vw] block mx-auto text-red-500">
+                Invalid old password
+              </p>
+            )}
+            {searchParams?.error === "password" && (
+              <p className="text-center w-[15vw] block mx-auto text-red-500">
+                Password must have 8-20 characters, including an uppercase
+                letter, a lowercase letter, a digit, and a special character.
+              </p>
+            )}
+            {searchParams?.status === "password-chabged" && (
+              <p className="text-center w-[15vw] block mx-auto text-green-500">
+                Password&apos;s benn changed successfully
+              </p>
+            )}
             <input
               className="input bg-slate-300"
               placeholder="Old Password"
