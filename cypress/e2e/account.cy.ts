@@ -62,7 +62,7 @@ describe("testing account functionality", () => {
         cy.get("p")
           .contains("Password's benn changed successfully")
           .should("be.visible");
-        cy.get("button").contains("Logout").click();
+        cy.get("button").contains("Log out").click();
         cy.login(username, newPassword);
       },
     );
