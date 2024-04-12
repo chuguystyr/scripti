@@ -101,7 +101,7 @@ const Account: React.FC<{
           </form>
           <form action={logout}>
             <button type="submit" className="btn-outlined  block mx-auto">
-              Logout
+              Log out
             </button>
           </form>
           <form action={deleteAccount}>
@@ -109,7 +109,7 @@ const Account: React.FC<{
               className="bg-red-600 text-white block mx-auto py-2 px-4 rounded-md hover:bg-red-700 transition-all duration-500 my-2"
               type="submit"
             >
-              Delete Account
+              Delete account
             </button>
           </form>
         </div>

@@ -72,7 +72,7 @@ describe("testing account functionality", () => {
       cy.login(username, newPassword);
       cy.goToAccountPage();
     });
-    cy.get("button").contains("Logout").click();
+    cy.get("button").contains("Log out").click();
     cy.url().should("eq", "https://scripti-app.vercel.app/");
   });
   it("should delete user's account, (#AF6)", () => {
