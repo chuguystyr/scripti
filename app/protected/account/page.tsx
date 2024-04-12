@@ -80,7 +80,7 @@ const Account: React.FC<{
                 letter, a lowercase letter, a digit, and a special character.
               </p>
             )}
-            {searchParams?.status === "password-chabged" && (
+            {searchParams?.status === "password-changed" && (
               <p className="text-center w-[15vw] block mx-auto text-green-500">
                 Password&apos;s benn changed successfully
               </p>
