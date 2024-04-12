@@ -214,9 +214,9 @@ export const deleteAccount = async () => {
       return { message: "Invalid credentials" };
     }
     cookies().set("_scrpt", "", { maxAge: 0 });
-    return { message: "Account deleted" };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
   }
+  redirect("/");
 };
