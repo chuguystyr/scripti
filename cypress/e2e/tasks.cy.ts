@@ -68,11 +68,15 @@ describe("testing tasks functionality", () => {
   });
   it("should edit an existing task with valid data, (#TF6)", () => {
     cy.get("form").find("button:has(svg)").first().click();
-    cy.fixture("tasks").then(({ editedTitle }) => {
+    cy.fixture("tasks").then(({ editedTitle, validTask: { title } }) => {
       cy.get('input[name="title"]').clear().type(editedTitle);
       cy.get("button[type='submit']").contains("Save").click();
 
       cy.get("h1").contains(editedTitle).should("be.visible");
+
+      cy.get("form").find("button:has(svg)").first().click();
+      cy.get('input[name="title"]').clear().type(title);
+      cy.get("button[type='submit']").contains("Save").click();
     });
   });
   it("should not edit an existing course with missing data, (#TF7)", () => {
@@ -99,19 +103,18 @@ describe("testing tasks functionality", () => {
       );
       cy.get('input[name="description"]').type(validTask.description);
       cy.get('button[type="submit"]').contains("Save").click();
+      cy.get("form").find("button:has(svg)").last().click();
 
       cy.get("p")
         .contains("Task with this title already exists")
         .should("be.visible");
     });
-
-    cy.get("form").find("button:has(svg)").last().click();
   });
-  it("should delete an existing course, (#TF9)", () => {
-    cy.fixture("courses").then(({ editData }) => {
+  it("should delete an existing task, (#TF9)", () => {
+    cy.fixture("tasks").then(({ validTask: { title } }) => {
       cy.get("form").find("button:has(svg)").last().click();
 
-      cy.get("h1").contains(editData.title).should("not.exist");
+      cy.contains(title).should("not.exist");
     });
   });
 });
