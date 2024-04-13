@@ -34,8 +34,13 @@ const TaskCard: React.FC<{
             </form>
           </div>
           <h2>
-            <span className="font-mono">{task.date}</span> |{" "}
-            <span>{task.course}</span> |{" "}
+            <span className="font-mono">
+              {new Date(task.date).toLocaleString("ua-UK", {
+                day: "2-digit",
+                month: "2-digit",
+              })}
+            </span>{" "}
+            | <span>{task.course}</span> |{" "}
             <span className="font-serif">{task.status}</span>
           </h2>
           <p>{task.description}</p>

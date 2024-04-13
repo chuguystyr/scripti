@@ -102,7 +102,7 @@ export const setTask = async (form: FormData) => {
     console.log(error);
     return { message: "Something went wrong" };
   }
-  closeAddTask();
+  await closeAddTask();
 };
 
 export const setTaskEditableAtHome = async () => {
