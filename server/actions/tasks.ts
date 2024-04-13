@@ -147,18 +147,19 @@ export const checkTask = async (form: FormData) => {
   await dbConnect();
   try {
     const result = await User.findOneAndUpdate(
-      { _id: user.id },
+      { _id: user.id, "tasks.id": id },
       {
         $set: {
-          "tasks.$[elem].status": "done",
+          "tasks.$.status": "done",
         },
       },
-      { arrayFilters: [{ "elem.id": id }], new: true },
+      { new: true },
     );
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    return { message: "Task checked" };
+    revalidatePath("/protected/home");
+    revalidatePath("/protected/tasks");
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
@@ -199,21 +200,20 @@ export const editTask = async (form: FormData) => {
   }
   const { id } = user;
   const data = Object.fromEntries(form.entries());
+  console.log("Data object", data);
   if (!data.id || !data.title || !data.date || !data.course || !data.status) {
     redirect("/protected/tasks?edit=true&error=fields");
   }
   await dbConnect();
   try {
     const result = await User.findOneAndUpdate(
-      { _id: id },
+      { _id: id, "tasks.id": data.id },
       {
         $set: {
-          "tasks.$[elem]": {
-            data,
-          },
+          "tasks.$": data,
         },
       },
-      { arrayFilters: [{ "elem.id": data.id }], new: true },
+      { new: true },
     );
     if (!result) {
       return { message: "Invalid credentials" };
@@ -222,7 +222,9 @@ export const editTask = async (form: FormData) => {
     console.log(error);
     return { message: "Something went wrong" };
   }
-  closeEditTask();
+  revalidatePath("/protected/home");
+  revalidatePath("/protected/tasks");
+  await closeEditTask();
 };
 
 export const setTaskEditableAtTasks = async () => {

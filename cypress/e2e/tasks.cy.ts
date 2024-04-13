@@ -87,7 +87,7 @@ describe("testing tasks functionality", () => {
   it("should mark existing task as done, (#TF8)", () => {
     cy.get("form").find("button:has(svg)").eq(1).click();
 
-    cy.get("h2").contains("done").should("exist");
+    cy.get("h2").contains("done").should("be.visible");
   });
   it("should not add a new task with repeating title, (#TF5)", () => {
     cy.get("button").contains("Add Task").click();

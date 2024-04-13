@@ -56,6 +56,11 @@ const TaskCard: React.FC<{
             action={editTask}
             className="bg-white rounded shadow"
           >
+            {searchParams?.error === "fields" && (
+              <p className="text-red-500 text-center">
+                Please fill in all required fields
+              </p>
+            )}
             <div className="flex flex-col items-center space-y-2">
               <input
                 className="text-center font-bold p-2 rounded border border-gray-300 w-full"
