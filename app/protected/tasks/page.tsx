@@ -29,7 +29,9 @@ const Tasks: React.FC<{
               </form>
             </>
           )}
-          {searchParams?.add && <SetTask close={closeAddTask} />}
+          {searchParams?.add && (
+            <SetTask close={closeAddTask} searchParams={searchParams} />
+          )}
         </>
       : <>
           <div className="flex flex-col md:flex-row items-center my-4">
@@ -49,7 +51,9 @@ const Tasks: React.FC<{
                   Add Task
                 </button>
               </form>
-              {searchParams?.add && <SetTask close={closeAddTask} />}
+              {searchParams?.add && (
+                <SetTask close={closeAddTask} searchParams={searchParams} />
+              )}
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

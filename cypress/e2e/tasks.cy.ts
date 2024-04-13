@@ -10,7 +10,9 @@ describe("testing tasks functionality", () => {
     cy.fixture("tasks").then(({ validTask, invalidCourse }) => {
       cy.get('input[name="title"]').type(validTask.title);
       cy.get('input[name="course"]').type(invalidCourse);
-      cy.get('input[name="date"]').type(new Date().toISOString().split("T")[0]);
+      cy.get('input[name="date"]').type(
+        new Date(Date.now() + 86400000).toISOString().split("T")[0],
+      );
       cy.get('input[name="description"]').type(validTask.description);
       cy.get('button[type="submit"]').contains("Save").click();
 
@@ -21,7 +23,9 @@ describe("testing tasks functionality", () => {
     cy.get("button").contains("Add Task").click();
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="course"]').type(validTask.course);
-      cy.get('input[name="date"]').type(new Date().toISOString().split("T")[0]);
+      cy.get('input[name="date"]').type(
+        new Date(Date.now() + 86400000).toISOString().split("T")[0],
+      );
       cy.get('input[name="description"]').type(validTask.description);
       cy.get('button[type="submit"]').contains("Save").click();
 
@@ -49,7 +53,9 @@ describe("testing tasks functionality", () => {
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="title"]').type(validTask.title);
       cy.get('input[name="course"]').type(validTask.course);
-      cy.get('input[name="date"]').type(new Date().toISOString().split("T")[0]);
+      cy.get('input[name="date"]').type(
+        new Date(Date.now() + 86400000).toISOString().split("T")[0],
+      );
       cy.get('input[name="description"]').type(validTask.description);
       cy.get('button[type="submit"]').contains("Save").click();
 
@@ -71,6 +77,8 @@ describe("testing tasks functionality", () => {
         .contains("Task with this title already exists")
         .should("be.visible");
     });
+
+    cy.get("form").find("button:has(svg)").last().click();
   });
   it("should edit an existing task with valid data, (#TF5)", () => {
     cy.get("form").find("button:has(svg)").first().click();

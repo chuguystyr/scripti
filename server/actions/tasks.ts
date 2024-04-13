@@ -86,7 +86,7 @@ export const setTask = async (form: FormData) => {
   }
   const { id } = user;
   const data = Object.fromEntries(form.entries());
-  if (!data.title || !data.date || !data.course || !data.status) {
+  if (!data.title || !data.date || !data.course) {
     redirect("/protected/tasks?add=true&error=fields");
   } else {
     const courses = await getCourses();
