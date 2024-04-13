@@ -62,22 +62,26 @@ const TaskCard: React.FC<{
                 type="text"
                 placeholder="Task Title"
                 defaultValue={task.title}
+                name="title"
               />
               <input
                 className="p-2 rounded border border-gray-300 w-full"
                 type="date"
                 defaultValue={task.date}
+                name="date"
               />
               <input
                 className="text-center p-2 rounded border border-gray-300 w-full"
                 type="text"
                 placeholder="Course"
                 defaultValue={task.course}
+                name="course"
               />
 
               <select
                 className="p-2 rounded border border-gray-300 w-full text-center"
                 defaultValue={task.status}
+                name="status"
               >
                 <option value="new">New</option>
                 <option value="in progress">In Progress</option>
@@ -87,6 +91,7 @@ const TaskCard: React.FC<{
                 className="p-2 rounded border border-gray-300 w-full"
                 placeholder="Description"
                 defaultValue={task.description}
+                name="description"
               ></textarea>
               <input type="text" name="id" hidden value={task.id} />
               <button
