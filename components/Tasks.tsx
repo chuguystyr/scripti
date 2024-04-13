@@ -31,7 +31,7 @@ const Tasks: React.FC<{
         </p>
       </section>
       {searchParams && searchParams?.add && (
-        <SetTask close={closeAddTaskAtHome} />
+        <SetTask close={closeAddTaskAtHome} searchParams={searchParams} />
       )}
       <section className="mt-10 h-[55vh] flex flex-wrap gap-3" id="tasks">
         {tasks && tasks.length === 0 && (

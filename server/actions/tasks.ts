@@ -8,6 +8,8 @@ import { ObjectId } from "mongodb";
 import Task from "types/Task";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { getCourses } from "./courses";
+import { get } from "node_modules/cypress/types/lodash";
 
 export const getTasks = async () => {
   const user = await protector(cookies().get("_scrpt")!.value);
@@ -84,6 +86,22 @@ export const setTask = async (form: FormData) => {
   }
   const { id } = user;
   const data = Object.fromEntries(form.entries());
+  if (!data.title || !data.date || !data.course || !data.status) {
+    redirect("/protected/tasks?add=true&error=fields");
+  } else {
+    const courses = await getCourses();
+    if (Array.isArray(courses)) {
+      const course = courses.find((course) => course.title === data.course);
+      if (!course) {
+        redirect("/protected/tasks?add=true&error=course");
+      }
+    } else {
+      redirect("/protected/tasks?add=true&error=course");
+    }
+    if (new Date(data.date.toString()) < new Date()) {
+      redirect("/protected/tasks?add=true&error=date");
+    }
+  }
   data.status = "new";
   data.id = Math.random().toString().slice(2, 12);
   await dbConnect();

@@ -4,6 +4,6 @@
     "course": "QA",
     "description": "Потрібно протестувати вебсайт або будь-який застосунок"
   },
-  "invalidDeadline": "new Date(2021-01-01)",
+  "invalidCourse": "QA and QM",
   "editedTitle": "QA Course thesis"
 }

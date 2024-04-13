@@ -30,6 +30,7 @@ declare namespace Cypress {
   interface Chainable {
     login(username: string, password: string): Chainable<void>;
     goToCoursesPage(): Chainable<void>;
+    goToTasksPage(): Chainable<void>;
     goToAccountPage(): Chainable<void>;
   }
 }
@@ -48,6 +49,13 @@ Cypress.Commands.add("goToCoursesPage", () => {
   cy.get("a").contains("Courses").click();
   cy.waitUntil(() =>
     cy.get("button").contains("Add Course").should("be.visible"),
+  );
+});
+
+Cypress.Commands.add("goToTasksPage", () => {
+  cy.get("a").contains("Tasks").click();
+  cy.waitUntil(() =>
+    cy.get("button").contains("Add Task").should("be.visible"),
   );
 });
 
