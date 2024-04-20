@@ -1,52 +1,92 @@
 describe("testing account functionality", () => {
-  beforeEach(() => {
-    cy.login();
-    cy.get("button").contains("Account").click();
-  });
   it("should edit user's data with valid data, (#AF1)", () => {
+    cy.fixture("users").then(({ correctUser: { username, password } }) => {
+      cy.login(username, password);
+    });
+    cy.goToAccountPage();
+
     cy.get("button:has(svg)").first().click();
-    cy.fixture("user").then(({ editedUser }) => {
+    cy.fixture("users").then(({ editedUser }) => {
       cy.get("input[name='name']").clear().type(editedUser.name);
       cy.get("input[name='email']").clear().type(editedUser.email);
       cy.get("button[type='submit']").contains("Save").click();
+
+      cy.get("p").contains(editedUser.name).should("be.visible");
+      cy.get("p").contains(editedUser.email).should("be.visible");
     });
   });
-  it("should change password to another valid password, (#AF2)", () => {
-    cy.fixture("user").then(({ validUser, newPassword }) => {
-      cy.get("input[name='oldPassword']").type(validUser.password);
-      cy.get("input[name='newPassword']").type(newPassword);
-      cy.get("button[type='submit']").contains("Change").click();
-    });
-    cy.get("button").contains("Logout").click();
-    cy.visit("https://scripti-app.vercel.app/login");
-    cy.fixture("user").then(({ validUser, newPassword }) => {
-      cy.get("input[name='uaername']").type(validUser.username);
-      cy.get("input[name='password']").type(newPassword);
-      cy.get("button[type='submit']").click();
-      cy.url().should("contain", "/protected/home");
-    });
+  it("should not change password when the incorrect old password is provided, (#AF2)", () => {
+    cy.fixture("users").then(
+      ({ correctUser: { username, password }, newPassword }) => {
+        cy.login(username, password);
+        cy.goToAccountPage();
+
+        cy.get("input[name='oldPassword']").type(`${password + "a"}`);
+        cy.get("input[name='newPassword']").type(newPassword);
+        cy.get("button[type='submit']").contains("Change").click();
+      },
+    );
+
+    cy.url().should("contain", "/protected/account");
+    cy.get("p").contains("Invalid old password").should("be.visible");
   });
   it("should not change password to an invalid password, (#AF3)", () => {
-    cy.fixture("user").then(({ validUser, shortPasswordUser, newPassword }) => {
-      cy.get("input[name='oldPassword']").type(validUser.password);
-      cy.get("input[name='newPassword']").type(shortPasswordUser.password);
-      cy.get("button[type='submit']").contains("Change").click();
-    });
+    cy.fixture("users").then(
+      ({ correctUser: { username, password }, shortPasswordUser }) => {
+        cy.login(username, password);
+        cy.goToAccountPage();
+
+        cy.get("input[name='oldPassword']").type(password);
+        cy.get("input[name='newPassword']").type(shortPasswordUser.password);
+        cy.get("button[type='submit']").contains("Change").click();
+      },
+    );
+
     cy.url().should("contain", "/protected/account");
+    cy.get("p")
+      .contains(
+        "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
+      )
+      .should("be.visible");
   });
-  it("should logout user, (#AF4)", () => {
-    cy.get("button").contains("Logout").click();
+  it("should change password to another valid password, (#AF4)", () => {
+    cy.fixture("users").then(
+      ({ correctUser: { username, password }, newPassword }) => {
+        cy.login(username, password);
+        cy.goToAccountPage();
+
+        cy.get("input[name='oldPassword']").type(password);
+        cy.get("input[name='newPassword']").type(newPassword);
+        cy.get("button[type='submit']").contains("Change").click();
+
+        cy.get("p")
+          .contains("Password's benn changed successfully")
+          .should("be.visible");
+        cy.get("button").contains("Log out").click();
+        cy.login(username, newPassword);
+      },
+    );
+  });
+  it("should logout user, (#AF5)", () => {
+    cy.fixture("users").then(({ correctUser: { username }, newPassword }) => {
+      cy.login(username, newPassword);
+      cy.goToAccountPage();
+    });
+    cy.get("button").contains("Log out").click();
     cy.url().should("eq", "https://scripti-app.vercel.app/");
   });
-  it("should delete user's account, (#AF5)", () => {
-    cy.get("button").contains("Delete account").click();
-    cy.url().should("eq", "https://scripti-app.vercel.app/");
-    cy.get("button").contains("Login").click();
-    cy.fixture("user").then(({ validUser }) => {
-      cy.get("input[name='username']").type(validUser.username);
-      cy.get("input[name='password']").type(validUser.password);
-      cy.get("button[type='submit']").click();
-      cy.get("p").contains("Invalid credentials").should("exist");
+  it("should delete user's account, (#AF6)", () => {
+    cy.fixture("users").then(({ correctUser: { username }, newPassword }) => {
+      cy.login(username, newPassword);
+      cy.goToAccountPage();
+      cy.get("button").contains("Delete account").click();
+
+      cy.url().should("eq", "https://scripti-app.vercel.app/");
+      cy.visit("https://scripti-app.vercel.app/login");
+      cy.get("input[name='username']").type(username);
+      cy.get("input[name='password']").type(newPassword);
+      cy.get("button[type='submit']").contains("Log in").click();
+      cy.get("p").contains("Invalid credentials").should("be.visible");
     });
   });
 });

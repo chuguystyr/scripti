@@ -1,10 +1,24 @@
 import SubmitButton from "./SubmitButton";
 import { setCourse } from "server/actions/courses";
 
-const SetCourse: React.FC<{ close: () => never }> = ({ close }) => {
+const SetCourse: React.FC<{
+  close: () => never;
+  searchParams?: { [key: string]: string | string[] | undefined };
+}> = ({ close, searchParams }) => {
+  let message = "";
+  switch (searchParams?.error) {
+    case "fields":
+      message = `Please fill in\nall required fields`;
+      break;
+  }
   return (
     <div className="z-30 absolute bg-white rounded-md shadow-lg p-5 gap-3">
       <form action={setCourse}>
+        {searchParams?.error && (
+          <p className="text-center w-[15vw] block mx-auto text-red-500">
+            {message}
+          </p>
+        )}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label htmlFor="title" className="font-semibold">

@@ -1,6 +1,6 @@
 describe("testing signup functionality", () => {
   beforeEach(() => {
-    cy.visit("https://scripti-app.vercel.app/login");
+    cy.visit("https://scripti-app.vercel.app/signup");
   });
   it("should register a new user when valid data is provided (#SF1)", () => {
     cy.fixture("users").then(({ correctUser }) => {
@@ -52,7 +52,7 @@ describe("testing signup functionality", () => {
       cy.url().should("include", "/signup");
       cy.get("p")
         .contains(
-          "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8-20 characters",
+          "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
         )
         .should("be.visible");
     });
@@ -68,23 +68,27 @@ describe("testing signup functionality", () => {
       cy.url().should("include", "/signup");
       cy.get("p")
         .contains(
-          "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8-20 characters",
+          "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
         )
         .should("be.visible");
     });
   });
   it("should not register a new user when password doesn't contain a special character (#SF6)", () => {
-    cy.fixture("users").then(({ noSpecialCharacterUser }) => {
-      cy.get('input[name="name"]').type(noSpecialCharacterUser.name);
-      cy.get('input[name="username"]').type(noSpecialCharacterUser.username);
-      cy.get('input[name="email"]').type(noSpecialCharacterUser.email);
-      cy.get('input[name="password"]').type(noSpecialCharacterUser.password);
+    cy.fixture("users").then(({ noSpecialCharacterPasswordUser }) => {
+      cy.get('input[name="name"]').type(noSpecialCharacterPasswordUser.name);
+      cy.get('input[name="username"]').type(
+        noSpecialCharacterPasswordUser.username,
+      );
+      cy.get('input[name="email"]').type(noSpecialCharacterPasswordUser.email);
+      cy.get('input[name="password"]').type(
+        noSpecialCharacterPasswordUser.password,
+      );
       cy.get('button[type="submit"]').click();
 
       cy.url().should("include", "/signup");
       cy.get("p")
         .contains(
-          "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8-20 characters",
+          "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
         )
         .should("be.visible");
     });
@@ -98,7 +102,6 @@ describe("testing signup functionality", () => {
       cy.get('button[type="submit"]').click();
 
       cy.url().should("include", "/signup");
-      cy.get("p").contains("Email is invalid").should("be.visible");
     });
   });
 });

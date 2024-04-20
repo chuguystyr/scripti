@@ -5,6 +5,8 @@ import User from "models/User";
 import { cookies } from "next/headers";
 import { protector } from "server/protection";
 import Schedule from "types/Schedule";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 export const getSchedule = async () => {
   const user = await protector(cookies().get("_scrpt")!.value);
   const { id } = user;
@@ -87,7 +89,7 @@ export const setSchedule = async (prevState: any, form: FormData) => {
     formData["from"] !== "" &&
     formData["to"] !== "" &&
     formData["from"] < formData["to"] &&
-    formData["from"] >
+    formData["from"] >=
       new Date().toLocaleDateString("de-DE", {
         day: "2-digit",
         month: "2-digit",
@@ -107,14 +109,14 @@ export const setSchedule = async (prevState: any, form: FormData) => {
         { $push: { schedules: schedule } },
         { new: true },
       );
-      if (result) {
-        return { message: "Schedule set successfully" };
-      } else {
+      if (!result) {
         return { error: "Something went wrong." };
       }
     } catch (error) {
       return { error: "Something went wrong." };
     }
+    revalidatePath("/protected/home");
+    redirect("/protected/home");
   } else {
     return { error: "Invalid data." };
   }

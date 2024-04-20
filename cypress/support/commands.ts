@@ -28,20 +28,40 @@
 
 declare namespace Cypress {
   interface Chainable {
-    login(): Chainable<void>;
-    drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>;
-    dismiss(
-      subject: string,
-      options?: Partial<TypeOptions>,
-    ): Chainable<Element>;
+    login(username: string, password: string): Chainable<void>;
+    goToCoursesPage(): Chainable<void>;
+    goToTasksPage(): Chainable<void>;
+    goToAccountPage(): Chainable<void>;
   }
 }
 
-Cypress.Commands.add("login", () => {
-  cy.fixture("users").then(({ correctUser }) => {
-    cy.visit("https://scripti-app.vercel.app/login");
-    cy.get('input[name="username"]').type(correctUser.username);
-    cy.get('input[name="password"]').type(correctUser.password);
-    cy.get('button[type="submit"]').click();
-  });
+Cypress.Commands.add("login", (username: string, password: string) => {
+  cy.visit("https://scripti-app.vercel.app/login");
+  cy.get('input[name="username"]').type(username);
+  cy.get('input[name="password"]').type(password);
+  cy.get('button[type="submit"]').click();
+
+  cy.url().should("contain", "/protected/home");
+  cy.get("h2").contains("Hello,").should("be.visible");
+});
+
+Cypress.Commands.add("goToCoursesPage", () => {
+  cy.get("a").contains("Courses").click();
+  cy.waitUntil(() =>
+    cy.get("button").contains("Add Course").should("be.visible"),
+  );
+});
+
+Cypress.Commands.add("goToTasksPage", () => {
+  cy.get("a").contains("Tasks").click();
+  cy.waitUntil(() =>
+    cy.get("button").contains("Add Task").should("be.visible"),
+  );
+});
+
+Cypress.Commands.add("goToAccountPage", () => {
+  cy.get("a").contains("Account").click();
+  cy.waitUntil(() =>
+    cy.get("h1").contains("Account Actions").should("be.visible"),
+  );
 });

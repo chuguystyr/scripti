@@ -10,7 +10,8 @@
     "test": "vitest",
     "lint": "next lint",
     "format": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "e2e": "cypress run --headless --browser chrome"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

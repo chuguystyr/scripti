@@ -43,6 +43,14 @@ export const setCourse = async (form: FormData) => {
   }
   const { id } = user;
   const data = Object.fromEntries(form.entries());
+  if (
+    !data.title ||
+    !data.controlForm ||
+    !data.teacherLectures ||
+    !data.teacherPractices
+  ) {
+    redirect("/protected/courses?add=true&error=fields");
+  }
   data.id = Math.random().toString().slice(2, 12);
   await dbConnect();
   try {
@@ -54,11 +62,12 @@ export const setCourse = async (form: FormData) => {
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    revalidatePath("/protected/courses", "page");
+    revalidatePath("/protected/courses");
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
   }
+  closeAddCourse();
 };
 
 export const editCourse = async (form: FormData) => {
@@ -75,9 +84,8 @@ export const editCourse = async (form: FormData) => {
   const practicesLink = form.get("practicesLink")!.toString();
   const notes = form.get("notes")!.toString();
   const id = form.get("id")!.toString();
-
   if (!title || !controlForm || !teacherLectures || !id) {
-    return { message: "Please fill all fields" };
+    redirect("/protected/courses?edit=true&error=fields");
   }
   await dbConnect();
   try {
@@ -86,6 +94,7 @@ export const editCourse = async (form: FormData) => {
       {
         $set: {
           "courses.$[elem]": {
+            id,
             title,
             controlForm,
             teacherLectures,
@@ -102,11 +111,11 @@ export const editCourse = async (form: FormData) => {
       return { message: "Invalid credentials" };
     }
     revalidatePath("/protected/courses", "page");
-    return { message: "Course updated" };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
   }
+  closeEditCourse();
 };
 
 export const deleteCourse = async (form: FormData) => {
@@ -127,7 +136,7 @@ export const deleteCourse = async (form: FormData) => {
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    return { message: "Course deleted" };
+    revalidatePath("/protected/courses");
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };

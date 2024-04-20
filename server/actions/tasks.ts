@@ -8,6 +8,8 @@ import { ObjectId } from "mongodb";
 import Task from "types/Task";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { getCourses } from "./courses";
+import { get } from "node_modules/cypress/types/lodash";
 
 export const getTasks = async () => {
   const user = await protector(cookies().get("_scrpt")!.value);
@@ -66,7 +68,7 @@ export const openAddTask = async () => {
 };
 
 export const closeAddTask = async () => {
-  redirect("/protected/tasks?add");
+  redirect("/protected/tasks");
 };
 
 export const openAddTaskAtHome = async () => {
@@ -84,6 +86,22 @@ export const setTask = async (form: FormData) => {
   }
   const { id } = user;
   const data = Object.fromEntries(form.entries());
+  if (!data.title || !data.date || !data.course) {
+    redirect("/protected/tasks?add=true&error=fields");
+  } else {
+    const courses = await getCourses();
+    if (Array.isArray(courses)) {
+      const course = courses.find((course) => course.title === data.course);
+      if (!course) {
+        redirect("/protected/tasks?add=true&error=course");
+      }
+    } else {
+      redirect("/protected/tasks?add=true&error=course");
+    }
+    if (new Date(data.date.toString()) < new Date()) {
+      redirect("/protected/tasks?add=true&error=date");
+    }
+  }
   data.status = "new";
   data.id = Math.random().toString().slice(2, 12);
   await dbConnect();
@@ -98,11 +116,11 @@ export const setTask = async (form: FormData) => {
     }
     revalidatePath("/protected/home");
     revalidatePath("/protected/tasks");
-    return { message: "Task added" };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
   }
+  await closeAddTask();
 };
 
 export const setTaskEditableAtHome = async () => {
@@ -111,6 +129,10 @@ export const setTaskEditableAtHome = async () => {
 
 export const setTaskNonEditableAtHome = async () => {
   redirect("/protected/home");
+};
+
+export const closeEditTask = async () => {
+  redirect("/protected/tasks");
 };
 
 export const checkTask = async (form: FormData) => {
@@ -125,18 +147,19 @@ export const checkTask = async (form: FormData) => {
   await dbConnect();
   try {
     const result = await User.findOneAndUpdate(
-      { _id: user.id },
+      { _id: user.id, "tasks.id": id },
       {
         $set: {
-          "tasks.$[elem].status": "done",
+          "tasks.$.status": "done",
         },
       },
-      { arrayFilters: [{ "elem.id": id }], new: true },
+      { new: true },
     );
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    return { message: "Task checked" };
+    revalidatePath("/protected/home");
+    revalidatePath("/protected/tasks");
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
@@ -150,6 +173,7 @@ export const deleteTask = async (form: FormData) => {
     return { message: "Unathorised" };
   }
   if (!user || !id) {
+    console.log("Bad request");
     return { message: "Bad request" };
   }
   await dbConnect();
@@ -161,7 +185,8 @@ export const deleteTask = async (form: FormData) => {
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    return { message: "Task deleted" };
+    revalidatePath("/protected/home");
+    revalidatePath("/protected/tasks");
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
@@ -175,30 +200,31 @@ export const editTask = async (form: FormData) => {
   }
   const { id } = user;
   const data = Object.fromEntries(form.entries());
+  console.log("Data object", data);
   if (!data.id || !data.title || !data.date || !data.course || !data.status) {
-    return { message: "Bad request" };
+    redirect("/protected/tasks?edit=true&error=fields");
   }
   await dbConnect();
   try {
     const result = await User.findOneAndUpdate(
-      { _id: id },
+      { _id: id, "tasks.id": data.id },
       {
         $set: {
-          "tasks.$[elem]": {
-            data,
-          },
+          "tasks.$": data,
         },
       },
-      { arrayFilters: [{ "elem.id": data.id }], new: true },
+      { new: true },
     );
     if (!result) {
       return { message: "Invalid credentials" };
     }
-    return { message: "Task updated" };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };
   }
+  revalidatePath("/protected/home");
+  revalidatePath("/protected/tasks");
+  await closeEditTask();
 };
 
 export const setTaskEditableAtTasks = async () => {

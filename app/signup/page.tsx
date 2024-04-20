@@ -14,7 +14,7 @@ const SignUp: React.FC<{
       message = `This username is already taken`;
       break;
     case "password":
-      message = `Password must contain at least one uppercase letter,\none lowercase letter, one digit, one special character,\nand be between 8-20 characters`;
+      message = `Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.`;
       break;
     case "internal":
       message = `Something went wrong.\nPlease try again`;
@@ -28,7 +28,7 @@ const SignUp: React.FC<{
       >
         <h1 className="text-center font-bold ">Scripti | Sign Up </h1>
         {searchParams?.error && (
-          <p className="text-center text-red-500">{message}</p>
+          <p className="text-center max-w-[15em] text-red-500">{message}</p>
         )}
         <label htmlFor="name">Name</label>
         <input

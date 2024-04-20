@@ -21,21 +21,26 @@ const TaskCard: React.FC<{
               </button>
             </form>
             <form action={checkTask}>
-              <input type="hidden" value={task.id} />
+              <input type="hidden" name="id" value={task.id} />
               <button>
                 <FaCheckCircle className="inline cursor-pointer self-center" />
               </button>
             </form>
             <form action={deleteTask}>
-              <input type="hidden" value={task.id} />
+              <input type="hidden" name="id" value={task.id} />
               <button>
                 <RiDeleteBin7Fill className="inline cursor-pointer self-center" />
               </button>
             </form>
           </div>
           <h2>
-            <span className="font-mono">{task.date}</span> |{" "}
-            <span>{task.course}</span> |{" "}
+            <span className="font-mono">
+              {new Date(task.date).toLocaleString("ua-UK", {
+                day: "2-digit",
+                month: "2-digit",
+              })}
+            </span>{" "}
+            | <span>{task.course}</span> |{" "}
             <span className="font-serif">{task.status}</span>
           </h2>
           <p>{task.description}</p>
@@ -51,28 +56,37 @@ const TaskCard: React.FC<{
             action={editTask}
             className="bg-white rounded shadow"
           >
+            {searchParams?.error === "fields" && (
+              <p className="text-red-500 text-center">
+                Please fill in all required fields
+              </p>
+            )}
             <div className="flex flex-col items-center space-y-2">
               <input
                 className="text-center font-bold p-2 rounded border border-gray-300 w-full"
                 type="text"
                 placeholder="Task Title"
                 defaultValue={task.title}
+                name="title"
               />
               <input
                 className="p-2 rounded border border-gray-300 w-full"
                 type="date"
                 defaultValue={task.date}
+                name="date"
               />
               <input
                 className="text-center p-2 rounded border border-gray-300 w-full"
                 type="text"
                 placeholder="Course"
                 defaultValue={task.course}
+                name="course"
               />
 
               <select
                 className="p-2 rounded border border-gray-300 w-full text-center"
                 defaultValue={task.status}
+                name="status"
               >
                 <option value="new">New</option>
                 <option value="in progress">In Progress</option>
@@ -82,6 +96,7 @@ const TaskCard: React.FC<{
                 className="p-2 rounded border border-gray-300 w-full"
                 placeholder="Description"
                 defaultValue={task.description}
+                name="description"
               ></textarea>
               <input type="text" name="id" hidden value={task.id} />
               <button

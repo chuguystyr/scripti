@@ -24,11 +24,13 @@ const Courses: React.FC<{
                 type="submit"
                 className="btn-filled block mx-auto w-10 mt-5"
               >
-                Add Courses
+                Add Course
               </button>
             </form>
           )}
-          {searchParams?.add && <SetCourse close={closeAddCourse} />}
+          {searchParams?.add && (
+            <SetCourse close={closeAddCourse} searchParams={searchParams} />
+          )}
         </>
       : <>
           <div className="flex flex-col md:flex-row items-center my-4">
@@ -51,7 +53,9 @@ const Courses: React.FC<{
                   Add Course
                 </button>
               </form>
-              {searchParams?.add && <SetCourse close={closeAddCourse} />}
+              {searchParams?.add && (
+                <SetCourse close={closeAddCourse} searchParams={searchParams} />
+              )}
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

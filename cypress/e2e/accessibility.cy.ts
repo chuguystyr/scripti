@@ -18,10 +18,8 @@ describe("testing app's public pages accessibility", () => {
 
 describe("testing app's private pages accessibility", () => {
   beforeEach(() => {
-    cy.login();
-    cy.waitUntil(() => cy.get("h2").contains("Hello,").should("exist"), {
-      timeout: 10000,
-      interval: 1000,
+    cy.fixture("users").then(({ correctUser: { username, password } }) => {
+      cy.login(username, password);
     });
   });
   it("testing home page's accessibility", () => {

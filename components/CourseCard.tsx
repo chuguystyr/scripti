@@ -13,6 +13,12 @@ const CourseCard: React.FC<{
   course: Course;
   searchParams?: { [key: string]: string | string[] | undefined };
 }> = ({ course, searchParams }) => {
+  let message = "";
+  switch (searchParams?.error) {
+    case "fields":
+      message = "Please fill in all required fields";
+      break;
+  }
   return (
     <div className="card w-fit h-fit p-4 bg-white shadow rounded">
       {!searchParams?.edit ?
@@ -81,6 +87,11 @@ const CourseCard: React.FC<{
             action={editCourse}
             className="z-20 absolute  flex flex-col bg-white rounded-md shadow-lg p-5 gap-3"
           >
+            {searchParams?.error && (
+              <p className="text-center w-[15vw] block mx-auto text-red-500">
+                {message}
+              </p>
+            )}
             <div className="grid grid-cols-2 gap-4">
               <input
                 className="text-center font-bold p-2 rounded border border-gray-300 w-full"

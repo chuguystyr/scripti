@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { cleanup, render, screen, fireEvent } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import TaskCard from "components/TaskCard";
 
 const mockTask = {
@@ -33,7 +33,14 @@ describe("TaskCard component", () => {
 
   it("should render task details", () => {
     expect(screen.getByText(mockTask.title)).toBeDefined();
-    expect(screen.getByText(mockTask.date)).toBeDefined();
+    expect(
+      screen.getByText(
+        new Date(mockTask.date).toLocaleString("ua-UK", {
+          day: "2-digit",
+          month: "2-digit",
+        }),
+      ),
+    ).toBeDefined();
     expect(screen.getByText(mockTask.course)).toBeDefined();
     expect(screen.getByText(mockTask.status)).toBeDefined();
     expect(screen.getByText(mockTask.description)).toBeDefined();
