@@ -1,5 +1,3 @@
-import { use } from "chai";
-
 describe("testing app's public pages accessibility", () => {
   it("testing main page's accessibility", () => {
     cy.visit("https://scripti-app.vercel.app/");
