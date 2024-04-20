@@ -15,11 +15,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Cache dependecies
+        id: cache
         uses: actions/cache@v4
         with:
-          path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Run unit tests
         run: npm test
@@ -30,19 +32,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Cache dependecies
+        id: cache
         uses: actions/cache@v4
         with:
-          path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
       - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+        run: npm install vercel@latest
       - name: Setup deployment environment
         id: step4
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
             echo environment=production >> $GITHUB_OUTPUT
           elif [[ ${{ github.ref }} == 'refs/heads/dev' ]]; then
-          echo environment=production >> $GITHUB_OUTPUT
+            echo environment=preview >> $GITHUB_OUTPUT
           fi
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=${{steps.step4.outputs.environment}} --token=${{ secrets.VERCEL_TOKEN }}
