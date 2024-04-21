@@ -10,7 +10,7 @@ const Main: React.FC<{}> = () => {
           alt="logo"
           width={512}
           height={206}
-          className="w-20 h-16 md:w-40 md:h-30 rounded-xl"
+          className="w-36 h-auto md:w-38 lg:w-40 rounded-xl"
           priority
         />
         <ul className="flex flex-row gap-5 md:gap-10 items-center">
