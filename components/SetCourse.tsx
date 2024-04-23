@@ -1,15 +1,15 @@
-import SubmitButton from "./SubmitButton";
-import { setCourse } from "server/actions/courses";
+import SubmitButton from "./SubmitButton"
+import { setCourse } from "server/actions/courses"
 
 const SetCourse: React.FC<{
-  close: () => never;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  close: () => never
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = ({ close, searchParams }) => {
-  let message = "";
+  let message = ""
   switch (searchParams?.error) {
     case "fields":
-      message = `Please fill in\nall required fields`;
-      break;
+      message = `Please fill in\nall required fields`
+      break
   }
   return (
     <div className="z-30 absolute bg-white rounded-md shadow-lg p-5 gap-3">
@@ -112,7 +112,7 @@ const SetCourse: React.FC<{
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default SetCourse;
+export default SetCourse

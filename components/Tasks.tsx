@@ -1,19 +1,19 @@
-import { getTasks, openAddTaskAtHome } from "server/actions/tasks";
-import TaskCard from "components/TaskCard";
-import SetTask from "components/SetTask";
-import { closeAddTaskAtHome } from "server/actions/tasks";
+import { getTasks, openAddTaskAtHome } from "server/actions/tasks"
+import TaskCard from "components/TaskCard"
+import SetTask from "components/SetTask"
+import { closeAddTaskAtHome } from "server/actions/tasks"
 
 const Tasks: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined };
-  setEditable: () => Promise<never>;
-  resetEditable: () => Promise<never>;
+  searchParams?: { [key: string]: string | string[] | undefined }
+  setEditable: () => Promise<never>
+  resetEditable: () => Promise<never>
 }> = async ({ searchParams, setEditable, resetEditable }) => {
-  const { tasks, done } = await getTasks();
+  const { tasks, done } = await getTasks()
   const statistics = {
     inProgress:
       tasks.filter((task) => task.status === "in progress").length ?? 0,
     waiting: tasks.filter((task) => task.status === "new").length ?? 0,
-  };
+  }
   return (
     <section id="right" className="md:w-1/2">
       <section id="statistics" className="flex md:flex-row gap-5 md:gap-10">
@@ -66,7 +66,7 @@ const Tasks: React.FC<{
         )}
       </section>
     </section>
-  );
-};
+  )
+}
 
-export default Tasks;
+export default Tasks

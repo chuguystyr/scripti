@@ -1,5 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from "next/image"
+import Link from "next/link"
 
 const Main: React.FC<{}> = () => {
   return (
@@ -55,7 +55,7 @@ const Main: React.FC<{}> = () => {
         </section>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default Main;
+export default Main

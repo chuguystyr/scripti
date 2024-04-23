@@ -1,17 +1,17 @@
-import TaskCard from "components/TaskCard";
-import SetTask from "components/SetTask";
+import TaskCard from "components/TaskCard"
+import SetTask from "components/SetTask"
 import {
   closeAddTask,
   getAllTasks,
   openAddTask,
   setTaskEditableAtTasks as setEditable,
   setTaskNonEditableAtTasks as resetEditable,
-} from "server/actions/tasks";
+} from "server/actions/tasks"
 
 const Tasks: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = async ({ searchParams }) => {
-  const tasks = await getAllTasks();
+  const tasks = await getAllTasks()
   return (
     <>
       {!tasks || (Array.isArray(tasks) && tasks.length === 0) ?
@@ -67,13 +67,13 @@ const Tasks: React.FC<{
                     setEditable={setEditable}
                     resetEditable={resetEditable}
                   />
-                );
+                )
               })}
           </div>
         </>
       }
     </>
-  );
-};
+  )
+}
 
-export default Tasks;
+export default Tasks

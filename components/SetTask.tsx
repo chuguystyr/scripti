@@ -1,9 +1,9 @@
-import SubmitButton from "components/SubmitButton";
-import { setTask } from "server/actions/tasks";
-import { FaWindowClose } from "react-icons/fa";
+import SubmitButton from "components/SubmitButton"
+import { setTask } from "server/actions/tasks"
+import { FaWindowClose } from "react-icons/fa"
 const SetTask: React.FC<{
-  close: () => void;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  close: () => void
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = ({ close, searchParams }) => {
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 w-full flex flex-col justify-center content-center">
@@ -74,7 +74,7 @@ const SetTask: React.FC<{
         <SubmitButton text="Save" />
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default SetTask;
+export default SetTask

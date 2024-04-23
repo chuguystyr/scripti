@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 const Loader: React.FC<{}> = () => {
   return (
@@ -6,7 +6,7 @@ const Loader: React.FC<{}> = () => {
       <span className="text-4xl mr-2 animate-spin">💡</span>
       <span className="scripti text-4xl animate-pulse">Scripti</span>
     </div>
-  );
-};
+  )
+}
 
-export default Loader;
+export default Loader

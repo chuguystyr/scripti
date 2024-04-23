@@ -1,19 +1,19 @@
-"use server";
+"use server"
 
-import dbConnect from "server/db";
-import User from "models/User";
-import { cookies } from "next/headers";
-import { protector } from "server/protection";
-import Schedule from "types/Schedule";
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import dbConnect from "server/db"
+import User from "models/User"
+import { cookies } from "next/headers"
+import { protector } from "server/protection"
+import Schedule from "types/Schedule"
+import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 export const getSchedule = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value);
-  const { id } = user;
-  const date = new Date();
-  const day = date.toLocaleDateString("uk-UA", { weekday: "long" });
+  const user = await protector(cookies().get("_scrpt")!.value)
+  const { id } = user
+  const date = new Date()
+  const day = date.toLocaleDateString("uk-UA", { weekday: "long" })
   try {
-    await dbConnect();
+    await dbConnect()
     // TODO: add types
     const result = await User.aggregate([
       { $match: { _id: id } },
@@ -69,22 +69,22 @@ export const getSchedule = async () => {
           },
         },
       },
-    ]);
+    ])
     if (result.length === 0) {
-      return { schedule: null };
+      return { schedule: null }
     } else {
-      return result[0].schedule;
+      return result[0].schedule
     }
   } catch (err) {
-    console.log(err);
-    throw new Error("Internal");
+    console.log(err)
+    throw new Error("Internal")
   }
-};
+}
 
 export const setSchedule = async (prevState: any, form: FormData) => {
   const formData = Object.fromEntries(form.entries()) as {
-    [key: string]: string;
-  };
+    [key: string]: string
+  }
   if (
     formData["from"] !== "" &&
     formData["to"] !== "" &&
@@ -96,48 +96,48 @@ export const setSchedule = async (prevState: any, form: FormData) => {
         year: "numeric",
       })
   ) {
-    const user = await protector(cookies().get("_scrpt")!.value);
+    const user = await protector(cookies().get("_scrpt")!.value)
     if ("message" in user) {
-      return { message: "Unathorised" };
+      return { message: "Unathorised" }
     }
-    const { id } = user;
-    const schedule = transformData(formData);
-    await dbConnect();
+    const { id } = user
+    const schedule = transformData(formData)
+    await dbConnect()
     try {
       const result = await User.findOneAndUpdate(
         { _id: id },
         { $push: { schedules: schedule } },
         { new: true },
-      );
+      )
       if (!result) {
-        return { error: "Something went wrong." };
+        return { error: "Something went wrong." }
       }
     } catch (error) {
-      return { error: "Something went wrong." };
+      return { error: "Something went wrong." }
     }
-    revalidatePath("/protected/home");
-    redirect("/protected/home");
+    revalidatePath("/protected/home")
+    redirect("/protected/home")
   } else {
-    return { error: "Invalid data." };
+    return { error: "Invalid data." }
   }
-};
+}
 
 function transformData(input: { [key: string]: string }) {
-  const schedule = JSON.parse(input.inputsData);
-  const transformed: { [key: string]: { [key: string]: {} } } = {};
+  const schedule = JSON.parse(input.inputsData)
+  const transformed: { [key: string]: { [key: string]: {} } } = {}
   Object.keys(schedule).forEach((key) => {
-    const match = key.match(/(^[a-zA-Z]+)(\d+)/);
+    const match = key.match(/(^[a-zA-Z]+)(\d+)/)
     if (match) {
-      const day = match[1];
-      const index = match[2];
+      const day = match[1]
+      const index = match[2]
       if (schedule[key].course === "") {
-        return;
+        return
       }
       if (!transformed[day]) {
-        transformed[day] = {};
+        transformed[day] = {}
       }
-      transformed[day][index] = schedule[key];
+      transformed[day][index] = schedule[key]
     }
-  });
-  return { ...transformed, to: input.to, from: input.from };
+  })
+  return { ...transformed, to: input.to, from: input.from }
 }

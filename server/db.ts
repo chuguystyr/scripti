@@ -1,29 +1,29 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
-let cachedDb: null | typeof mongoose = null;
+let cachedDb: null | typeof mongoose = null
 
 async function connectDB() {
-  const DATABASE_URL = process.env.DATABASE_URL;
+  const DATABASE_URL = process.env.DATABASE_URL
   if (!DATABASE_URL) {
-    throw new Error("Please define the DATABASE_URL environment variable");
+    throw new Error("Please define the DATABASE_URL environment variable")
   }
 
   if (cachedDb && mongoose.connection.readyState === 1) {
-    console.log("Using cached database instance");
-    return cachedDb;
+    console.log("Using cached database instance")
+    return cachedDb
   }
 
   try {
     const dbInstance = await mongoose.connect(DATABASE_URL!, {
       minPoolSize: 10,
       maxPoolSize: 25,
-    });
-    cachedDb = dbInstance;
-    console.log("New database connection established");
-    return dbInstance;
+    })
+    cachedDb = dbInstance
+    console.log("New database connection established")
+    return dbInstance
   } catch (error) {
-    console.error("Database connection failed", error);
+    console.error("Database connection failed", error)
   }
 }
 
-export default connectDB;
+export default connectDB

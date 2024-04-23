@@ -1,13 +1,13 @@
-import { FaEdit, FaWindowClose, FaCheckCircle } from "react-icons/fa";
-import { RiDeleteBin7Fill } from "react-icons/ri";
-import Task from "types/Task";
-import { checkTask, deleteTask, editTask } from "server/actions/tasks";
+import { FaEdit, FaWindowClose, FaCheckCircle } from "react-icons/fa"
+import { RiDeleteBin7Fill } from "react-icons/ri"
+import Task from "types/Task"
+import { checkTask, deleteTask, editTask } from "server/actions/tasks"
 
 const TaskCard: React.FC<{
-  task: Task;
-  searchParams?: { [key: string]: string | string[] | undefined };
-  setEditable: () => Promise<never>;
-  resetEditable: () => Promise<never>;
+  task: Task
+  searchParams?: { [key: string]: string | string[] | undefined }
+  setEditable: () => Promise<never>
+  resetEditable: () => Promise<never>
 }> = ({ task, searchParams, setEditable, resetEditable }) => {
   return (
     <div className="card w-fit h-fit">
@@ -110,7 +110,7 @@ const TaskCard: React.FC<{
         </>
       }
     </div>
-  );
-};
+  )
+}
 
-export default TaskCard;
+export default TaskCard

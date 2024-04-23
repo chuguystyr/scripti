@@ -1,24 +1,24 @@
-import Link from "next/link";
-import SubmitButton from "components/SubmitButton";
-import { signUp } from "server/actions/account";
+import Link from "next/link"
+import SubmitButton from "components/SubmitButton"
+import { signUp } from "server/actions/account"
 
 const SignUp: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = ({ searchParams }) => {
-  let message = "";
+  let message = ""
   switch (searchParams?.error) {
     case "fields":
-      message = `Please fill in\nall fields`;
-      break;
+      message = `Please fill in\nall fields`
+      break
     case "username":
-      message = `This username is already taken`;
-      break;
+      message = `This username is already taken`
+      break
     case "password":
-      message = `Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.`;
-      break;
+      message = `Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.`
+      break
     case "internal":
-      message = `Something went wrong.\nPlease try again`;
-      break;
+      message = `Something went wrong.\nPlease try again`
+      break
   }
   return (
     <main className="w-[100vw] h-[100vh] bg-zinc-300 flex items-center justify-center">
@@ -82,6 +82,6 @@ const SignUp: React.FC<{
         </p>
       </form>
     </main>
-  );
-};
-export default SignUp;
+  )
+}
+export default SignUp

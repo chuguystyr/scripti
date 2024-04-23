@@ -1,5 +1,5 @@
-import { FaEdit, FaWindowClose } from "react-icons/fa";
-import SubmitButton from "components/SubmitButton";
+import { FaEdit, FaWindowClose } from "react-icons/fa"
+import SubmitButton from "components/SubmitButton"
 import {
   getAccount,
   editAccount,
@@ -8,12 +8,12 @@ import {
   logout,
   openEdit,
   closeEdit,
-} from "server/actions/account";
+} from "server/actions/account"
 
 const Account: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = async ({ searchParams }) => {
-  const { name, username, email } = await getAccount();
+  const { name, username, email } = await getAccount()
   return (
     <div className="grid grid-cols-2">
       <div>
@@ -115,7 +115,7 @@ const Account: React.FC<{
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Account;
+export default Account

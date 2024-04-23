@@ -1,23 +1,23 @@
-import Link from "next/link";
-import SubmitButton from "components/SubmitButton";
-import { login } from "server/actions/account";
+import Link from "next/link"
+import SubmitButton from "components/SubmitButton"
+import { login } from "server/actions/account"
 const Login: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = ({ searchParams }) => {
-  let message = "";
+  let message = ""
   switch (searchParams?.error) {
     case "fields":
-      message = `Please fill in\nall fields`;
-      break;
+      message = `Please fill in\nall fields`
+      break
     case "credentials":
-      message = "Invalid credentials";
-      break;
+      message = "Invalid credentials"
+      break
     case "internal":
-      message = `Something went wrong.\nPlease try again`;
-      break;
+      message = `Something went wrong.\nPlease try again`
+      break
   }
   if (searchParams?.status === "signed up") {
-    message = `Thanks for signing up.\nEnjoy the app.`;
+    message = `Thanks for signing up.\nEnjoy the app.`
   }
   return (
     <main className="w-[100vw] h-[100vh] bg-zinc-300 flex items-center justify-center">
@@ -63,8 +63,8 @@ const Login: React.FC<{
         </p>
       </form>
     </main>
-  );
-};
-export default Login;
+  )
+}
+export default Login
 
 // TODO: client-side validation && its styling

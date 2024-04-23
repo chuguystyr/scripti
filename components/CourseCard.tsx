@@ -1,23 +1,23 @@
-import Link from "next/link";
-import { RiDeleteBin7Fill } from "react-icons/ri";
-import { FaEdit, FaWindowClose } from "react-icons/fa";
-import SubmitButton from "./SubmitButton";
-import Course from "types/Course";
+import Link from "next/link"
+import { RiDeleteBin7Fill } from "react-icons/ri"
+import { FaEdit, FaWindowClose } from "react-icons/fa"
+import SubmitButton from "./SubmitButton"
+import Course from "types/Course"
 import {
   editCourse,
   deleteCourse,
   openEditCourse,
   closeEditCourse,
-} from "server/actions/courses";
+} from "server/actions/courses"
 const CourseCard: React.FC<{
-  course: Course;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  course: Course
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = ({ course, searchParams }) => {
-  let message = "";
+  let message = ""
   switch (searchParams?.error) {
     case "fields":
-      message = "Please fill in all required fields";
-      break;
+      message = "Please fill in all required fields"
+      break
   }
   return (
     <div className="card w-fit h-fit p-4 bg-white shadow rounded">
@@ -149,7 +149,7 @@ const CourseCard: React.FC<{
         </>
       }
     </div>
-  );
-};
+  )
+}
 
-export default CourseCard;
+export default CourseCard

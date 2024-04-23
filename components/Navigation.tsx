@@ -1,11 +1,11 @@
-"use client";
-import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
-import Logo from "public/Logo.png";
+"use client"
+import Link from "next/link"
+import Image from "next/image"
+import { useState } from "react"
+import Logo from "public/Logo.png"
 
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <nav className="flex mb-5">
       <Link href="/protected/home">
@@ -53,6 +53,6 @@ const Navigation = () => {
         </ul>
       </div>
     </nav>
-  );
-};
-export default Navigation;
+  )
+}
+export default Navigation

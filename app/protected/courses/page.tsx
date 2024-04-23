@@ -1,12 +1,12 @@
-import CourseCard from "components/CourseCard";
-import SetCourse from "components/SetCourse";
-import { getCourses } from "server/actions/courses";
-import { openAddCourse, closeAddCourse } from "server/actions/courses";
+import CourseCard from "components/CourseCard"
+import SetCourse from "components/SetCourse"
+import { getCourses } from "server/actions/courses"
+import { openAddCourse, closeAddCourse } from "server/actions/courses"
 
 const Courses: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = async ({ searchParams }) => {
-  const courses = await getCourses();
+  const courses = await getCourses()
   return (
     <>
       {Array.isArray(courses) && courses.length === 0 ?
@@ -68,13 +68,13 @@ const Courses: React.FC<{
                     course={course}
                     searchParams={searchParams}
                   />
-                );
+                )
               })}
           </div>
         </>
       }
     </>
-  );
-};
+  )
+}
 
-export default Courses;
+export default Courses

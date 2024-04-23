@@ -1,11 +1,11 @@
-"use client";
-import SubmitButton from "components/SubmitButton";
-import { useSetSchedule } from "hooks/useSetSchedule";
+"use client"
+import SubmitButton from "components/SubmitButton"
+import { useSetSchedule } from "hooks/useSetSchedule"
 const SetSchedule: React.FC<{}> = () => {
   const {
     data: { inputs, days, times, suggestions, currentField, blurred },
     actions: { handleInputChange, handleInputFocus, setBlurred, formAction },
-  } = useSetSchedule();
+  } = useSetSchedule()
   return (
     <>
       <form action={formAction}>
@@ -46,10 +46,10 @@ const SetSchedule: React.FC<{}> = () => {
         <SubmitButton text="Submit" />
       </form>
     </>
-  );
-};
+  )
+}
 
-export default SetSchedule;
+export default SetSchedule
 
 const TableRows = ({
   days,
@@ -61,14 +61,14 @@ const TableRows = ({
   blurred,
   setBlurred,
 }: {
-  days: string[];
-  times: string[];
-  suggestions: string[];
-  handleInputChange: Function;
-  handleInputFocus: Function;
-  currentField: string;
-  blurred: string;
-  setBlurred: Function;
+  days: string[]
+  times: string[]
+  suggestions: string[]
+  handleInputChange: Function
+  handleInputFocus: Function
+  currentField: string
+  blurred: string
+  setBlurred: Function
 }) => {
   return times.map((time, index) => {
     return (
@@ -141,9 +141,9 @@ const TableRows = ({
                 )}
               </div>
             </td>
-          );
+          )
         })}
       </tr>
-    );
-  });
-};
+    )
+  })
+}

@@ -1,20 +1,20 @@
-"use server";
+"use server"
 
-import dbConnect from "server/db";
-import User from "models/User";
-import { cookies } from "next/headers";
-import { protector } from "server/protection";
-import { ObjectId } from "mongodb";
-import Task from "types/Task";
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import { getCourses } from "./courses";
-import { get } from "node_modules/cypress/types/lodash";
+import dbConnect from "server/db"
+import User from "models/User"
+import { cookies } from "next/headers"
+import { protector } from "server/protection"
+import { ObjectId } from "mongodb"
+import Task from "types/Task"
+import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
+import { getCourses } from "./courses"
+import { get } from "node_modules/cypress/types/lodash"
 
 export const getTasks = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value);
-  const { id } = user;
-  await dbConnect();
+  const user = await protector(cookies().get("_scrpt")!.value)
+  const { id } = user
+  await dbConnect()
   try {
     const result: { tasks: Task[]; done: number }[] = await User.aggregate([
       { $match: { _id: new ObjectId(id) } },
@@ -39,112 +39,112 @@ export const getTasks = async () => {
           },
         },
       },
-    ]);
-    return result[0];
+    ])
+    return result[0]
   } catch (error) {
-    console.log(error);
-    throw new Error("Internal");
+    console.log(error)
+    throw new Error("Internal")
   }
-};
+}
 
 export const getAllTasks = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value);
-  const { id } = user;
-  await dbConnect();
+  const user = await protector(cookies().get("_scrpt")!.value)
+  const { id } = user
+  await dbConnect()
   try {
-    const result = await User.findOne({ _id: id }, { _id: 0, tasks: 1 });
+    const result = await User.findOne({ _id: id }, { _id: 0, tasks: 1 })
     if (result) {
-      return result.tasks as Task[];
+      return result.tasks as Task[]
     } else {
-      return { message: "No tasks found" };
+      return { message: "No tasks found" }
     }
   } catch (error) {
-    return { error: "Something went wrong." };
+    return { error: "Something went wrong." }
   }
-};
+}
 
 export const openAddTask = async () => {
-  redirect("/protected/tasks?add=true");
-};
+  redirect("/protected/tasks?add=true")
+}
 
 export const closeAddTask = async () => {
-  redirect("/protected/tasks");
-};
+  redirect("/protected/tasks")
+}
 
 export const openAddTaskAtHome = async () => {
-  redirect("/protected/home?add=true");
-};
+  redirect("/protected/home?add=true")
+}
 
 export const closeAddTaskAtHome = async () => {
-  redirect("/protected/home");
-};
+  redirect("/protected/home")
+}
 
 export const setTask = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value);
+  const user = await protector(cookies().get("_scrpt")!.value)
   if ("message" in user) {
-    return { message: "Unathorised" };
+    return { message: "Unathorised" }
   }
-  const { id } = user;
-  const data = Object.fromEntries(form.entries());
+  const { id } = user
+  const data = Object.fromEntries(form.entries())
   if (!data.title || !data.date || !data.course) {
-    redirect("/protected/tasks?add=true&error=fields");
+    redirect("/protected/tasks?add=true&error=fields")
   } else {
-    const courses = await getCourses();
+    const courses = await getCourses()
     if (Array.isArray(courses)) {
-      const course = courses.find((course) => course.title === data.course);
+      const course = courses.find((course) => course.title === data.course)
       if (!course) {
-        redirect("/protected/tasks?add=true&error=course");
+        redirect("/protected/tasks?add=true&error=course")
       }
     } else {
-      redirect("/protected/tasks?add=true&error=course");
+      redirect("/protected/tasks?add=true&error=course")
     }
     if (new Date(data.date.toString()) < new Date()) {
-      redirect("/protected/tasks?add=true&error=date");
+      redirect("/protected/tasks?add=true&error=date")
     }
   }
-  data.status = "new";
-  data.id = Math.random().toString().slice(2, 12);
-  await dbConnect();
+  data.status = "new"
+  data.id = Math.random().toString().slice(2, 12)
+  await dbConnect()
   try {
     const result = await User.findOneAndUpdate(
       { _id: id },
       { $push: { tasks: data } },
       { new: true },
-    );
+    )
     if (!result) {
-      return { message: "Invalid credentials" };
+      return { message: "Invalid credentials" }
     }
-    revalidatePath("/protected/home");
-    revalidatePath("/protected/tasks");
+    revalidatePath("/protected/home")
+    revalidatePath("/protected/tasks")
   } catch (error) {
-    console.log(error);
-    return { message: "Something went wrong" };
+    console.log(error)
+    return { message: "Something went wrong" }
   }
-  await closeAddTask();
-};
+  await closeAddTask()
+}
 
 export const setTaskEditableAtHome = async () => {
-  redirect("/protected/home?edit=true");
-};
+  redirect("/protected/home?edit=true")
+}
 
 export const setTaskNonEditableAtHome = async () => {
-  redirect("/protected/home");
-};
+  redirect("/protected/home")
+}
 
 export const closeEditTask = async () => {
-  redirect("/protected/tasks");
-};
+  redirect("/protected/tasks")
+}
 
 export const checkTask = async (form: FormData) => {
-  const id = form.get("id");
-  const user = await protector(cookies().get("_scrpt")!.value);
+  const id = form.get("id")
+  const user = await protector(cookies().get("_scrpt")!.value)
   if ("message" in user) {
-    return { message: "Unathorised" };
+    return { message: "Unathorised" }
   }
   if (!user || !id) {
-    return { message: "Bad request" };
+    return { message: "Bad request" }
   }
-  await dbConnect();
+  await dbConnect()
   try {
     const result = await User.findOneAndUpdate(
       { _id: user.id, "tasks.id": id },
@@ -154,57 +154,57 @@ export const checkTask = async (form: FormData) => {
         },
       },
       { new: true },
-    );
+    )
     if (!result) {
-      return { message: "Invalid credentials" };
+      return { message: "Invalid credentials" }
     }
-    revalidatePath("/protected/home");
-    revalidatePath("/protected/tasks");
+    revalidatePath("/protected/home")
+    revalidatePath("/protected/tasks")
   } catch (error) {
-    console.log(error);
-    return { message: "Something went wrong" };
+    console.log(error)
+    return { message: "Something went wrong" }
   }
-};
+}
 
 export const deleteTask = async (form: FormData) => {
-  const id = form.get("id");
-  const user = await protector(cookies().get("_scrpt")!.value);
+  const id = form.get("id")
+  const user = await protector(cookies().get("_scrpt")!.value)
   if ("message" in user) {
-    return { message: "Unathorised" };
+    return { message: "Unathorised" }
   }
   if (!user || !id) {
-    console.log("Bad request");
-    return { message: "Bad request" };
+    console.log("Bad request")
+    return { message: "Bad request" }
   }
-  await dbConnect();
+  await dbConnect()
   try {
     const result = await User.findOneAndUpdate(
       { _id: user.id },
       { $pull: { tasks: { id } } },
-    );
+    )
     if (!result) {
-      return { message: "Invalid credentials" };
+      return { message: "Invalid credentials" }
     }
-    revalidatePath("/protected/home");
-    revalidatePath("/protected/tasks");
+    revalidatePath("/protected/home")
+    revalidatePath("/protected/tasks")
   } catch (error) {
-    console.log(error);
-    return { message: "Something went wrong" };
+    console.log(error)
+    return { message: "Something went wrong" }
   }
-};
+}
 
 export const editTask = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value);
+  const user = await protector(cookies().get("_scrpt")!.value)
   if ("message" in user) {
-    return { message: "Unathorised" };
+    return { message: "Unathorised" }
   }
-  const { id } = user;
-  const data = Object.fromEntries(form.entries());
-  console.log("Data object", data);
+  const { id } = user
+  const data = Object.fromEntries(form.entries())
+  console.log("Data object", data)
   if (!data.id || !data.title || !data.date || !data.course || !data.status) {
-    redirect("/protected/tasks?edit=true&error=fields");
+    redirect("/protected/tasks?edit=true&error=fields")
   }
-  await dbConnect();
+  await dbConnect()
   try {
     const result = await User.findOneAndUpdate(
       { _id: id, "tasks.id": data.id },
@@ -214,23 +214,23 @@ export const editTask = async (form: FormData) => {
         },
       },
       { new: true },
-    );
+    )
     if (!result) {
-      return { message: "Invalid credentials" };
+      return { message: "Invalid credentials" }
     }
   } catch (error) {
-    console.log(error);
-    return { message: "Something went wrong" };
+    console.log(error)
+    return { message: "Something went wrong" }
   }
-  revalidatePath("/protected/home");
-  revalidatePath("/protected/tasks");
-  await closeEditTask();
-};
+  revalidatePath("/protected/home")
+  revalidatePath("/protected/tasks")
+  await closeEditTask()
+}
 
 export const setTaskEditableAtTasks = async () => {
-  redirect("/protected/tasks?edit=true");
-};
+  redirect("/protected/tasks?edit=true")
+}
 
 export const setTaskNonEditableAtTasks = async () => {
-  redirect("/protected/tasks");
-};
+  redirect("/protected/tasks")
+}

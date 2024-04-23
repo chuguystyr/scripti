@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "next/link"
 
 const NotFoundPage: React.FC<{}> = () => {
   return (
@@ -11,7 +11,7 @@ const NotFoundPage: React.FC<{}> = () => {
         Back to Home
       </Link>
     </main>
-  );
-};
+  )
+}
 
-export default NotFoundPage;
+export default NotFoundPage
