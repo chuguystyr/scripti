@@ -35,16 +35,18 @@ const Tasks: React.FC<{
       )}
       <section className="mt-10 h-[55vh] flex flex-wrap gap-3" id="tasks">
         {tasks && tasks.length === 0 && (
-          <p className="card h-fit block mx-auto text-center">
-            Doddy is free!
-            <br />
-            If you need to add a task please click{" "}
-            <form action={openAddTaskAtHome}>
+          <div className="card h-fit block mx-auto text-center">
+            <p className="inline">
+              Doddy is free!
+              <br />
+              If you need to add a task please click{" "}
+            </p>
+            <form action={openAddTaskAtHome} className="inline">
               <button className="font-semibold hover:underline underline-offset-4">
                 here
               </button>
             </form>
-          </p>
+          </div>
         )}
         {tasks &&
           tasks.length !== 0 &&
