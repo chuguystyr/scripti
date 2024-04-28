@@ -17,15 +17,15 @@ const Tasks: React.FC<{
   return (
     <section id="right" className="md:w-1/2">
       <section id="statistics" className="flex md:flex-row gap-5 md:gap-10">
-        <p className="card text-center w-1/3 md:h-[15vh] md:w-[15vw]">
+        <p className="card text-center w-1/3 md:h-[15vh]">
           New <br />
           {statistics.waiting}
         </p>
-        <p className="card text-center w-1/3 md:h-[15vh] md:w-[15vw]">
+        <p className="card text-center w-1/3 md:h-[15vh]">
           In progress <br />
           {statistics.inProgress}
         </p>
-        <p className="card text-center w-1/3 md:h-[15vh] md:w-[15vw]">
+        <p className="card text-center w-1/3 md:h-[15vh]">
           Done <br />
           {done}
         </p>

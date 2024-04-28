@@ -17,7 +17,7 @@ const Home: React.FC<{
           className="flex flex-col md:flex-row justify-between"
           id="greeting"
         >
-          <div className="card h-[15vh] w-fit">
+          <div className="card h-[15vh] w-full mb-4 md:w-fit md:mb-0 md:mr-4">
             <Name />
             <DateTime />
           </div>
