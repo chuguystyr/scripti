@@ -19,11 +19,8 @@ const Courses: React.FC<{
             </p>
           )}
           {!searchParams?.add && (
-            <form action={openAddCourse}>
-              <button
-                type="submit"
-                className="btn-filled block mx-auto w-10 mt-5"
-              >
+            <form action={openAddCourse} className="flex justify-center">
+              <button type="submit" className="btn-outlined">
                 Add Course
               </button>
             </form>

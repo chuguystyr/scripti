@@ -22,8 +22,8 @@ const Tasks: React.FC<{
                 Looks like you&apos;re first time here. Let&apos;s add some
                 tasks
               </p>
-              <form action={openAddTask} className="block mx-auto mt-5">
-                <button type="submit" className="btn-filled">
+              <form action={openAddTask} className="flex justify-center">
+                <button type="submit" className="btn-outlined">
                   Add Task
                 </button>
               </form>
