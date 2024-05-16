@@ -10,7 +10,7 @@
     "test": "vitest",
     "lint": "next lint",
     "format": "prettier --write .",
-    "prepare": "husky install",
+    "prepare": "husky",
     "e2e": "cypress run --headless --browser chrome"
   },
   "dependencies": {
