@@ -15,7 +15,7 @@ const Account: React.FC<{
 }> = async ({ searchParams }) => {
   const { name, username, email } = await getAccount()
   return (
-    <div className="grid grid-cols-2">
+    <div className="md:grid md:grid-cols-2">
       <div>
         <h1 className="text-2xl font-bold my-4 text-center">Account info</h1>
         {searchParams?.edit ?
@@ -66,7 +66,7 @@ const Account: React.FC<{
         <h1 className="text-2xl font-bold my-4 text-center">Account Actions</h1>
         <div className="mx-auto">
           <form
-            className="flex flex-col w-[20vw] mx-auto mb-4 rounded-md p-2 gap-4 bg-white"
+            className="flex flex-col w-fit mx-auto mb-4 rounded-md p-2 gap-4 bg-white"
             action={changePassword}
           >
             {searchParams?.error === "no-match" && (
