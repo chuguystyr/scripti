@@ -32,7 +32,7 @@ export const openAddCourse = () => {
   redirect("/protected/courses?add=true")
 }
 
-export const closeAddCourse = () => {
+export const closeAddCourse = async () => {
   redirect("/protected/courses")
 }
 
@@ -67,7 +67,7 @@ export const setCourse = async (form: FormData) => {
     console.log(error)
     return { message: "Something went wrong" }
   }
-  closeAddCourse()
+  await closeAddCourse()
 }
 
 export const editCourse = async (form: FormData) => {
