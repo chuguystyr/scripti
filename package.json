@@ -11,7 +11,8 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "prepare": "husky",
-    "e2e": "cypress run --headless --browser chrome"
+    "cy:local": "cypress open --env type-of-environment=local",
+    "e2e": "cypress run --env type-of-environment=development --headless --browser chrome"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -73,7 +73,7 @@ describe("testing account functionality", () => {
       cy.goToAccountPage()
     })
     cy.get("button").contains("Log out").click()
-    cy.url().should("eq", "https://scripti-app.vercel.app/")
+    cy.url().should("eq", Cypress.env("baseUrl"))
   })
   it("should delete user's account, (#AF6)", () => {
     cy.fixture("users").then(({ correctUser: { username }, newPassword }) => {
@@ -81,8 +81,8 @@ describe("testing account functionality", () => {
       cy.goToAccountPage()
       cy.get("button").contains("Delete account").click()
 
-      cy.url().should("eq", "https://scripti-app.vercel.app/")
-      cy.visit("https://scripti-app.vercel.app/login")
+      cy.url().should("eq", Cypress.env("baseUrl"))
+      cy.visit("/login")
       cy.get("input[name='username']").type(username)
       cy.get("input[name='password']").type(newPassword)
       cy.get("button[type='submit']").contains("Log in").click()

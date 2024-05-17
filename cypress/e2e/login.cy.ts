@@ -1,6 +1,6 @@
 describe("testing login functionality", () => {
   beforeEach(() => {
-    cy.visit("https://scripti-app.vercel.app/login")
+    cy.visit("/login")
   })
   it("should login a user when valid data is provided, (#LF1)", () => {
     cy.fixture("users").then(({ correctUser }) => {

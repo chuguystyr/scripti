@@ -1,16 +1,16 @@
 describe("testing app's public pages accessibility", () => {
   it("testing main page's accessibility", () => {
-    cy.visit("https://scripti-app.vercel.app/")
+    cy.visit("/")
     cy.injectAxe()
     cy.checkA11y()
   })
   it("testing singup page's accessibility", () => {
-    cy.visit("https://scripti-app.vercel.app/signup")
+    cy.visit("/signup")
     cy.injectAxe()
     cy.checkA11y()
   })
   it("testing login page's accessibility", () => {
-    cy.visit("https://scripti-app.vercel.app/login")
+    cy.visit("/login")
     cy.injectAxe()
     cy.checkA11y()
   })
