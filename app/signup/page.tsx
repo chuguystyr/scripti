@@ -38,8 +38,6 @@ const SignUp: React.FC<{
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder="John"
           autoComplete="on"
-          pattern="[A-Za-z]{2,20}"
-          required
         />
         <label htmlFor="username">Username</label>
         <input
@@ -49,8 +47,6 @@ const SignUp: React.FC<{
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder="john_smith"
           autoComplete="on"
-          pattern="[A-Za-z0-9_]{3,20}"
-          required
         />
         <label htmlFor="email">Email</label>
         <input
@@ -60,7 +56,6 @@ const SignUp: React.FC<{
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder="john_smith@gmail.com"
           autoComplete="on"
-          required
         />
         <label htmlFor="password">Password</label>
         <input
@@ -70,8 +65,6 @@ const SignUp: React.FC<{
           className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
           placeholder=""
           autoComplete="on"
-          pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}"
-          required
         />
         <SubmitButton text="Sign Up" />
         <p className="text-center text-sm">
