@@ -2,7 +2,7 @@ import SubmitButton from "./SubmitButton"
 import { setCourse } from "server/actions/courses"
 
 const SetCourse: React.FC<{
-  close: () => never
+  close: () => Promise<never>
   searchParams?: { [key: string]: string | string[] | undefined }
 }> = ({ close, searchParams }) => {
   let message = ""

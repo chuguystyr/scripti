@@ -43,11 +43,11 @@ const Tasks: React.FC<{
               placeholder="Search"
             />
             <div className="w-[20vw] flex gap-3 mt-3 md:mt-0">
-              <button type="button" className="btn-filled">
+              <button type="button" className="btn-outlined">
                 Search
               </button>
               <form action={openAddTask}>
-                <button type="submit" className="btn-filled">
+                <button type="submit" className="btn-outlined">
                   Add Task
                 </button>
               </form>

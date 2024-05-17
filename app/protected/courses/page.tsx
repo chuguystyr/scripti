@@ -38,15 +38,12 @@ const Courses: React.FC<{
               className="py-2 px-4 rounded-md border border-gray-300 w-full mr-5 md:w-auto"
               placeholder="Search"
             />
-            <div className="w-[20vw] flex gap-3 mt-3 md:mt-0">
-              <button type="button" className="btn-filled">
+            <div className="flex gap-3 mt-3 md:mt-0">
+              <button type="button" className="btn-outlined">
                 Search
               </button>
               <form action={openAddCourse}>
-                <button
-                  type="submit"
-                  className="btn-filled w-full hover:w-[120%]"
-                >
+                <button type="submit" className="btn-outlined">
                   Add Course
                 </button>
               </form>
