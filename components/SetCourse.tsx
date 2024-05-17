@@ -12,7 +12,7 @@ const SetCourse: React.FC<{
       break
   }
   return (
-    <div className="z-30 absolute bg-white rounded-md shadow-lg p-5 gap-3">
+    <div className="w-fit bg-white rounded-md shadow-lg p-5 gap-3">
       <form action={setCourse}>
         {searchParams?.error && (
           <p className="text-center w-[15vw] block mx-auto text-red-500">
