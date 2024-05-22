@@ -15,7 +15,7 @@ const Account: React.FC<{
 }> = async ({ searchParams }) => {
   const { name, username, email } = await getAccount()
   return (
-    <div className="md:grid md:grid-cols-2">
+    <main className="md:grid md:grid-cols-2">
       <div>
         <h1 className="text-2xl font-bold my-4 text-center">Account info</h1>
         {searchParams?.edit ?
@@ -52,7 +52,7 @@ const Account: React.FC<{
           </>
         : <div className="mx-auto card flex flex-col w-fit">
             <form action={openEdit} className="flex justify-end">
-              <button type="submit">
+              <button type="submit" aria-label="edit">
                 <FaEdit className="self-end hover:cursor-pointer" />
               </button>
             </form>
@@ -114,7 +114,7 @@ const Account: React.FC<{
           </form>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
 

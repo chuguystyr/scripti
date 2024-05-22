@@ -8,7 +8,8 @@ const Courses: React.FC<{
 }> = async ({ searchParams }) => {
   const courses = await getCourses()
   return (
-    <>
+    <main>
+      <h1 className="sr-only">Courses page</h1>
       {Array.isArray(courses) && courses.length === 0 ?
         <>
           {!searchParams?.add && (
@@ -67,7 +68,7 @@ const Courses: React.FC<{
           </div>
         </>
       }
-    </>
+    </main>
   )
 }
 

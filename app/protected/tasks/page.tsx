@@ -13,7 +13,8 @@ const Tasks: React.FC<{
 }> = async ({ searchParams }) => {
   const tasks = await getAllTasks()
   return (
-    <>
+    <main>
+      <h1 className="sr-only">Tasks page</h1>
       {!tasks || (Array.isArray(tasks) && tasks.length === 0) ?
         <>
           {!searchParams?.add && (
@@ -72,7 +73,7 @@ const Tasks: React.FC<{
           </div>
         </>
       }
-    </>
+    </main>
   )
 }
 

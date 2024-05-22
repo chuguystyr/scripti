@@ -7,7 +7,7 @@ import Logo from "public/Logo.png"
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false)
   return (
-    <nav className="flex mb-5 justify-between">
+    <nav className="flex mb-5 justify-between" role="navigation">
       <Link href="/protected/home">
         <Image
           src={Logo}

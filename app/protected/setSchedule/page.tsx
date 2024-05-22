@@ -7,7 +7,8 @@ const SetSchedule: React.FC<{}> = () => {
     actions: { handleInputChange, handleInputFocus, setBlurred, formAction },
   } = useSetSchedule()
   return (
-    <>
+    <main>
+      <h1 className="sr-only">Set schedule page</h1>
       <form action={formAction}>
         <input name="from" className="input" placeholder="from: 30.10.2023" />
         <input name="to" className="input ml-5" placeholder="to: 10.11.2023" />
@@ -45,7 +46,7 @@ const SetSchedule: React.FC<{}> = () => {
         </table>
         <SubmitButton text="Submit" />
       </form>
-    </>
+    </main>
   )
 }
 
