@@ -115,7 +115,7 @@ export const editCourse = async (form: FormData) => {
     console.log(error)
     return { message: "Something went wrong" }
   }
-  closeEditCourse()
+  await closeEditCourse()
 }
 
 export const deleteCourse = async (form: FormData) => {
@@ -147,6 +147,6 @@ export const openEditCourse = () => {
   redirect("/protected/courses?edit=true")
 }
 
-export const closeEditCourse = () => {
+export const closeEditCourse = async () => {
   redirect("/protected/courses")
 }
