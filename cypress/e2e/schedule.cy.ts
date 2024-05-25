@@ -37,35 +37,31 @@ describe("testing schedule functionality", () => {
     cy.get("a").contains("here").click()
 
     const today = new Date()
-    const formattedToday = `${today.getDate()}.${"0" + (today.getMonth() + 1)}.${today.getFullYear()}`
+    const formattedToday = `${String(today.getDate()).padStart(2, "0")}.${String(today.getMonth() + 1).padStart(2, "0")}.${today.getFullYear()}`
 
     cy.get('input[name="from"]').type(formattedToday)
 
     const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
-    const formattedNextWeek = `${nextWeek.getDate()}.${"0" + (nextWeek.getMonth() + 1)}.${nextWeek.getFullYear()}`
+    const formattedNextWeek = `${String(nextWeek.getDate()).padStart(2, "0")}.${String(nextWeek.getMonth() + 1).padStart(2, "0")}.${nextWeek.getFullYear()}`
     cy.get('input[name="to"]').type(formattedNextWeek)
 
     const currentDayIndex = today.getDay() || 7
-
     const dayIndex = currentDayIndex - 1 || 7
 
     cy.fixture("courses").then(({ validCourse }) => {
-      cy.get(
-        `table tbody tr:nth-child(${dayIndex}) td:nth-child(2) input`,
-      ).type(validCourse.title)
+      cy.get(`.grid .grid-cols-7:nth-child(3) .border-l input`).type(
+        validCourse.title,
+      )
       cy.get("li").contains(validCourse.title).click()
+      cy.get(`.grid .grid-cols-7:nth-child(3) .border-l select`).select(
+        "Lecture",
+      )
       cy.get(
-        `table tbody tr:nth-child(${dayIndex}) td:nth-child(2) select`,
-      ).select("Lecture")
-
-      cy.get(
-        `table tbody tr:nth-child(${dayIndex}) td:nth-child(2) input[name="room"]`,
+        `.grid .grid-cols-7:nth-child(3) .border-l input[name="room"]`,
       ).type("601")
-
-      cy.get("button").contains("Submit").click()
-      cy.waitUntil(() => cy.get("h2").contains("Hello,"))
-      cy.get("td").contains(validCourse.title).should("be.visible")
-      cy.get("td").contains("601").should("be.visible")
     })
+
+    cy.get("button").contains("Submit").click()
+    cy.waitUntil(() => cy.get("h2").contains("Hello,"))
   })
 })

@@ -1,6 +1,6 @@
 import { getCourses } from "server/actions/courses"
 import { setSchedule } from "server/actions/schedule"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Course from "types/Course"
 import { useFormState } from "react-dom"
@@ -9,11 +9,19 @@ import { useDebounce } from "./useDebounce"
 export const useSetSchedule = () => {
   const router = useRouter()
   const [state, formAction] = useFormState(setSchedule, { message: "" })
-  if (state.message?.length! > 0) router.push("/protected/home")
-
   const [courses, setCourses] = useState<Course[] | null>(null)
-  if (Array.isArray(courses) && courses.length === 0)
-    router.push("/protected/courses?message=no courses")
+
+  useEffect(() => {
+    if (state.message?.length! > 0) {
+      router.push("/protected/home")
+    }
+  }, [state.message, router])
+
+  useEffect(() => {
+    if (Array.isArray(courses) && courses.length === 0) {
+      router.push("/protected/courses?message=no courses")
+    }
+  }, [courses, router])
 
   const times = [
     "10:00  11:20",
@@ -66,7 +74,10 @@ export const useSetSchedule = () => {
     getData()
   }, [])
 
-  const titles = courses?.map((course) => course.title)
+  const titles = useMemo(
+    () => courses?.map((course) => course.title) || [],
+    [courses],
+  )
   const [currentField, setCurrentField] = useState<string>("")
   const [blurred, setBlurred] = useState<string>("")
   const handleInputFocus = (fieldName: string) => {
@@ -82,9 +93,17 @@ export const useSetSchedule = () => {
       const filteredSuggestions = titles.filter((title) =>
         title.toLowerCase().includes(debouncedCurrentFieldValue.toLowerCase()),
       )
-      setSuggestions(filteredSuggestions)
+      setSuggestions((prevSuggestions) => {
+        if (
+          JSON.stringify(prevSuggestions) !==
+          JSON.stringify(filteredSuggestions)
+        ) {
+          return filteredSuggestions
+        }
+        return prevSuggestions
+      })
     }
-  }, [inputs, currentField, debouncedCurrentFieldValue, titles])
+  }, [debouncedCurrentFieldValue, titles])
 
   return {
     data: { inputs, days, times, suggestions, currentField, blurred },
