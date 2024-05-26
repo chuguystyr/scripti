@@ -85,16 +85,21 @@ export const setSchedule = async (prevState: any, form: FormData) => {
   const formData = Object.fromEntries(form.entries()) as {
     [key: string]: string
   }
+  const fromDate = new Date(
+    Number(formData["from"].split(".")[2]),
+    Number(formData["from"].split(".")[1]) - 1,
+    Number(formData["from"].split(".")[0]),
+  )
+  const toDate = new Date(
+    Number(formData["to"].split(".")[2]),
+    Number(formData["to"].split(".")[1]) - 1,
+    Number(formData["to"].split(".")[0]),
+  )
   if (
     formData["from"] !== "" &&
     formData["to"] !== "" &&
-    formData["from"] < formData["to"] &&
-    formData["from"] >=
-      new Date().toLocaleDateString("de-DE", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      })
+    fromDate < toDate &&
+    fromDate.getDay() >= new Date().getDay()
   ) {
     const user = await protector(cookies().get("_scrpt")!.value)
     if ("message" in user) {

@@ -45,20 +45,11 @@ describe("testing schedule functionality", () => {
     const formattedNextWeek = `${String(nextWeek.getDate()).padStart(2, "0")}.${String(nextWeek.getMonth() + 1).padStart(2, "0")}.${nextWeek.getFullYear()}`
     cy.get('input[name="to"]').type(formattedNextWeek)
 
-    const currentDayIndex = today.getDay() || 7
-    const dayIndex = currentDayIndex - 1 || 7
-
     cy.fixture("courses").then(({ validCourse }) => {
-      cy.get(`.grid .grid-cols-7:nth-child(3) .border-l input`).type(
-        validCourse.title,
-      )
+      cy.get(`input[name="Monday1"]`).type(validCourse.title)
       cy.get("li").contains(validCourse.title).click()
-      cy.get(`.grid .grid-cols-7:nth-child(3) .border-l select`).select(
-        "Lecture",
-      )
-      cy.get(
-        `.grid .grid-cols-7:nth-child(3) .border-l input[name="room"]`,
-      ).type("601")
+      cy.get(`select`).select("Lecture")
+      cy.get(`input[name="room"]`).type("601")
     })
 
     cy.get("button").contains("Submit").click()
