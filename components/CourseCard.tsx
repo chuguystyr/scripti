@@ -36,7 +36,7 @@ const CourseCard: React.FC<{
               </button>
             </form>
             <form action={deleteCourse} className="cursor-pointer">
-              <input type="text" name="id" value={course.id} hidden />
+              <input type="text" name="id" value={course._id} hidden />
               <button type="submit">
                 <RiDeleteBin7Fill />
               </button>
@@ -142,7 +142,7 @@ const CourseCard: React.FC<{
                 defaultValue={course.notes}
                 name="notes"
               ></textarea>
-              <input type="text" name="id" value={course.id} hidden />
+              <input type="text" name="id" value={course._id} hidden />
               <SubmitButton text="Save" />
             </div>
           </form>

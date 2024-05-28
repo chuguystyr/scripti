@@ -3,9 +3,11 @@ import dbConnect from "server/db"
 import { cookies } from "next/headers"
 import { protector } from "server/protection"
 import User from "models/User"
-import Course from "types/Course"
+import Course from "models/Course"
+import ICourse from "types/Course"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
+import { ObjectId } from "mongodb"
 
 export const getCourses = async () => {
   const user = await protector(cookies().get("_scrpt")!.value)
@@ -15,14 +17,13 @@ export const getCourses = async () => {
   const { id } = user
   await dbConnect()
   try {
-    const courses: { courses: Course[] } | null = await User.findOne(
-      { _id: id },
-      { courses: 1 },
-    ).lean()
+    const courses: ICourse[] | null = await Course.find({
+      userId: new ObjectId(id),
+    }).lean()
     if (!courses) {
       return { message: "No courses found" }
     }
-    return courses.courses
+    return courses
   } catch (error) {
     return { message: "Error fetching courses" }
   }
@@ -43,33 +44,25 @@ export const setCourse = async (form: FormData) => {
   }
   const { id } = user
   const data = Object.fromEntries(form.entries())
-  if (
-    !data.title ||
-    !data.controlForm ||
-    !data.teacherLectures ||
-    !data.teacherPractices
-  ) {
-    redirect("/protected/courses?add=true&error=fields")
-  }
-  data.id = Math.random().toString().slice(2, 12)
   await dbConnect()
   try {
-    const result = await User.findOneAndUpdate(
-      { _id: id },
-      { $push: { courses: data } },
-      { new: true },
-    )
-    if (!result) {
-      return { message: "Invalid credentials" }
+    await Course.create({
+      userId: new ObjectId(id),
+      ...data,
+    })
+  } catch (e) {
+    const error = e as Error
+    if (error.name === "ValidationError") {
+      redirect("/protected/courses?add=true&error=fields")
+    } else {
+      console.log(error)
+      return { message: "Something went wrong" }
     }
-    revalidatePath("/protected/courses")
-  } catch (error) {
-    console.log(error)
-    return { message: "Something went wrong" }
   }
+  revalidatePath("/protected/courses")
   await closeAddCourse()
 }
-
+// TODO: Rewrite the edit and delete functions taking into account the new course model
 export const editCourse = async (form: FormData) => {
   const user = await protector(cookies().get("_scrpt")!.value)
   if ("message" in user) {
@@ -84,37 +77,33 @@ export const editCourse = async (form: FormData) => {
   const practicesLink = form.get("practicesLink")!.toString()
   const notes = form.get("notes")!.toString()
   const id = form.get("id")!.toString()
-  if (!title || !controlForm || !teacherLectures || !id) {
-    redirect("/protected/courses?edit=true&error=fields")
-  }
   await dbConnect()
   try {
-    const course = await User.findOneAndUpdate(
-      { _id: user.id },
+    await Course.findOneAndUpdate(
+      { _id: new ObjectId(id) },
       {
         $set: {
-          "courses.$[elem]": {
-            id,
-            title,
-            controlForm,
-            teacherLectures,
-            lecturesLink,
-            teacherPractices,
-            practicesLink,
-            notes,
-          },
+          userId: new ObjectId(userId),
+          title,
+          controlForm,
+          teacherLectures,
+          lecturesLink,
+          teacherPractices,
+          practicesLink,
+          notes,
         },
       },
-      { arrayFilters: [{ "elem.id": id }], new: true },
     )
-    if (!course) {
-      return { message: "Invalid credentials" }
+  } catch (e) {
+    const error = e as Error
+    if (error.name === "ValidationError") {
+      redirect("/protected/courses?add=true&error=fields")
+    } else {
+      console.log(error)
+      return { message: "Something went wrong" }
     }
-    revalidatePath("/protected/courses", "page")
-  } catch (error) {
-    console.log(error)
-    return { message: "Something went wrong" }
   }
+  revalidatePath("/protected/courses", "page")
   await closeEditCourse()
 }
 
@@ -129,18 +118,12 @@ export const deleteCourse = async (form: FormData) => {
   }
   await dbConnect()
   try {
-    const result = await User.findOneAndUpdate(
-      { _id: user.id },
-      { $pull: { courses: { id } } },
-    )
-    if (!result) {
-      return { message: "Invalid credentials" }
-    }
-    revalidatePath("/protected/courses")
+    await Course.deleteOne({ _id: new ObjectId(id) })
   } catch (error) {
     console.log(error)
     return { message: "Something went wrong" }
   }
+  revalidatePath("/protected/courses")
 }
 
 export const openEditCourse = () => {

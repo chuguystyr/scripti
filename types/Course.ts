@@ -1,5 +1,5 @@
 export default interface Course {
-  id: string
+  _id: string
   title: string
   teacherLectures: string
   lecturesLink: string
