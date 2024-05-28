@@ -2,7 +2,6 @@
 import dbConnect from "server/db"
 import { cookies } from "next/headers"
 import { protector } from "server/protection"
-import User from "models/User"
 import Course from "models/Course"
 import ICourse from "types/Course"
 import { redirect } from "next/navigation"
@@ -10,11 +9,7 @@ import { revalidatePath } from "next/cache"
 import { ObjectId } from "mongodb"
 
 export const getCourses = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
     const courses: ICourse[] | null = await Course.find({
@@ -38,11 +33,7 @@ export const closeAddCourse = async () => {
 }
 
 export const setCourse = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
   await dbConnect()
   try {
@@ -62,13 +53,9 @@ export const setCourse = async (form: FormData) => {
   revalidatePath("/protected/courses")
   await closeAddCourse()
 }
-// TODO: Rewrite the edit and delete functions taking into account the new course model
+
 export const editCourse = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  const userId = user.id
+  const userId = await protector(cookies().get("_scrpt")!.value)
   const title = form.get("title")!.toString()
   const controlForm = form.get("controlForm")!.toString()
   const teacherLectures = form.get("teacherLectures")!.toString()
@@ -109,9 +96,6 @@ export const editCourse = async (form: FormData) => {
 
 export const deleteCourse = async (form: FormData) => {
   const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
   const id = form.get("id")!.toString()
   if (!user || !id) {
     return { message: "Bad request" }

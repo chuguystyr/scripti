@@ -83,8 +83,7 @@ export const login = async (form: FormData) => {
 }
 
 export const getAccount = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   try {
     await dbConnect()
     const result: { name: string; username: string; email: string } | null =
@@ -110,11 +109,7 @@ export const closeEdit = async () => {
 }
 
 export const editAccount = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
   if (!data.name || !data.username || !data.email) {
     return { message: "Bad request" }
@@ -146,11 +141,7 @@ export const editAccount = async (form: FormData) => {
 }
 
 export const changePassword = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   const oldPassword = form.get("oldPassword")!.toString()
   const newPassword = form.get("newPassword")!.toString()
   if (!oldPassword || !newPassword) {
@@ -193,20 +184,13 @@ export const changePassword = async (form: FormData) => {
 }
 
 export const logout = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
+  await protector(cookies().get("_scrpt")!.value)
   cookies().set("_scrpt", "", { maxAge: 0 })
   redirect("/")
 }
 
 export const deleteAccount = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
     const result = await User.findOneAndDelete({ _id: id })

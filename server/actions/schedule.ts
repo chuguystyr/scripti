@@ -8,8 +8,7 @@ import Schedule from "types/Schedule"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 export const getSchedule = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   const date = new Date()
   const day = date.toLocaleDateString("uk-UA", { weekday: "long" })
   try {
@@ -101,11 +100,7 @@ export const setSchedule = async (prevState: any, form: FormData) => {
     fromDate < toDate &&
     fromDate.getDay() >= new Date().getDay()
   ) {
-    const user = await protector(cookies().get("_scrpt")!.value)
-    if ("message" in user) {
-      return { message: "Unathorised" }
-    }
-    const { id } = user
+    const id = await protector(cookies().get("_scrpt")!.value)
     const schedule = transformData(formData)
     await dbConnect()
     try {

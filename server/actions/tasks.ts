@@ -9,11 +9,9 @@ import Task from "types/Task"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { getCourses } from "./courses"
-import { get } from "node_modules/cypress/types/lodash"
 
 export const getTasks = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
     const result: { tasks: Task[]; done: number }[] = await User.aggregate([
@@ -48,8 +46,7 @@ export const getTasks = async () => {
 }
 
 export const getAllTasks = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
     const result = await User.findOne({ _id: id }, { _id: 0, tasks: 1 })
@@ -80,11 +77,7 @@ export const closeAddTaskAtHome = async () => {
 }
 
 export const setTask = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
   if (!data.title || !data.date || !data.course) {
     redirect("/protected/tasks?add=true&error=fields")
@@ -137,17 +130,14 @@ export const closeEditTask = async () => {
 
 export const checkTask = async (form: FormData) => {
   const id = form.get("id")
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  if (!user || !id) {
+  const userId = await protector(cookies().get("_scrpt")!.value)
+  if (!userId || !id) {
     return { message: "Bad request" }
   }
   await dbConnect()
   try {
     const result = await User.findOneAndUpdate(
-      { _id: user.id, "tasks.id": id },
+      { _id: userId, "tasks.id": id },
       {
         $set: {
           "tasks.$.status": "done",
@@ -168,18 +158,15 @@ export const checkTask = async (form: FormData) => {
 
 export const deleteTask = async (form: FormData) => {
   const id = form.get("id")
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  if (!user || !id) {
+  const userId = await protector(cookies().get("_scrpt")!.value)
+  if (!userId || !id) {
     console.log("Bad request")
     return { message: "Bad request" }
   }
   await dbConnect()
   try {
     const result = await User.findOneAndUpdate(
-      { _id: user.id },
+      { _id: userId },
       { $pull: { tasks: { id } } },
     )
     if (!result) {
@@ -194,11 +181,7 @@ export const deleteTask = async (form: FormData) => {
 }
 
 export const editTask = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value)
-  if ("message" in user) {
-    return { message: "Unathorised" }
-  }
-  const { id } = user
+  const id = await protector(cookies().get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
   console.log("Data object", data)
   if (!data.id || !data.title || !data.date || !data.course || !data.status) {
