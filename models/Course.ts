@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose"
+import { Schema, model, models } from "mongoose"
 
 const CourseSchema = new Schema({
   userId: {
@@ -32,6 +32,6 @@ const CourseSchema = new Schema({
   },
 })
 
-const CourseModel = model("courses", CourseSchema)
+const CourseModel = models.courses || model("courses", CourseSchema)
 
 export default CourseModel

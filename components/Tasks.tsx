@@ -8,7 +8,7 @@ const Tasks: React.FC<{
   setEditable: () => Promise<never>
   resetEditable: () => Promise<never>
 }> = async ({ searchParams, setEditable, resetEditable }) => {
-  const { tasks, done } = await getTasks()
+  const { tasks, done } = (await getTasks()) ?? { tasks: [], done: 0 }
   const statistics = {
     inProgress:
       tasks.filter((task) => task.status === "in progress").length ?? 0,

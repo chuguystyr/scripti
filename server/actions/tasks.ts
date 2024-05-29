@@ -5,40 +5,43 @@ import User from "models/User"
 import { cookies } from "next/headers"
 import { protector } from "server/protection"
 import { ObjectId } from "mongodb"
-import Task from "types/Task"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { getCourses } from "./courses"
+import Task from "models/Task"
+import { Error } from "mongoose"
+import Course from "models/Course"
 
 export const getTasks = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
-    const result: { tasks: Task[]; done: number }[] = await User.aggregate([
-      { $match: { _id: new ObjectId(id) } },
+    const tasks = await Task.aggregate([
+      { $match: { userId: new ObjectId(id), status: { $ne: "done" } } },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "course",
+          foreignField: "_id",
+          as: "courseDetails",
+        },
+      },
+      {
+        $unwind: "$courseDetails",
+      },
+      {
+        $addFields: {
+          course: "$courseDetails.title",
+        },
+      },
       {
         $project: {
-          _id: 0,
-          tasks: {
-            $filter: {
-              input: "$tasks",
-              as: "task",
-              cond: { $ne: ["$$task.status", "done"] },
-            },
-          },
-          done: {
-            $size: {
-              $filter: {
-                input: "$tasks",
-                as: "task",
-                cond: { $eq: ["$$task.status", "done"] },
-              },
-            },
-          },
+          courseDetails: 0,
         },
       },
     ])
-    return result[0]
+    const done = (await Task.find({ userId: new ObjectId(id), status: "done" }))
+      .length
+    return { tasks, done }
   } catch (error) {
     console.log(error)
     throw new Error("Internal")
@@ -49,9 +52,33 @@ export const getAllTasks = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
-    const result = await User.findOne({ _id: id }, { _id: 0, tasks: 1 })
-    if (result) {
-      return result.tasks as Task[]
+    // TODOL fiz tasks output with aggregation edit, check and delete also don't work
+    const tasks = await Task.aggregate([
+      { $match: { userId: new ObjectId(id) } },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "course",
+          foreignField: "_id",
+          as: "courseDetails",
+        },
+      },
+      {
+        $unwind: "$courseDetails",
+      },
+      {
+        $addFields: {
+          course: "$courseDetails.title",
+        },
+      },
+      {
+        $project: {
+          courseDetails: 0,
+        },
+      },
+    ])
+    if (tasks.length > 0) {
+      return tasks
     } else {
       return { message: "No tasks found" }
     }
@@ -79,39 +106,35 @@ export const closeAddTaskAtHome = async () => {
 export const setTask = async (form: FormData) => {
   const id = await protector(cookies().get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
-  if (!data.title || !data.date || !data.course) {
-    redirect("/protected/tasks?add=true&error=fields")
-  } else {
-    const courses = await getCourses()
-    if (Array.isArray(courses)) {
-      const course = courses.find((course) => course.title === data.course)
-      if (!course) {
-        redirect("/protected/tasks?add=true&error=course")
-      }
-    } else {
-      redirect("/protected/tasks?add=true&error=course")
-    }
-    if (new Date(data.date.toString()) < new Date()) {
-      redirect("/protected/tasks?add=true&error=date")
-    }
-  }
-  data.status = "new"
-  data.id = Math.random().toString().slice(2, 12)
   await dbConnect()
   try {
-    const result = await User.findOneAndUpdate(
-      { _id: id },
-      { $push: { tasks: data } },
-      { new: true },
+    const courseId = await Course.findOne(
+      { userId: new ObjectId(id), title: data.course.toString() },
+      { _id: 1 },
     )
-    if (!result) {
-      return { message: "Invalid credentials" }
-    }
+    await Task.create({
+      ...data,
+      userId: new ObjectId(id),
+      course: courseId?._id,
+      status: "new",
+      deadline: new Date(data.date.toString()),
+    })
     revalidatePath("/protected/home")
     revalidatePath("/protected/tasks")
-  } catch (error) {
-    console.log(error)
-    return { message: "Something went wrong" }
+  } catch (e) {
+    const error = e as Error.ValidationError
+    if (error.errors) {
+      if (error.errors.deadline) {
+        redirect("/protected/tasks?add=true&error=date")
+      } else if (error.errors.course) {
+        console.log(error.errors.course)
+        redirect("/protected/tasks?add=true&error=course")
+      } else {
+        redirect("/protected/tasks?add=true&error=fields")
+      }
+    } else {
+      throw e
+    }
   }
   await closeAddTask()
 }
@@ -136,18 +159,7 @@ export const checkTask = async (form: FormData) => {
   }
   await dbConnect()
   try {
-    const result = await User.findOneAndUpdate(
-      { _id: userId, "tasks.id": id },
-      {
-        $set: {
-          "tasks.$.status": "done",
-        },
-      },
-      { new: true },
-    )
-    if (!result) {
-      return { message: "Invalid credentials" }
-    }
+    await Task.findOneAndUpdate({ _id: id }, { status: "done" })
     revalidatePath("/protected/home")
     revalidatePath("/protected/tasks")
   } catch (error) {
@@ -165,13 +177,7 @@ export const deleteTask = async (form: FormData) => {
   }
   await dbConnect()
   try {
-    const result = await User.findOneAndUpdate(
-      { _id: userId },
-      { $pull: { tasks: { id } } },
-    )
-    if (!result) {
-      return { message: "Invalid credentials" }
-    }
+    await Task.findOneAndDelete({ _id: id })
     revalidatePath("/protected/home")
     revalidatePath("/protected/tasks")
   } catch (error) {
@@ -183,24 +189,19 @@ export const deleteTask = async (form: FormData) => {
 export const editTask = async (form: FormData) => {
   const id = await protector(cookies().get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
-  console.log("Data object", data)
-  if (!data.id || !data.title || !data.date || !data.course || !data.status) {
-    redirect("/protected/tasks?edit=true&error=fields")
-  }
   await dbConnect()
   try {
-    const result = await User.findOneAndUpdate(
-      { _id: id, "tasks.id": data.id },
-      {
-        $set: {
-          "tasks.$": data,
-        },
-      },
-      { new: true },
+    const courseId = await Course.findOne(
+      { userId: new ObjectId(id), title: data.course },
+      { _id: 1 },
     )
-    if (!result) {
-      return { message: "Invalid credentials" }
-    }
+    await Task.findOneAndUpdate(
+      { _id: data.id },
+      {
+        ...data,
+        course: courseId?._id,
+      },
+    )
   } catch (error) {
     console.log(error)
     return { message: "Something went wrong" }

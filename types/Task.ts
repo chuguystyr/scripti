@@ -1,7 +1,8 @@
 export default interface Task {
-  id: string
+  _id: string | number | readonly string[] | undefined
+  userId: string
   title: string
-  date: string
+  deadline: string
   course: string
   status: string
   description: string
