@@ -3,9 +3,10 @@ import { cleanup, render, screen } from "@testing-library/react"
 import TaskCard from "components/TaskCard"
 
 const mockTask = {
-  id: "1",
+  _id: "1",
+  userId: "1",
   title: "Test Task",
-  date: "2023-01-01",
+  deadline: "2023-01-01",
   course: "Test Course",
   status: "new",
   description: "Test Description",
@@ -35,7 +36,7 @@ describe("TaskCard component", () => {
     expect(screen.getByText(mockTask.title)).toBeDefined()
     expect(
       screen.getByText(
-        new Date(mockTask.date).toLocaleString("ua-UK", {
+        new Date(mockTask.deadline).toLocaleString("ua-UK", {
           day: "2-digit",
           month: "2-digit",
         }),

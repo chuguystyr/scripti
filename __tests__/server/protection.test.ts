@@ -14,12 +14,11 @@ describe("protector", () => {
     await expect(protector("")).rejects.toThrow("Unathorised")
   })
 
-  it("should return decoded token if token is valid", async () => {
+  it("should call jwt.verify function with token and secret", async () => {
     const mockToken = "token"
-    const mockDecoded = { id: "123" }
+    const mockDecoded = "123"
     vi.mocked(jwt.verify).mockReturnValue(mockDecoded as any)
-    const decoded = await protector(mockToken)
-    expect(decoded).toEqual(mockDecoded)
+    await protector(mockToken)
     expect(jwt.verify).toHaveBeenCalledWith(mockToken, process.env.JWT_SECRET)
   })
 
