@@ -8,14 +8,14 @@ import { useDebounce } from "./useDebounce"
 
 export const useSetSchedule = () => {
   const router = useRouter()
-  const [state, formAction] = useFormState(setSchedule, { message: "" })
+  const [state, formAction] = useFormState(setSchedule, { error: "" })
   const [courses, setCourses] = useState<Course[] | null>(null)
 
   useEffect(() => {
-    if (state.message?.length! > 0) {
+    if (state.error?.length! > 0) {
       router.push("/protected/home")
     }
-  }, [state.message, router])
+  }, [state.error, router])
 
   useEffect(() => {
     if (Array.isArray(courses) && courses.length === 0) {
