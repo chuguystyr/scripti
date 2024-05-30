@@ -10,6 +10,9 @@ const SetCourse: React.FC<{
     case "fields":
       message = `Please fill in\nall required fields`
       break
+    case "title":
+      message = `Course with this name already exists`
+      break
   }
   return (
     <div className="mb-3 md:mx-auto w-fit bg-white rounded-md shadow-lg p-5">

@@ -52,7 +52,6 @@ export const getAllTasks = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
-    // TODOL fiz tasks output with aggregation edit, check and delete also don't work
     const tasks = await Task.aggregate([
       { $match: { userId: new ObjectId(id) } },
       {
@@ -201,6 +200,7 @@ export const editTask = async (form: FormData) => {
         ...data,
         course: courseId?._id,
       },
+      { runValidators: true },
     )
   } catch (error) {
     console.log(error)

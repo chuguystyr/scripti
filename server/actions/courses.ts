@@ -7,6 +7,8 @@ import ICourse from "types/Course"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { ObjectId } from "mongodb"
+import { Error as MongooseoError } from "mongoose"
+import { MongoServerError } from "mongodb"
 
 export const getCourses = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
@@ -41,10 +43,15 @@ export const setCourse = async (form: FormData) => {
       userId: new ObjectId(id),
       ...data,
     })
-  } catch (e) {
-    const error = e as Error
-    if (error.name === "ValidationError") {
-      redirect("/protected/courses?add=true&error=fields")
+  } catch (error) {
+    if (error instanceof MongooseoError.ValidationError) {
+      for (let key in error.errors) {
+        if (error.errors[key].kind === "required") {
+          redirect("/protected/courses?add=true&error=fields")
+        }
+      }
+    } else if (error instanceof MongoServerError && error.code === 11000) {
+      redirect("/protected/courses?add=true&error=title")
     } else {
       console.log(error)
       return { message: "Something went wrong" }
@@ -80,11 +87,17 @@ export const editCourse = async (form: FormData) => {
           notes,
         },
       },
+      { runValidators: true },
     )
-  } catch (e) {
-    const error = e as Error
-    if (error.name === "ValidationError") {
-      redirect("/protected/courses?add=true&error=fields")
+  } catch (error) {
+    if (error instanceof MongooseoError.ValidationError) {
+      for (let key in error.errors) {
+        if (error.errors[key].kind === "required") {
+          redirect("/protected/courses?edit=true&error=fields")
+        }
+      }
+    } else if (error instanceof MongoServerError && error.code === 11000) {
+      redirect("/protected/courses?edit=true&error=title")
     } else {
       console.log(error)
       return { message: "Something went wrong" }

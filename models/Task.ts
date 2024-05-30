@@ -13,15 +13,20 @@ const TaskSchema = new Schema({
   deadline: {
     type: Date,
     required: true,
-    validator: (value: Date) => {
-      return value >= new Date()
+    validate: {
+      validator: (value: Date) => {
+        return value >= new Date()
+      },
+      message: "Can't add task that's already overdue",
     },
   },
   course: {
     type: Schema.Types.ObjectId,
     required: true,
-    validator: async (value: Schema.Types.ObjectId) => {
-      return (await Course.findById(value)) !== null
+    validate: {
+      validator: async (value: Schema.Types.ObjectId) => {
+        return (await Course.findById(value)) !== null
+      },
     },
   },
   status: {
@@ -33,16 +38,6 @@ const TaskSchema = new Schema({
     type: String,
     required: false,
   },
-})
-
-TaskSchema.pre("validate", async function (next) {
-  const task = this
-  const course = await Course.findById(task.course)
-  if (!course) {
-    console.log(`Validation failed: Course with ID ${task.course} not found`)
-    task.invalidate("course", "Course not found")
-  }
-  next()
 })
 
 const TaskModel = models.tasks || model("tasks", TaskSchema)

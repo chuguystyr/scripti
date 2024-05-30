@@ -43,6 +43,23 @@ describe("testing courses functionality", () => {
       cy.contains("Please fill in all required fields").should("exist")
     })
   })
+  it("should not add a new course with repeating title, (#CF3)", () => {
+    cy.get("button").contains("Add Course").click()
+    cy.fixture("courses").then(({ validCourse }) => {
+      cy.get('input[name="title"]').type(validCourse.title)
+      cy.get('input[name="teacherLectures"]').type(validCourse.teacherLectures)
+      cy.get('input[name="teacherPractices"]').type(
+        validCourse.teacherPractices,
+      )
+      cy.get('select[name="controlForm"]').select(validCourse.formOfControl)
+      cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink)
+      cy.get('input[name="practicesLink"]').type(validCourse.practicesLink)
+      cy.get('input[name="notes"]').type(validCourse.notes)
+      cy.contains("button", /^Add$/).click()
+
+      cy.contains("Course with this name already exists").should("exist")
+    })
+  })
   it("should edit an existing course with valid data, (#CF4)", () => {
     cy.get("form").find("button:has(svg)").first().click()
     cy.fixture("courses").then(({ validCourse, editData }) => {
@@ -70,24 +87,6 @@ describe("testing courses functionality", () => {
       cy.get('button[type="submit"]').contains("Save").click()
 
       cy.contains("Please fill in all required fields").should("exist")
-    })
-  })
-  it("should not add a new course with repeating title, (#CF3)", () => {
-    cy.get("button").contains("Add Course").click()
-    cy.fixture("courses").then(({ validCourse }) => {
-      cy.get('input[name="title"]').type(validCourse.title)
-      cy.get('input[name="teacherLectures"]').type(validCourse.teacherLectures)
-      cy.get('input[name="teacherPractices"]').type(
-        validCourse.teacherPractices,
-      )
-      cy.get('select[name="controlForm"]').select(validCourse.formOfControl)
-      cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink)
-      cy.get('input[name="practicesLink"]').type(validCourse.practicesLink)
-      cy.get('input[name="notes"]').type(validCourse.notes)
-      cy.contains("button", /^Add$/).click()
-
-      cy.get("form").find("button:has(svg)").last().click()
-      cy.contains("Course with this name already exists").should("exist")
     })
   })
   it("should delete an existing course, (#CF6)", () => {

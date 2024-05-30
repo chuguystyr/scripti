@@ -8,11 +8,17 @@ const CourseSchema = new Schema({
   title: {
     type: String,
     required: true,
+    validate: {
+      validator: (value: string) => value.length > 0,
+    },
     unique: true,
   },
   teacherLectures: {
     type: String,
     required: true,
+    validate: {
+      validator: (value: string) => value.length > 0,
+    },
   },
   lecturesLink: {
     type: String,
@@ -21,6 +27,9 @@ const CourseSchema = new Schema({
   teacherPractices: {
     type: String,
     required: true,
+    validate: {
+      validator: (value: string) => value.length > 0,
+    },
   },
   practicesLink: {
     type: String,
@@ -29,6 +38,13 @@ const CourseSchema = new Schema({
   controlForm: {
     type: String,
     required: true,
+    validate: {
+      validator: (value: string) => value.length > 0,
+    },
+  },
+  notes: {
+    type: String,
+    required: false,
   },
 })
 

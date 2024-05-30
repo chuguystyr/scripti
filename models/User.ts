@@ -1,4 +1,5 @@
 import { Schema, model, models } from "mongoose"
+import { unique } from "node_modules/cypress/types/jquery"
 
 const UserSchema = new Schema({
   name: {
@@ -8,6 +9,7 @@ const UserSchema = new Schema({
   username: {
     type: String,
     required: true,
+    unique: true,
   },
   email: {
     type: String,
