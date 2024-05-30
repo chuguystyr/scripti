@@ -12,7 +12,7 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "cy:local": "cypress open --env type-of-environment=local",
-    "e2e": "cypress run --env type-of-environment=development --headless --browser chrome"
+    "e2e": "cypress run --env type-of-environment=local --headless --browser chrome"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

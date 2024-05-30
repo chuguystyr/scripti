@@ -25,7 +25,15 @@ jobs:
         run: npm ci
       - name: Run unit tests
         run: npm test
-      - name: Run E2E tests with Cypress
+      - name: Build for testing
+        run: npm run build
+      - name: Start the application
+        run: npm start &
+        env:
+          CI: true
+      - name: Wait for application to be ready
+        run: npx wait-on http://localhost:3000
+      - name: Run Cypress tests
         run: npm run e2e
   deploy:
     needs: test
