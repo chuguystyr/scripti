@@ -68,12 +68,14 @@ describe("testing account functionality", () => {
     )
   })
   it("should logout user, (#AF5)", () => {
+    const baseUrl = Cypress.env("baseUrl")
+    console.log("Base URL:", baseUrl) // Debugging line
     cy.fixture("users").then(({ correctUser: { username }, newPassword }) => {
       cy.login(username, newPassword)
       cy.goToAccountPage()
     })
     cy.get("button").contains("Log out").click()
-    cy.url().should("eq", Cypress.env("baseUrl"))
+    cy.url().should("eq", Cypress.config("baseUrl"))
   })
   it("should delete user's account, (#AF6)", () => {
     cy.fixture("users").then(({ correctUser: { username }, newPassword }) => {
@@ -81,7 +83,7 @@ describe("testing account functionality", () => {
       cy.goToAccountPage()
       cy.get("button").contains("Delete account").click()
 
-      cy.url().should("eq", Cypress.env("baseUrl"))
+      cy.url().should("eq", Cypress.config("baseUrl"))
       cy.visit("/login")
       cy.get("input[name='username']").type(username)
       cy.get("input[name='password']").type(newPassword)

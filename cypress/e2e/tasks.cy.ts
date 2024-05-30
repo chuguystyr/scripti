@@ -103,10 +103,9 @@ describe("testing tasks functionality", () => {
       )
       cy.get('input[name="description"]').type(validTask.description)
       cy.get('button[type="submit"]').contains("Save").click()
-      cy.get("form").find("button:has(svg)").last().click()
 
       cy.get("p")
-        .contains("Task with this title already exists")
+        .contains("Task with this title and course already exists")
         .should("be.visible")
     })
   })

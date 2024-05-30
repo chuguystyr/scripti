@@ -1,7 +1,6 @@
 "use server"
 
 import dbConnect from "server/db"
-import User from "models/User"
 import { cookies } from "next/headers"
 import { protector } from "server/protection"
 import { ObjectId } from "mongodb"
@@ -9,6 +8,7 @@ import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import Task from "models/Task"
 import { Error } from "mongoose"
+import { MongoServerError } from "mongodb"
 import Course from "models/Course"
 
 export const getTasks = async () => {
@@ -120,19 +120,19 @@ export const setTask = async (form: FormData) => {
     })
     revalidatePath("/protected/home")
     revalidatePath("/protected/tasks")
-  } catch (e) {
-    const error = e as Error.ValidationError
-    if (error.errors) {
+  } catch (error) {
+    if (error instanceof Error.ValidationError && error.errors) {
       if (error.errors.deadline) {
         redirect("/protected/tasks?add=true&error=date")
       } else if (error.errors.course) {
-        console.log(error.errors.course)
         redirect("/protected/tasks?add=true&error=course")
-      } else {
+      } else if (checkForMissingFields(error)) {
         redirect("/protected/tasks?add=true&error=fields")
       }
+    } else if (error instanceof MongoServerError && error.code === 11000) {
+      redirect("/protected/tasks?add=true&error=title")
     } else {
-      throw e
+      throw error
     }
   }
   await closeAddTask()
@@ -203,8 +203,19 @@ export const editTask = async (form: FormData) => {
       { runValidators: true },
     )
   } catch (error) {
-    console.log(error)
-    return { message: "Something went wrong" }
+    if (error instanceof Error.ValidationError && error.errors) {
+      if (error.errors.deadline) {
+        redirect("/protected/tasks?edit=true&error=date")
+      } else if (error.errors.course) {
+        redirect("/protected/tasks?edit=true&error=course")
+      } else if (checkForMissingFields(error)) {
+        redirect("/protected/tasks?edit=true&error=fields")
+      }
+    } else if (error instanceof MongoServerError && error.code === 11000) {
+      redirect("/protected/tasks?edit=true&error=title")
+    } else {
+      throw error
+    }
   }
   revalidatePath("/protected/home")
   revalidatePath("/protected/tasks")
@@ -217,4 +228,13 @@ export const setTaskEditableAtTasks = async () => {
 
 export const setTaskNonEditableAtTasks = async () => {
   redirect("/protected/tasks")
+}
+
+const checkForMissingFields = (error: Error.ValidationError) => {
+  for (let key in error.errors) {
+    if (error.errors[key].kind === "required") {
+      return true
+    }
+  }
+  return false
 }

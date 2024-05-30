@@ -7,7 +7,7 @@ import ICourse from "types/Course"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { ObjectId } from "mongodb"
-import { Error as MongooseoError } from "mongoose"
+import { Error as MongooseError } from "mongoose"
 import { MongoServerError } from "mongodb"
 
 export const getCourses = async () => {
@@ -44,7 +44,7 @@ export const setCourse = async (form: FormData) => {
       ...data,
     })
   } catch (error) {
-    if (error instanceof MongooseoError.ValidationError) {
+    if (error instanceof MongooseError.ValidationError) {
       for (let key in error.errors) {
         if (error.errors[key].kind === "required") {
           redirect("/protected/courses?add=true&error=fields")
@@ -90,7 +90,7 @@ export const editCourse = async (form: FormData) => {
       { runValidators: true },
     )
   } catch (error) {
-    if (error instanceof MongooseoError.ValidationError) {
+    if (error instanceof MongooseError.ValidationError) {
       for (let key in error.errors) {
         if (error.errors[key].kind === "required") {
           redirect("/protected/courses?edit=true&error=fields")

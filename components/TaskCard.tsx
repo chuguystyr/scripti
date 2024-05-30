@@ -9,6 +9,18 @@ const TaskCard: React.FC<{
   setEditable: () => Promise<never>
   resetEditable: () => Promise<never>
 }> = ({ task, searchParams, setEditable, resetEditable }) => {
+  let message = ""
+  switch (searchParams?.error) {
+    case "fields":
+      message = `Please fill in\nall required fields`
+      break
+    case "course":
+      message = `No such course exists`
+      break
+    case "date":
+      message = `Can't add task that's already overdue`
+      break
+  }
   return (
     <div className="card w-fit h-fit">
       {!searchParams?.edit ?
@@ -56,9 +68,9 @@ const TaskCard: React.FC<{
             action={editTask}
             className="bg-white rounded shadow"
           >
-            {searchParams?.error === "fields" && (
-              <p className="text-red-500 text-center">
-                Please fill in all required fields
+            {searchParams?.error && (
+              <p className="text-center w-[15vw] block mx-auto text-red-500">
+                {message}
               </p>
             )}
             <div className="flex flex-col items-center space-y-2">
@@ -72,7 +84,7 @@ const TaskCard: React.FC<{
               <input
                 className="p-2 rounded border border-gray-300 w-full"
                 type="date"
-                defaultValue={task.deadline}
+                defaultValue={task.deadline.toISOString().slice(0, 10)}
                 name="deadline"
               />
               <input

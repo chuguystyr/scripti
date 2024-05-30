@@ -1,4 +1,16 @@
 describe("testing schedule functionality", () => {
+  before(() => {
+    cy.fixture("users").then(({ correctUser: { username, password } }) => {
+      cy.login(username, password)
+      cy.goToCoursesPage()
+    })
+    cy.fixture("courses").then(({ validCourse }) => {
+      cy.get("form").find("button:has(svg)").last().click()
+      cy.contains(new RegExp("^" + validCourse.title + "$", "g")).should(
+        "not.exist",
+      )
+    })
+  })
   it("should navigate to courses when no course was added, (#SF1)", () => {
     cy.fixture("users").then(({ correctUser: { username, password } }) => {
       cy.login(username, password)
