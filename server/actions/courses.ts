@@ -1,152 +1,132 @@
-"use server";
-import dbConnect from "server/db";
-import { cookies } from "next/headers";
-import { protector } from "server/protection";
-import User from "models/User";
-import Course from "types/Course";
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+"use server"
+import dbConnect from "server/db"
+import { cookies } from "next/headers"
+import { protector } from "server/protection"
+import Course from "models/Course"
+import ICourse from "types/Course"
+import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
+import { ObjectId } from "mongodb"
+import { Error as MongooseError } from "mongoose"
+import { MongoServerError } from "mongodb"
 
 export const getCourses = async () => {
-  const user = await protector(cookies().get("_scrpt")!.value);
-  if ("message" in user) {
-    return { message: "Unathorised" };
-  }
-  const { id } = user;
-  await dbConnect();
+  const id = await protector(cookies().get("_scrpt")!.value)
+  await dbConnect()
   try {
-    const courses: { courses: Course[] } | null = await User.findOne(
-      { _id: id },
-      { courses: 1 },
-    ).lean();
+    const courses: ICourse[] | null = await Course.find({
+      userId: new ObjectId(id),
+    }).lean()
     if (!courses) {
-      return { message: "No courses found" };
+      return { message: "No courses found" }
     }
-    return courses.courses;
+    return courses
   } catch (error) {
-    return { message: "Error fetching courses" };
+    return { message: "Error fetching courses" }
   }
-};
+}
 
 export const openAddCourse = () => {
-  redirect("/protected/courses?add=true");
-};
+  redirect("/protected/courses?add=true")
+}
 
-export const closeAddCourse = () => {
-  redirect("/protected/courses");
-};
+export const closeAddCourse = async () => {
+  redirect("/protected/courses")
+}
 
 export const setCourse = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value);
-  if ("message" in user) {
-    return { message: "Unathorised" };
-  }
-  const { id } = user;
-  const data = Object.fromEntries(form.entries());
-  if (
-    !data.title ||
-    !data.controlForm ||
-    !data.teacherLectures ||
-    !data.teacherPractices
-  ) {
-    redirect("/protected/courses?add=true&error=fields");
-  }
-  data.id = Math.random().toString().slice(2, 12);
-  await dbConnect();
+  const id = await protector(cookies().get("_scrpt")!.value)
+  const data = Object.fromEntries(form.entries())
+  await dbConnect()
   try {
-    const result = await User.findOneAndUpdate(
-      { _id: id },
-      { $push: { courses: data } },
-      { new: true },
-    );
-    if (!result) {
-      return { message: "Invalid credentials" };
-    }
-    revalidatePath("/protected/courses");
+    await Course.create({
+      userId: new ObjectId(id),
+      ...data,
+    })
   } catch (error) {
-    console.log(error);
-    return { message: "Something went wrong" };
+    if (error instanceof MongooseError.ValidationError) {
+      for (let key in error.errors) {
+        if (error.errors[key].kind === "required") {
+          redirect("/protected/courses?add=true&error=fields")
+        }
+      }
+    } else if (error instanceof MongoServerError && error.code === 11000) {
+      redirect("/protected/courses?add=true&error=title")
+    } else {
+      console.log(error)
+      return { message: "Something went wrong" }
+    }
   }
-  closeAddCourse();
-};
+  revalidatePath("/protected/courses")
+  await closeAddCourse()
+}
 
 export const editCourse = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value);
-  if ("message" in user) {
-    return { message: "Unathorised" };
-  }
-  const userId = user.id;
-  const title = form.get("title")!.toString();
-  const controlForm = form.get("controlForm")!.toString();
-  const teacherLectures = form.get("teacherLectures")!.toString();
-  const lecturesLink = form.get("lecturesLink")!.toString();
-  const teacherPractices = form.get("teacherPractices")!.toString();
-  const practicesLink = form.get("practicesLink")!.toString();
-  const notes = form.get("notes")!.toString();
-  const id = form.get("id")!.toString();
-  if (!title || !controlForm || !teacherLectures || !id) {
-    redirect("/protected/courses?edit=true&error=fields");
-  }
-  await dbConnect();
+  const userId = await protector(cookies().get("_scrpt")!.value)
+  const title = form.get("title")!.toString()
+  const controlForm = form.get("controlForm")!.toString()
+  const teacherLectures = form.get("teacherLectures")!.toString()
+  const lecturesLink = form.get("lecturesLink")!.toString()
+  const teacherPractices = form.get("teacherPractices")!.toString()
+  const practicesLink = form.get("practicesLink")!.toString()
+  const notes = form.get("notes")!.toString()
+  const id = form.get("id")!.toString()
+  await dbConnect()
   try {
-    const course = await User.findOneAndUpdate(
-      { _id: user.id },
+    await Course.findOneAndUpdate(
+      { _id: new ObjectId(id) },
       {
         $set: {
-          "courses.$[elem]": {
-            id,
-            title,
-            controlForm,
-            teacherLectures,
-            lecturesLink,
-            teacherPractices,
-            practicesLink,
-            notes,
-          },
+          userId: new ObjectId(userId),
+          title,
+          controlForm,
+          teacherLectures,
+          lecturesLink,
+          teacherPractices,
+          practicesLink,
+          notes,
         },
       },
-      { arrayFilters: [{ "elem.id": id }], new: true },
-    );
-    if (!course) {
-      return { message: "Invalid credentials" };
-    }
-    revalidatePath("/protected/courses", "page");
+      { runValidators: true },
+    )
   } catch (error) {
-    console.log(error);
-    return { message: "Something went wrong" };
+    if (error instanceof MongooseError.ValidationError) {
+      for (let key in error.errors) {
+        if (error.errors[key].kind === "required") {
+          redirect("/protected/courses?edit=true&error=fields")
+        }
+      }
+    } else if (error instanceof MongoServerError && error.code === 11000) {
+      redirect("/protected/courses?edit=true&error=title")
+    } else {
+      console.log(error)
+      return { message: "Something went wrong" }
+    }
   }
-  closeEditCourse();
-};
+  revalidatePath("/protected/courses", "page")
+  await closeEditCourse()
+}
 
 export const deleteCourse = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value);
-  if ("message" in user) {
-    return { message: "Unathorised" };
-  }
-  const id = form.get("id")!.toString();
+  const user = await protector(cookies().get("_scrpt")!.value)
+  const id = form.get("id")!.toString()
   if (!user || !id) {
-    return { message: "Bad request" };
+    return { message: "Bad request" }
   }
-  await dbConnect();
+  await dbConnect()
   try {
-    const result = await User.findOneAndUpdate(
-      { _id: user.id },
-      { $pull: { courses: { id } } },
-    );
-    if (!result) {
-      return { message: "Invalid credentials" };
-    }
-    revalidatePath("/protected/courses");
+    await Course.deleteOne({ _id: new ObjectId(id) })
   } catch (error) {
-    console.log(error);
-    return { message: "Something went wrong" };
+    console.log(error)
+    return { message: "Something went wrong" }
   }
-};
+  revalidatePath("/protected/courses")
+}
 
 export const openEditCourse = () => {
-  redirect("/protected/courses?edit=true");
-};
+  redirect("/protected/courses?edit=true")
+}
 
-export const closeEditCourse = () => {
-  redirect("/protected/courses");
-};
+export const closeEditCourse = async () => {
+  redirect("/protected/courses")
+}

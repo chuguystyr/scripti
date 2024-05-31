@@ -1,19 +1,20 @@
-import TaskCard from "components/TaskCard";
-import SetTask from "components/SetTask";
+import TaskCard from "components/TaskCard"
+import SetTask from "components/SetTask"
 import {
   closeAddTask,
   getAllTasks,
   openAddTask,
   setTaskEditableAtTasks as setEditable,
   setTaskNonEditableAtTasks as resetEditable,
-} from "server/actions/tasks";
+} from "server/actions/tasks"
 
 const Tasks: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = async ({ searchParams }) => {
-  const tasks = await getAllTasks();
+  const tasks = await getAllTasks()
   return (
-    <>
+    <main>
+      <h1 className="sr-only">Tasks page</h1>
       {!tasks || (Array.isArray(tasks) && tasks.length === 0) ?
         <>
           {!searchParams?.add && (
@@ -22,8 +23,8 @@ const Tasks: React.FC<{
                 Looks like you&apos;re first time here. Let&apos;s add some
                 tasks
               </p>
-              <form action={openAddTask} className="block mx-auto mt-5">
-                <button type="submit" className="btn-filled">
+              <form action={openAddTask} className="flex justify-center">
+                <button type="submit" className="btn-outlined">
                   Add Task
                 </button>
               </form>
@@ -43,11 +44,11 @@ const Tasks: React.FC<{
               placeholder="Search"
             />
             <div className="w-[20vw] flex gap-3 mt-3 md:mt-0">
-              <button type="button" className="btn-filled">
+              <button type="button" className="btn-outlined">
                 Search
               </button>
               <form action={openAddTask}>
-                <button type="submit" className="btn-filled">
+                <button type="submit" className="btn-outlined">
                   Add Task
                 </button>
               </form>
@@ -67,13 +68,13 @@ const Tasks: React.FC<{
                     setEditable={setEditable}
                     resetEditable={resetEditable}
                   />
-                );
+                )
               })}
           </div>
         </>
       }
-    </>
-  );
-};
+    </main>
+  )
+}
 
-export default Tasks;
+export default Tasks

@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import { useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom"
 
 const SubmitButton: React.FC<{ text: string }> = ({ text }) => {
-  const { pending } = useFormStatus();
+  const { pending } = useFormStatus()
   return (
     <button
       type="submit"
@@ -12,7 +12,7 @@ const SubmitButton: React.FC<{ text: string }> = ({ text }) => {
     >
       {pending ? "Submitting..." : text}
     </button>
-  );
-};
+  )
+}
 
-export default SubmitButton;
+export default SubmitButton

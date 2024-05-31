@@ -1,14 +1,26 @@
-import { FaEdit, FaWindowClose, FaCheckCircle } from "react-icons/fa";
-import { RiDeleteBin7Fill } from "react-icons/ri";
-import Task from "types/Task";
-import { checkTask, deleteTask, editTask } from "server/actions/tasks";
+import { FaEdit, FaWindowClose, FaCheckCircle } from "react-icons/fa"
+import { RiDeleteBin7Fill } from "react-icons/ri"
+import Task from "types/Task"
+import { checkTask, deleteTask, editTask } from "server/actions/tasks"
 
 const TaskCard: React.FC<{
-  task: Task;
-  searchParams?: { [key: string]: string | string[] | undefined };
-  setEditable: () => Promise<never>;
-  resetEditable: () => Promise<never>;
+  task: Task
+  searchParams?: { [key: string]: string | string[] | undefined }
+  setEditable: () => Promise<never>
+  resetEditable: () => Promise<never>
 }> = ({ task, searchParams, setEditable, resetEditable }) => {
+  let message = ""
+  switch (searchParams?.error) {
+    case "fields":
+      message = `Please fill in\nall required fields`
+      break
+    case "course":
+      message = `No such course exists`
+      break
+    case "date":
+      message = `Can't add task that's already overdue`
+      break
+  }
   return (
     <div className="card w-fit h-fit">
       {!searchParams?.edit ?
@@ -21,13 +33,13 @@ const TaskCard: React.FC<{
               </button>
             </form>
             <form action={checkTask}>
-              <input type="hidden" name="id" value={task.id} />
+              <input type="hidden" name="id" value={task._id} />
               <button>
                 <FaCheckCircle className="inline cursor-pointer self-center" />
               </button>
             </form>
             <form action={deleteTask}>
-              <input type="hidden" name="id" value={task.id} />
+              <input type="hidden" name="id" value={task._id} />
               <button>
                 <RiDeleteBin7Fill className="inline cursor-pointer self-center" />
               </button>
@@ -35,7 +47,7 @@ const TaskCard: React.FC<{
           </div>
           <h2>
             <span className="font-mono">
-              {new Date(task.date).toLocaleString("ua-UK", {
+              {new Date(task.deadline).toLocaleString("ua-UK", {
                 day: "2-digit",
                 month: "2-digit",
               })}
@@ -56,9 +68,9 @@ const TaskCard: React.FC<{
             action={editTask}
             className="bg-white rounded shadow"
           >
-            {searchParams?.error === "fields" && (
-              <p className="text-red-500 text-center">
-                Please fill in all required fields
+            {searchParams?.error && (
+              <p className="text-center w-[15vw] block mx-auto text-red-500">
+                {message}
               </p>
             )}
             <div className="flex flex-col items-center space-y-2">
@@ -72,8 +84,8 @@ const TaskCard: React.FC<{
               <input
                 className="p-2 rounded border border-gray-300 w-full"
                 type="date"
-                defaultValue={task.date}
-                name="date"
+                defaultValue={task.deadline.toISOString().slice(0, 10)}
+                name="deadline"
               />
               <input
                 className="text-center p-2 rounded border border-gray-300 w-full"
@@ -98,7 +110,7 @@ const TaskCard: React.FC<{
                 defaultValue={task.description}
                 name="description"
               ></textarea>
-              <input type="text" name="id" hidden value={task.id} />
+              <input type="text" name="id" hidden value={task._id} />
               <button
                 className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-all duration-500"
                 type="submit"
@@ -110,7 +122,7 @@ const TaskCard: React.FC<{
         </>
       }
     </div>
-  );
-};
+  )
+}
 
-export default TaskCard;
+export default TaskCard

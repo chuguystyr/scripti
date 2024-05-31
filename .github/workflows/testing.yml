@@ -1,4 +1,4 @@
-name: Unit-Test and Deploy of main&dev
+name: Unit-Test and E2E-Test
 on:
   pull_request:
     branches:
@@ -9,7 +9,7 @@ on:
       - main
       - dev
 jobs:
-  test:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -25,8 +25,8 @@ jobs:
         run: npm ci
       - name: Run unit tests
         run: npm test
-  deploy:
-    needs: test
+  e2e-test:
+    needs: unit-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -40,19 +40,14 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
-      - name: Install Vercel CLI
-        run: npm install vercel@latest
-      - name: Setup deployment environment
-        id: step4
-        run: |
-          if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo environment=production >> $GITHUB_OUTPUT
-          elif [[ ${{ github.ref }} == 'refs/heads/dev' ]]; then
-            echo environment=preview >> $GITHUB_OUTPUT
-          fi
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=${{steps.step4.outputs.environment}} --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build project
+        run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      - name: Start server
+        run: npm start &
+      - name: Wait for server to be up
+        run: npx wait-on http://localhost:3000
+      - name: Run e2e tests
+        run: npm run e2e

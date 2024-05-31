@@ -1,5 +1,5 @@
-import { FaEdit, FaWindowClose } from "react-icons/fa";
-import SubmitButton from "components/SubmitButton";
+import { FaEdit, FaWindowClose } from "react-icons/fa"
+import SubmitButton from "components/SubmitButton"
 import {
   getAccount,
   editAccount,
@@ -8,14 +8,14 @@ import {
   logout,
   openEdit,
   closeEdit,
-} from "server/actions/account";
+} from "server/actions/account"
 
 const Account: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = async ({ searchParams }) => {
-  const { name, username, email } = await getAccount();
+  const { name, username, email } = await getAccount()
   return (
-    <div className="grid grid-cols-2">
+    <main className="md:grid md:grid-cols-2">
       <div>
         <h1 className="text-2xl font-bold my-4 text-center">Account info</h1>
         {searchParams?.edit ?
@@ -52,7 +52,7 @@ const Account: React.FC<{
           </>
         : <div className="mx-auto card flex flex-col w-fit">
             <form action={openEdit} className="flex justify-end">
-              <button type="submit">
+              <button type="submit" aria-label="edit">
                 <FaEdit className="self-end hover:cursor-pointer" />
               </button>
             </form>
@@ -66,7 +66,7 @@ const Account: React.FC<{
         <h1 className="text-2xl font-bold my-4 text-center">Account Actions</h1>
         <div className="mx-auto">
           <form
-            className="flex flex-col w-[20vw] mx-auto mb-4 rounded-md p-2 gap-4 bg-white"
+            className="flex flex-col w-fit mx-auto mb-4 rounded-md p-2 gap-4 bg-white"
             action={changePassword}
           >
             {searchParams?.error === "no-match" && (
@@ -114,8 +114,8 @@ const Account: React.FC<{
           </form>
         </div>
       </div>
-    </div>
-  );
-};
+    </main>
+  )
+}
 
-export default Account;
+export default Account

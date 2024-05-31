@@ -1,10 +1,10 @@
-import WithProtection from "utils/WithProtection";
-import Navigation from "components/Navigation";
+import WithProtection from "utils/WithProtection"
+import Navigation from "components/Navigation"
 
 export default function AppLayout({
   children,
 }: {
-  children: React.JSX.Element;
+  children: React.JSX.Element
 }) {
   return (
     <WithProtection>
@@ -15,5 +15,5 @@ export default function AppLayout({
         {children}
       </div>
     </WithProtection>
-  );
+  )
 }

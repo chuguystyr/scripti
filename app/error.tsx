@@ -1,20 +1,20 @@
-"use client";
-import Link from "next/link";
+"use client"
+import Link from "next/link"
 const Error: React.FC<{
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: Error & { digest?: string }
+  reset: () => void
 }> = ({ error, reset }) => {
-  const data = { number: 0, text: "" };
+  const data = { number: 0, text: "" }
   switch (error.message) {
     case "Unauthorized":
-      data.number = 401;
+      data.number = 401
       data.text =
-        "You don't have access to this page. Please login to continue.";
-      break;
+        "You don't have access to this page. Please login to continue."
+      break
     case "Internal":
-      data.number = 500;
-      data.text = "Something went wrong. Please try again later.";
-      break;
+      data.number = 500
+      data.text = "Something went wrong. Please try again later."
+      break
   }
   return (
     <main className="flex flex-col items-center justify-center h-screen">
@@ -29,7 +29,7 @@ const Error: React.FC<{
         </button>
       }
     </main>
-  );
-};
+  )
+}
 
-export default Error;
+export default Error

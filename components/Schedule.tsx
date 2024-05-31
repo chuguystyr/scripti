@@ -1,15 +1,15 @@
-import Link from "next/link";
-import { getSchedule } from "server/actions/schedule";
+import Link from "next/link"
+import { getSchedule } from "server/actions/schedule"
 
 const Schedule = async () => {
-  const schedule = await getSchedule();
+  const schedule = await getSchedule()
   const times = [
     "10:00 - 11:20",
     "11:50 - 13:10",
     "13:20 - 14:40",
     "16:15 - 17:35",
     "17:45 - 19:05",
-  ];
+  ]
   return (
     <>
       {schedule.schedule !== null ?
@@ -24,7 +24,7 @@ const Schedule = async () => {
           </thead>
           <tbody>
             {Object.keys(schedule).map((key, index) => {
-              const course = schedule[key];
+              const course = schedule[key]
               return (
                 <tr key={index} className="hover:bg-black hover:text-white">
                   <td className="rounded-md">{times[Number(key)]}</td>
@@ -36,7 +36,7 @@ const Schedule = async () => {
                   </td>
                   <td className="rounded-md">{course.room}</td>
                 </tr>
-              );
+              )
             })}
           </tbody>
         </table>
@@ -53,7 +53,7 @@ const Schedule = async () => {
         </p>
       }
     </>
-  );
-};
+  )
+}
 
-export default Schedule;
+export default Schedule

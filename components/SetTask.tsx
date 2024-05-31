@@ -1,10 +1,25 @@
-import SubmitButton from "components/SubmitButton";
-import { setTask } from "server/actions/tasks";
-import { FaWindowClose } from "react-icons/fa";
+import SubmitButton from "components/SubmitButton"
+import { setTask } from "server/actions/tasks"
+import { FaWindowClose } from "react-icons/fa"
 const SetTask: React.FC<{
-  close: () => void;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  close: () => void
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = ({ close, searchParams }) => {
+  let message = ""
+  switch (searchParams?.error) {
+    case "fields":
+      message = `Please fill in\nall required fields`
+      break
+    case "course":
+      message = `No such course exists`
+      break
+    case "date":
+      message = `Can't add task that's already overdue`
+      break
+    case "title":
+      message = `Task with this title and course\nalready exists`
+      break
+  }
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 w-full flex flex-col justify-center content-center">
       <form action={close} className="self-center z-40">
@@ -16,19 +31,9 @@ const SetTask: React.FC<{
         className="w-fit h-fit self-center flex flex-col bg-white rounded-md shadow-lg p-5 gap-3"
         action={setTask}
       >
-        {searchParams?.error === "fields" && (
+        {searchParams?.error && (
           <p className="text-center w-[15vw] block mx-auto text-red-500">
-            Please fill in all required fields
-          </p>
-        )}
-        {searchParams?.error === "course" && (
-          <p className="text-center w-[15vw] block mx-auto text-red-500">
-            No such course exists
-          </p>
-        )}
-        {searchParams?.error === "date" && (
-          <p className="text-center w-[15vw] block mx-auto text-red-500">
-            Can&apos;t add task that&apos;s already overdue
+            {message}
           </p>
         )}
         <label htmlFor="title" className="font-semibold">
@@ -74,7 +79,7 @@ const SetTask: React.FC<{
         <SubmitButton text="Save" />
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default SetTask;
+export default SetTask

@@ -1,18 +1,21 @@
-import SubmitButton from "./SubmitButton";
-import { setCourse } from "server/actions/courses";
+import SubmitButton from "./SubmitButton"
+import { setCourse } from "server/actions/courses"
 
 const SetCourse: React.FC<{
-  close: () => never;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  close: () => Promise<never>
+  searchParams?: { [key: string]: string | string[] | undefined }
 }> = ({ close, searchParams }) => {
-  let message = "";
+  let message = ""
   switch (searchParams?.error) {
     case "fields":
-      message = `Please fill in\nall required fields`;
-      break;
+      message = `Please fill in\nall required fields`
+      break
+    case "title":
+      message = `Course with this name already exists`
+      break
   }
   return (
-    <div className="z-30 absolute bg-white rounded-md shadow-lg p-5 gap-3">
+    <div className="mb-3 md:mx-auto w-fit bg-white rounded-md shadow-lg p-5">
       <form action={setCourse}>
         {searchParams?.error && (
           <p className="text-center w-[15vw] block mx-auto text-red-500">
@@ -112,7 +115,7 @@ const SetCourse: React.FC<{
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default SetCourse;
+export default SetCourse

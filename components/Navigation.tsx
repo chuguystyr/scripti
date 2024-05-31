@@ -1,13 +1,13 @@
-"use client";
-import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
-import Logo from "public/Logo.png";
+"use client"
+import Link from "next/link"
+import Image from "next/image"
+import { useState } from "react"
+import Logo from "public/Logo.png"
 
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   return (
-    <nav className="flex mb-5">
+    <nav className="flex mb-5 justify-between" role="navigation">
       <Link href="/protected/home">
         <Image
           src={Logo}
@@ -18,20 +18,20 @@ const Navigation = () => {
           priority
         />
       </Link>
-      <ul className="hidden md:flex md:gap-10 md:my-auto md:ml-10">
+      <ul className="hidden md:flex md:gap-10 md:my-auto">
         <li className="btn-outlined">
           <Link href="/protected/courses">Courses</Link>
         </li>
-        <li className="btn-outlined w-[5vw] text-center">
+        <li className="btn-outlined">
           <Link href="/protected/tasks">Tasks</Link>
         </li>
         <li className="btn-outlined">
           <Link href="/protected/account">Account</Link>
         </li>
       </ul>
-      <div className="md:hidden self-center ml-[35vw]">
+      <div className="md:hidden self-center">
         <button
-          className="btn-filled"
+          className="btn-filled w-fit"
           onClick={() => setIsOpen((prev) => !prev)}
         >
           {isOpen ? "Close" : "Menu"}
@@ -39,20 +39,20 @@ const Navigation = () => {
         <ul
           className={`${
             isOpen ? "flex" : "hidden"
-          } z-10 absolute flex-col right-5 bg-white md:static md:w-auto md:flex md:flex-row gap-5 md:gap-10 my-auto`}
+          } px-2 rounded-md z-10 absolute flex-col right-5 bg-white md:static md:w-auto md:flex md:flex-row gap-3 md:gap-4 my-auto`}
         >
-          <li className="font-bold hover:text-gray-700 transition-colors duration-300 px-4 py-2">
+          <li className="mobileMenuLink">
             <Link href="/protected/courses">Courses</Link>
           </li>
-          <li className="font-bold hover:text-gray-700 transition-colors duration-300 px-4 py-2">
+          <li className="mobileMenuLink">
             <Link href="/protected/tasks">Tasks</Link>
           </li>
-          <li className="font-bold hover:text-gray-700 transition-colors duration-300 px-4 py-2">
+          <li className="mobileMenuLink">
             <Link href="/protected/account">Account</Link>
           </li>
         </ul>
       </div>
     </nav>
-  );
-};
-export default Navigation;
+  )
+}
+export default Navigation

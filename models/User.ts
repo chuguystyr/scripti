@@ -1,6 +1,5 @@
-import mongoose from "mongoose";
-
-const Schema = mongoose.Schema;
+import { Schema, model, models } from "mongoose"
+import { unique } from "node_modules/cypress/types/jquery"
 
 const UserSchema = new Schema({
   name: {
@@ -10,6 +9,7 @@ const UserSchema = new Schema({
   username: {
     type: String,
     required: true,
+    unique: true,
   },
   email: {
     type: String,
@@ -31,8 +31,8 @@ const UserSchema = new Schema({
     type: Array,
     required: false,
   },
-});
+})
 
-const UserModel = mongoose.models.users || mongoose.model("users", UserSchema);
+const UserModel = models.users || model("users", UserSchema)
 
-export default UserModel;
+export default UserModel

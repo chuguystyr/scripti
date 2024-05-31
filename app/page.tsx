@@ -1,16 +1,16 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from "next/image"
+import Link from "next/link"
 
 const Main: React.FC<{}> = () => {
   return (
-    <div className="w-[100vw] h-[100vh] bg-gradient-to-r from-gray-200 to-gray-300">
+    <div className="bg-gradient-to-r from-gray-200 to-gray-300">
       <nav className="flex flex-row p-3 md:p-5 justify-between items-center">
         <Image
           src="/Logo.png"
           alt="logo"
           width={512}
           height={206}
-          className="w-20 h-16 md:w-40 md:h-30 rounded-xl"
+          className="w-36 h-auto md:w-38 lg:w-40 rounded-xl"
           priority
         />
         <ul className="flex flex-row gap-5 md:gap-10 items-center">
@@ -55,7 +55,7 @@ const Main: React.FC<{}> = () => {
         </section>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default Main;
+export default Main
