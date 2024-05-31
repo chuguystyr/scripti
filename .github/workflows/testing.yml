@@ -40,6 +40,8 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
+      - name: Cypress install
+        run: npx cypress install
       - name: Build project
         run: npm run build
         env:
