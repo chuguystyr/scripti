@@ -25,6 +25,8 @@ jobs:
         run: npm ci
       - name: Run unit tests
         run: npm test
+      - name: Pull Vercel Environment Information
+        run: vercel env pull .env.local --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build for testing
         run: npm run build
       - name: Start the application

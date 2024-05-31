@@ -1,4 +1,23 @@
 describe("testing tasks functionality", () => {
+  before(() => {
+    cy.fixture("users").then(({ correctUser: { username, password } }) => {
+      cy.login(username, password)
+    })
+    cy.goToCoursesPage()
+    cy.get("button").contains("Add Course").click()
+    cy.fixture("courses").then(({ validCourse }) => {
+      cy.get('input[name="title"]').type(validCourse.title)
+      cy.get('input[name="teacherLectures"]').type(validCourse.teacherLectures)
+      cy.get('input[name="teacherPractices"]').type(
+        validCourse.teacherPractices,
+      )
+      cy.get('select[name="controlForm"]').select(validCourse.formOfControl)
+      cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink)
+      cy.get('input[name="practicesLink"]').type(validCourse.practicesLink)
+      cy.get('input[name="notes"]').type(validCourse.notes)
+      cy.contains("button", /^Add$/).click()
+    })
+  })
   beforeEach(() => {
     cy.fixture("users").then(({ correctUser: { username, password } }) => {
       cy.login(username, password)
