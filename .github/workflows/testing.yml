@@ -49,6 +49,9 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
       - name: Start server
         run: npm start &
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
       - name: Wait for server to be up
         run: npx wait-on http://localhost:3000
       - name: Run e2e tests
