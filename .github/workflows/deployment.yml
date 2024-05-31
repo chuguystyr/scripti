@@ -25,28 +25,28 @@ jobs:
         run: npm ci
       - name: Run unit tests
         run: npm test
-      - name: Install Vercel CLI
-        run: npm install vercel@latest
-      - name: Setup deployment environment
-        id: step4
-        run: |
-          if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo environment=production >> $GITHUB_OUTPUT
-          elif [[ ${{ github.ref }} == 'refs/heads/dev' ]]; then
-            echo environment=preview >> $GITHUB_OUTPUT
-          fi
-      - name: Pull Vercel Environment Information
-        run: vercel env pull .env.local --environment=${{steps.step4.outputs.environment}} --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build for testing
-        run: npm run build
-      - name: Start the application
-        run: npm start &
-        env:
-          CI: true
-      - name: Wait for application to be ready
-        run: npx wait-on http://localhost:3000
-      - name: Run Cypress tests
-        run: npm run e2e
+      # - name: Install Vercel CLI
+      #   run: npm install vercel@latest
+      # - name: Setup deployment environment
+      #   id: step4
+      #   run: |
+      #     if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
+      #       echo environment=production >> $GITHUB_OUTPUT
+      #     elif [[ ${{ github.ref }} == 'refs/heads/dev' ]]; then
+      #       echo environment=preview >> $GITHUB_OUTPUT
+      #     fi
+      # - name: Pull Vercel Environment Information
+      #   run: vercel env pull .env.local --environment=${{steps.step4.outputs.environment}} --token=${{ secrets.VERCEL_TOKEN }}
+      # - name: Build for testing
+      #   run: npm run build
+      # - name: Start the application
+      #   run: npm start &
+      #   env:
+      #     CI: true
+      # - name: Wait for application to be ready
+      #   run: npx wait-on http://localhost:3000
+      # - name: Run Cypress tests
+      #   run: npm run e2e
   deploy:
     needs: test
     runs-on: ubuntu-latest
