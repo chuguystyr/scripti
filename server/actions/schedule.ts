@@ -13,7 +13,6 @@ export const getSchedule = async () => {
   const day = date.toLocaleDateString("uk-UA", { weekday: "long" })
   try {
     await dbConnect()
-    // TODO: add types
     const result = await User.aggregate([
       { $match: { _id: id } },
       { $unwind: "$schedules" },
