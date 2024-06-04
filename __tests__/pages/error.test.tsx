@@ -10,7 +10,7 @@ describe("error page", () => {
     const error = new Error()
     const reset = () => {}
     render(<ErrorPage error={error} reset={reset} />)
-    const header = screen.getByRole("heading", { name: "0" })
+    const header = screen.getByRole("heading", { name: "500" })
     const button = screen.getByRole("button", { name: "Reload page" })
     expect(header).toBeDefined()
     expect(button).toBeDefined()

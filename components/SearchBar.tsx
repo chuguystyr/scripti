@@ -29,12 +29,7 @@ const SearchBar: React.FC<{
         placeholder="Search"
         onChange={(e) => handleSearch(e.target.value)}
       />
-      <div className="flex gap-3 mt-3 md:mt-0">
-        <button type="button" className="btn-outlined">
-          Search
-        </button>
-        {children}
-      </div>
+      <div className="flex gap-3 mt-3 md:mt-0">{children}</div>
     </div>
   )
 }
