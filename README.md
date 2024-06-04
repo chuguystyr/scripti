@@ -12,10 +12,10 @@ Scripti is a study planning tool designed for students to manage their academic 
 - **Course Management**: Add, view, edit, and delete academic courses.
 - **Scheduling**: add and view schedule.
 - **Task Statistics**: statistics showing the status of tasks (New, In Progress, Done).
+- **Search**: search for courses and tasks by title
 
 ## Roadmap
 
-- **Search of tasks and courses on dedicated pages**
 - **Editing and deleting existing schedules**
 
 ## Technologies

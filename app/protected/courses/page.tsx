@@ -1,4 +1,5 @@
 import CourseCard from "components/CourseCard"
+import SearchBar from "components/SearchBar"
 import SetCourse from "components/SetCourse"
 import { getCourses } from "server/actions/courses"
 import { openAddCourse, closeAddCourse } from "server/actions/courses"
@@ -6,11 +7,11 @@ import { openAddCourse, closeAddCourse } from "server/actions/courses"
 const Courses: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined }
 }> = async ({ searchParams }) => {
-  const courses = await getCourses()
+  const courses = await getCourses(searchParams?.query?.toString())
   return (
     <main>
       <h1 className="sr-only">Courses page</h1>
-      {Array.isArray(courses) && courses.length === 0 ?
+      {Array.isArray(courses) && courses.length === 0 && !searchParams?.query ?
         <>
           {!searchParams?.add && (
             <p className="text-center">
@@ -31,25 +32,13 @@ const Courses: React.FC<{
           )}
         </>
       : <>
-          <div className="flex flex-col md:flex-row items-center my-4">
-            <input
-              type="text"
-              name="search"
-              id="search"
-              className="py-2 px-4 rounded-md border border-gray-300 w-full mr-5 md:w-auto"
-              placeholder="Search"
-            />
-            <div className="flex gap-3 mt-3 md:mt-0">
-              <button type="button" className="btn-outlined">
-                Search
+          <SearchBar>
+            <form action={openAddCourse}>
+              <button type="submit" className="btn-outlined">
+                Add Course
               </button>
-              <form action={openAddCourse}>
-                <button type="submit" className="btn-outlined">
-                  Add Course
-                </button>
-              </form>
-            </div>
-          </div>
+            </form>
+          </SearchBar>
           {searchParams?.add && (
             <SetCourse close={closeAddCourse} searchParams={searchParams} />
           )}
