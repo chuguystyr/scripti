@@ -19,7 +19,7 @@ describe("testing courses functionality", () => {
       cy.get('input[name="notes"]').type(validCourse.notes)
       cy.contains("button", /^Add$/).click()
 
-      cy.get("h1").contains(validCourse.title).should("exist")
+      cy.get("h2").contains(validCourse.title).should("exist")
       cy.get("span").contains(validCourse.teacherLectures).should("exist")
       cy.get("span").contains(validCourse.teacherPractices).should("exist")
       cy.get("span").contains(validCourse.formOfControl).should("exist")
@@ -27,7 +27,31 @@ describe("testing courses functionality", () => {
       cy.get("p").contains(validCourse.notes).should("exist")
     })
   })
-  it("should not add a new course when some fields are missing, (#CF2)", () => {
+  it("should search for a course by title and show existing, (#CF2)", () => {
+    cy.fixture("courses").then(({ validCourse }) => {
+      cy.get('input[name="search"]').type(validCourse.title)
+      cy.waitUntil(() => cy.url().should("include", validCourse.title))
+
+      cy.get("h2").contains(validCourse.title).should("exist")
+      cy.get("span").contains(validCourse.teacherLectures).should("exist")
+      cy.get("span").contains(validCourse.teacherPractices).should("exist")
+      cy.get("span").contains(validCourse.formOfControl).should("exist")
+      cy.get("a").filter(":contains('Link')").should("have.length", 2)
+      cy.get("p").contains(validCourse.notes).should("exist")
+    })
+  })
+  it("should search for a course by title and don't show anything when no course with such title exists, (#CF3)", () => {
+    cy.fixture("courses").then(({ validCourse }) => {
+      cy.get('input[name="search"]').type("nonexisting")
+      cy.waitUntil(() => cy.url().should("include", "nonexisting"))
+
+      cy.get("h2").should("not.exist")
+      cy.get("span").should("not.exist")
+      cy.get("a").filter(":contains('Link')").should("not.exist")
+      cy.get("p").should("not.exist")
+    })
+  })
+  it("should not add a new course when some fields are missing, (#CF4)", () => {
     cy.get("button").contains("Add Course").click()
     cy.fixture("courses").then(({ validCourse }) => {
       cy.get('input[name="teacherLectures"]').type(validCourse.teacherLectures)
@@ -43,7 +67,7 @@ describe("testing courses functionality", () => {
       cy.contains("Please fill in all required fields").should("exist")
     })
   })
-  it("should not add a new course with repeating title, (#CF3)", () => {
+  it("should not add a new course with repeating title, (#CF5)", () => {
     cy.get("button").contains("Add Course").click()
     cy.fixture("courses").then(({ validCourse }) => {
       cy.get('input[name="title"]').type(validCourse.title)
@@ -60,13 +84,13 @@ describe("testing courses functionality", () => {
       cy.contains("Course with this name already exists").should("exist")
     })
   })
-  it("should edit an existing course with valid data, (#CF4)", () => {
+  it("should edit an existing course with valid data, (#CF6)", () => {
     cy.get("form").find("button:has(svg)").first().click()
     cy.fixture("courses").then(({ validCourse, editData }) => {
       cy.get('input[name="title"]').clear().type(editData.title)
       cy.get("button[type='submit']").contains("Save").click()
 
-      cy.get("h1").contains(editData.title).should("exist")
+      cy.get("h2").contains(editData.title).should("exist")
       cy.get("span").contains(validCourse.teacherLectures).should("exist")
       cy.get("span").contains(validCourse.teacherPractices).should("exist")
       cy.get("span").contains(validCourse.formOfControl).should("exist")
@@ -80,7 +104,7 @@ describe("testing courses functionality", () => {
       })
     })
   })
-  it("should not edit an existing course with missing data, (#CF5)", () => {
+  it("should not edit an existing course with missing data, (#CF7)", () => {
     cy.get("form").find("button:has(svg)").first().click()
     cy.fixture("courses").then(() => {
       cy.get('input[name="title"]').clear()

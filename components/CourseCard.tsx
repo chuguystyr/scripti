@@ -24,9 +24,9 @@ const CourseCard: React.FC<{
       {!searchParams?.edit ?
         <>
           <div className="flex justify-between">
-            <h1 className="text-center text-lg font-bold mb-3">
+            <h2 className="text-center text-lg font-bold mb-3">
               {course.title}
-            </h1>
+            </h2>
             <form
               className="inline-block ml-[15vw] cursor-pointer"
               action={openEditCourse}
