@@ -9,7 +9,6 @@ async function connectDB() {
   }
 
   if (cachedDb && mongoose.connection.readyState === 1) {
-    console.log("Using cached database instance")
     return cachedDb
   }
 
@@ -19,10 +18,9 @@ async function connectDB() {
       maxPoolSize: 25,
     })
     cachedDb = dbInstance
-    console.log("New database connection established")
     return dbInstance
   } catch (error) {
-    console.error("Database connection failed", error)
+    throw new Error("Error connecting to the database")
   }
 }
 
