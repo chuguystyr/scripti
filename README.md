@@ -17,6 +17,8 @@ Scripti is a study planning tool designed for students to manage their academic 
 ## Roadmap
 
 - **Editing and deleting existing schedules**
+- **Tasks prioritizing system**
+- **Filters for courses and tasks**
 
 ## Technologies
 
