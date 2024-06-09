@@ -25,8 +25,7 @@ export default defineConfig({
         baseUrl: "https://scripti-dev.vercel.app/",
       },
       production: {
-        // TODO: replace when production is restored
-        baseUrl: "",
+        baseUrl: "https://scripti-app.vercel.app/",
       },
     },
   },

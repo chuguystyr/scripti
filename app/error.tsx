@@ -15,6 +15,9 @@ const Error: React.FC<{
       data.number = 500
       data.text = "Something went wrong. Please try again later."
       break
+    default:
+      data.number = 500
+      data.text = "Something went wrong. Please try again later."
   }
   return (
     <main className="flex flex-col items-center justify-center h-screen">

@@ -10,12 +10,13 @@ import { ObjectId } from "mongodb"
 import { Error as MongooseError } from "mongoose"
 import { MongoServerError } from "mongodb"
 
-export const getCourses = async () => {
+export const getCourses = async (searchTerm?: string) => {
   const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
     const courses: ICourse[] | null = await Course.find({
       userId: new ObjectId(id),
+      title: { $regex: new RegExp(searchTerm || "", "i") },
     }).lean()
     if (!courses) {
       return { message: "No courses found" }

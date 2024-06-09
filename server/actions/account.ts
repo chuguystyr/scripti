@@ -78,7 +78,6 @@ export const login = async (form: FormData) => {
     expiresIn: "3h",
   })
   cookies().set("_scrpt", token, { maxAge: 60 * 60 * 3 })
-  console.log("Here")
   redirect("/protected/home")
 }
 

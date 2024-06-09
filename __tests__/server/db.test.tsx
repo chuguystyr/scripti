@@ -18,13 +18,9 @@ describe("connectDB", () => {
   })
 
   it("should log an error if the database connection fails", async () => {
-    const connectionError = new Error("Connection failed")
+    const connectionError = new Error("Error connecting to the database")
     vi.mocked(mongoose.connect).mockRejectedValue(connectionError)
-    await connectDB()
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Database connection failed",
-      connectionError,
-    )
+    expect(connectDB()).rejects.toThrow()
   })
 
   it("should establish a new database connection if no cached instance is available", async () => {

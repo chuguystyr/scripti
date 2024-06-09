@@ -12,6 +12,10 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
+      - name: Ensure latest Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Cache dependecies
@@ -29,6 +33,10 @@ jobs:
     needs: unit-test
     runs-on: ubuntu-latest
     steps:
+      - name: Ensure latest Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Cache dependecies
@@ -40,6 +48,8 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
+      - name: Cypress install
+        run: npx cypress install
       - name: Build project
         run: npm run build
         env:
@@ -47,6 +57,9 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
       - name: Start server
         run: npm start &
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
       - name: Wait for server to be up
         run: npx wait-on http://localhost:3000
       - name: Run e2e tests

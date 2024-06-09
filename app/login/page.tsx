@@ -66,5 +66,3 @@ const Login: React.FC<{
   )
 }
 export default Login
-
-// TODO: client-side validation && its styling

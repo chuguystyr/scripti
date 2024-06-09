@@ -85,7 +85,29 @@ describe("testing tasks functionality", () => {
       cy.get("p").contains(validTask.description).should("be.visible")
     })
   })
-  it("should edit an existing task with valid data, (#TF6)", () => {
+  it("should search for a task by title, (#TF5)", () => {
+    cy.fixture("tasks").then(({ validTask: { title } }) => {
+      cy.get('input[name="search"]').type(title)
+      // FIX THIS LINE
+      cy.waitUntil(
+        () => cy.url().should("include", title.replaceAll(" ", "+")),
+        {
+          timeout: 10000,
+        },
+      )
+
+      cy.get("h1").contains(title).should("be.visible")
+    })
+  })
+  it("should search for a task by title and don't show anything when no task with such title exists, (#TF6)", () => {
+    cy.fixture("tasks").then(({ validTask: { title } }) => {
+      cy.get('input[name="search"]').type("nonexistent")
+      cy.waitUntil(() => cy.url().should("include", "nonexistent"))
+
+      cy.get("h1").contains(title).should("not.exist")
+    })
+  })
+  it("should edit an existing task with valid data, (#TF7)", () => {
     cy.get("form").find("button:has(svg)").first().click()
     cy.fixture("tasks").then(({ editedTitle, validTask: { title } }) => {
       cy.get('input[name="title"]').clear().type(editedTitle)
@@ -98,7 +120,7 @@ describe("testing tasks functionality", () => {
       cy.get("button[type='submit']").contains("Save").click()
     })
   })
-  it("should not edit an existing course with missing data, (#TF7)", () => {
+  it("should not edit an existing course with missing data, (#TF8)", () => {
     cy.get("form").find("button:has(svg)").first().click()
     cy.fixture("tasks").then(() => {
       cy.get('input[name="title"]').clear()
@@ -107,12 +129,12 @@ describe("testing tasks functionality", () => {
       cy.contains("Please fill in all required fields").should("be.visible")
     })
   })
-  it("should mark existing task as done, (#TF8)", () => {
+  it("should mark existing task as done, (#TF9)", () => {
     cy.get("form").find("button:has(svg)").eq(1).click()
 
     cy.get("h2").contains("done").should("be.visible")
   })
-  it("should not add a new task with repeating title, (#TF5)", () => {
+  it("should not add a new task with repeating title, (#TF10)", () => {
     cy.get("button").contains("Add Task").click()
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="title"]').type(validTask.title)
@@ -128,11 +150,19 @@ describe("testing tasks functionality", () => {
         .should("be.visible")
     })
   })
-  it("should delete an existing task, (#TF9)", () => {
+  it("should delete an existing task, (#TF11)", () => {
     cy.fixture("tasks").then(({ validTask: { title } }) => {
       cy.get("form").find("button:has(svg)").last().click()
 
       cy.contains(title).should("not.exist")
     })
+  })
+
+  after(() => {
+    cy.fixture("users").then(({ correctUser: { username, password } }) => {
+      cy.login(username, password)
+    })
+    cy.goToCoursesPage()
+    cy.get("form").find("button:has(svg)").last().click()
   })
 })

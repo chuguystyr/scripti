@@ -48,12 +48,17 @@ export const getTasks = async () => {
   }
 }
 
-export const getAllTasks = async () => {
+export const getAllTasks = async (searchTerm?: string) => {
   const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
     const tasks = await Task.aggregate([
-      { $match: { userId: new ObjectId(id) } },
+      {
+        $match: {
+          userId: new ObjectId(id),
+          title: { $regex: new RegExp(searchTerm || "", "i") },
+        },
+      },
       {
         $lookup: {
           from: "courses",
