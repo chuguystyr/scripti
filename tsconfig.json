@@ -29,6 +29,6 @@
     "next.config.js",
     "vitest.config.js",
     "__tests__/components/submitButton.test.tsx"
-  ],
+, "eslint.config.js"  ],
   "exclude": ["node_modules"]
 }
