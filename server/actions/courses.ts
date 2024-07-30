@@ -46,7 +46,7 @@ export const setCourse = async (form: FormData) => {
     })
   } catch (error) {
     if (error instanceof MongooseError.ValidationError) {
-      for (let key in error.errors) {
+      for (const key in error.errors) {
         if (error.errors[key].kind === "required") {
           redirect("/protected/courses?add=true&error=fields")
         }
@@ -92,7 +92,7 @@ export const editCourse = async (form: FormData) => {
     )
   } catch (error) {
     if (error instanceof MongooseError.ValidationError) {
-      for (let key in error.errors) {
+      for (const key in error.errors) {
         if (error.errors[key].kind === "required") {
           redirect("/protected/courses?edit=true&error=fields")
         }

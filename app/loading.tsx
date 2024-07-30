@@ -1,6 +1,6 @@
 "use client"
 
-const Loader: React.FC<{}> = () => {
+const Loader: React.FC = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <span className="text-4xl mr-2 animate-spin">💡</span>

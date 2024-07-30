@@ -12,14 +12,14 @@ export default [
   ...fixupConfigRules(compat.extends("plugin:@next/next/recommended")),
   {
     files: ["**/**/*.js", "**/**/*.ts", "**/**/*.jsx", "**/**/*.tsx"],
-	languageOptions: {
-		parserOptions: {
-		  ecmaVersion: "latest",
-		  sourceType: "module",
-		  ecmaFeatures: {
-			jsx: true,
-		  },
-		},
-	  },
+    languageOptions: {
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
   },
 ]

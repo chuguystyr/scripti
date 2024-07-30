@@ -4,7 +4,6 @@ import dbConnect from "server/db"
 import User from "models/User"
 import { cookies } from "next/headers"
 import { protector } from "server/protection"
-import Schedule from "types/Schedule"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 export const getSchedule = async () => {
@@ -79,7 +78,7 @@ export const getSchedule = async () => {
   }
 }
 
-export const setSchedule = async (prevState: any, form: FormData) => {
+export const setSchedule = async (prevState: unknown, form: FormData) => {
   const formData = Object.fromEntries(form.entries()) as {
     [key: string]: string
   }
@@ -123,7 +122,7 @@ export const setSchedule = async (prevState: any, form: FormData) => {
 
 function transformData(input: { [key: string]: string }) {
   const schedule = JSON.parse(input.inputsData)
-  const transformed: { [key: string]: { [key: string]: {} } } = {}
+  const transformed: { [key: string]: { [key: string]: object } } = {}
   Object.keys(schedule).forEach((key) => {
     const match = key.match(/(^[a-zA-Z]+)(\d+)/)
     if (match) {

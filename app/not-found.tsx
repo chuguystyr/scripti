@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-const NotFoundPage: React.FC<{}> = () => {
+const NotFoundPage: React.FC = () => {
   return (
     <main className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-6xl font-bold animate-bounce">404</h1>

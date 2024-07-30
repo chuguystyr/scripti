@@ -1,6 +1,5 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import SearchBar from "components/SearchBar"
-import { replace } from "node_modules/cypress/types/lodash"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 describe("search bar", () => {

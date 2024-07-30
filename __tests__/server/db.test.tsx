@@ -3,7 +3,6 @@ import mongoose, { Mongoose } from "mongoose"
 import connectDB from "server/db"
 
 vi.spyOn(mongoose, "connect")
-const consoleErrorSpy = vi.spyOn(console, "error")
 describe("connectDB", () => {
   beforeEach(() => {
     process.env.DATABASE_URL = "mongodb://localhost:27017/testdb"

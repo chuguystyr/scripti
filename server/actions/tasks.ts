@@ -236,7 +236,7 @@ export const setTaskNonEditableAtTasks = async () => {
 }
 
 const checkForMissingFields = (error: Error.ValidationError) => {
-  for (let key in error.errors) {
+  for (const key in error.errors) {
     if (error.errors[key].kind === "required") {
       return true
     }
