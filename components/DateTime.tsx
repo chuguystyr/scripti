@@ -1,7 +1,7 @@
 "use client"
 import { useDateTime } from "hooks/useDataTime"
 
-const DateTime: React.FC<{}> = () => {
+const DateTime: React.FC = () => {
   const { time, dayMonth } = useDateTime()
   return (
     <p>

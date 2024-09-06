@@ -4,7 +4,7 @@ import { compare, hash } from "bcryptjs"
 import jwt from "jsonwebtoken"
 import dbConnect from "server/db"
 import User from "models/User"
-import { cookies, headers } from "next/headers"
+import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { protector } from "server/protection"
 import { revalidatePath } from "next/cache"
@@ -37,6 +37,7 @@ export const signUp = async (form: FormData) => {
       password: hashedPassword,
     })
     await newUser.save()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error.code === 11000) {
       redirect("/signup?error=username")

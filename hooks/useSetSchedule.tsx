@@ -12,6 +12,7 @@ export const useSetSchedule = () => {
   const [courses, setCourses] = useState<Course[] | null>(null)
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     if (state.error?.length! > 0) {
       router.push("/protected/home")
     }
@@ -89,7 +90,7 @@ export const useSetSchedule = () => {
   const debouncedCurrentFieldValue = useDebounce(currentFieldValue, 500)
 
   useEffect(() => {
-    if (titles && debouncedCurrentFieldValue) {
+    if (titles && typeof debouncedCurrentFieldValue === "string") {
       const filteredSuggestions = titles.filter((title) =>
         title.toLowerCase().includes(debouncedCurrentFieldValue.toLowerCase()),
       )

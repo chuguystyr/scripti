@@ -41,7 +41,7 @@ describe("testing courses functionality", () => {
     })
   })
   it("should search for a course by title and don't show anything when no course with such title exists, (#CF3)", () => {
-    cy.fixture("courses").then(({ validCourse }) => {
+    cy.fixture("courses").then(() => {
       cy.get('input[name="search"]').type("nonexisting")
       cy.waitUntil(() => cy.url().should("include", "nonexisting"))
 

@@ -2,7 +2,7 @@
 import SubmitButton from "components/SubmitButton"
 import { useSetSchedule } from "hooks/useSetSchedule"
 
-const SetSchedule: React.FC<{}> = () => {
+const SetSchedule: React.FC = () => {
   const {
     data: { inputs, days, times, suggestions, currentField, blurred },
     actions: { handleInputChange, handleInputFocus, setBlurred, formAction },

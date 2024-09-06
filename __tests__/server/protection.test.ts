@@ -17,7 +17,7 @@ describe("protector", () => {
   it("should call jwt.verify function with token and secret", async () => {
     const mockToken = "token"
     const mockDecoded = "123"
-    vi.mocked(jwt.verify).mockReturnValue(mockDecoded as any)
+    vi.mocked(jwt.verify).mockReturnValue(mockDecoded as never)
     await protector(mockToken)
     expect(jwt.verify).toHaveBeenCalledWith(mockToken, process.env.JWT_SECRET)
   })
