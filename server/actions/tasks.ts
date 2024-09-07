@@ -86,7 +86,7 @@ export const getAllTasks = async (searchTerm?: string) => {
     } else {
       return { message: "No tasks found" }
     }
-  } catch (error) {
+  } catch {
     return { error: "Something went wrong." }
   }
 }

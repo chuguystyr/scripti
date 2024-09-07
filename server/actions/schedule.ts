@@ -110,7 +110,7 @@ export const setSchedule = async (prevState: unknown, form: FormData) => {
       if (!result) {
         return { error: "Something went wrong." }
       }
-    } catch (error) {
+    } catch {
       return { error: "Something went wrong." }
     }
     revalidatePath("/protected/home")

@@ -19,7 +19,7 @@ async function connectDB() {
     })
     cachedDb = dbInstance
     return dbInstance
-  } catch (error) {
+  } catch {
     throw new Error("Error connecting to the database")
   }
 }

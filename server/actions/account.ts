@@ -86,15 +86,15 @@ export const getAccount = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
   try {
     await dbConnect()
-    const result: { name: string; username: string; email: string } | null =
-      await User.findOne(
+    const result =
+      (await User.findOne(
         { _id: id },
         { _id: 0, name: 1, email: 1, username: 1 },
-      ).lean()
+      ).lean()) as { name: string; username: string; email: string } | null;
     if (result) {
       return result
     }
-  } catch (error) {
+  } catch {
     throw new Error("Internal")
   }
   throw new Error("Internal")

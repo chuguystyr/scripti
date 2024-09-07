@@ -8,7 +8,7 @@ export const protector = async (token: string) => {
       id: string
     }
     return id
-  } catch (error) {
+  } catch {
     throw new Error("Unathorised")
   }
 }
