@@ -26,7 +26,7 @@ jobs:
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm install --force
       - name: Run unit tests
         run: npm test
   e2e-test:
@@ -47,7 +47,7 @@ jobs:
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm install --force
       - name: Cypress install
         run: npx cypress install
       - name: Build project
