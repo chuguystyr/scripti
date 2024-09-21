@@ -1,4 +1,4 @@
-import Schedule from "components/Schedule"
+import Schedule from "components/schedule/Schedule"
 import Tasks from "components/Tasks"
 import Quote from "components/Quote"
 import Name from "components/Name"

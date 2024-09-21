@@ -1,18 +1,9 @@
-import Link from "next/link"
-import { getSchedule } from "server/actions/schedule"
-
-const Schedule = async () => {
-  const schedule = await getSchedule()
-  const times = [
-    "10:00 - 11:20",
-    "11:50 - 13:10",
-    "13:20 - 14:40",
-    "16:15 - 17:35",
-    "17:45 - 19:05",
-  ]
-  return (
-    <>
-      {schedule.schedule !== null ?
+import Schedule from "types/Schedule"
+const ScheduleTable: React.FC<{
+    schedule: Schedule
+    times: string[]
+}> = ({schedule, times}) => {
+    return (
         <table className="border-separate border-spacing-5 border-spacing-x-10 text-center">
           <thead>
             <tr>
@@ -40,20 +31,7 @@ const Schedule = async () => {
             })}
           </tbody>
         </table>
-      : <p className="text-center">
-          You don&apos;t have any classes set today. Happy weekend!
-          <br />
-          If you need to add schedule please click{" "}
-          <Link
-            className="font-semibold hover:underline underline-offset-4"
-            href="/protected/setSchedule"
-          >
-            here
-          </Link>
-        </p>
-      }
-    </>
-  )
+    )
 }
 
-export default Schedule
+export default ScheduleTable
