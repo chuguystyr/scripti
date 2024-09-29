@@ -159,7 +159,7 @@ export const checkTask = async (form: FormData) => {
   const id = form.get("id")
   const userId = await protector(cookies().get("_scrpt")!.value)
   if (!userId || !id) {
-    return { message: "Bad request" }
+    return
   }
   await dbConnect()
   try {
@@ -168,7 +168,6 @@ export const checkTask = async (form: FormData) => {
     revalidatePath("/protected/tasks")
   } catch (error) {
     console.log(error)
-    return { message: "Something went wrong" }
   }
 }
 
@@ -177,7 +176,7 @@ export const deleteTask = async (form: FormData) => {
   const userId = await protector(cookies().get("_scrpt")!.value)
   if (!userId || !id) {
     console.log("Bad request")
-    return { message: "Bad request" }
+    return
   }
   await dbConnect()
   try {
@@ -186,7 +185,6 @@ export const deleteTask = async (form: FormData) => {
     revalidatePath("/protected/tasks")
   } catch (error) {
     console.log(error)
-    return { message: "Something went wrong" }
   }
 }
 

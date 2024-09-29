@@ -55,7 +55,6 @@ export const setCourse = async (form: FormData) => {
       redirect("/protected/courses?add=true&error=title")
     } else {
       console.log(error)
-      return { message: "Something went wrong" }
     }
   }
   revalidatePath("/protected/courses")
@@ -101,7 +100,6 @@ export const editCourse = async (form: FormData) => {
       redirect("/protected/courses?edit=true&error=title")
     } else {
       console.log(error)
-      return { message: "Something went wrong" }
     }
   }
   revalidatePath("/protected/courses", "page")
@@ -112,14 +110,13 @@ export const deleteCourse = async (form: FormData) => {
   const user = await protector(cookies().get("_scrpt")!.value)
   const id = form.get("id")!.toString()
   if (!user || !id) {
-    return { message: "Bad request" }
+    return
   }
   await dbConnect()
   try {
     await Course.deleteOne({ _id: new ObjectId(id) })
   } catch (error) {
     console.log(error)
-    return { message: "Something went wrong" }
   }
   revalidatePath("/protected/courses")
 }
