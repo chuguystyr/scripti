@@ -86,11 +86,10 @@ export const getAccount = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
   try {
     await dbConnect()
-    const result =
-      (await User.findOne(
-        { _id: id },
-        { _id: 0, name: 1, email: 1, username: 1 },
-      ).lean()) as { name: string; username: string; email: string } | null;
+    const result = (await User.findOne(
+      { _id: id },
+      { _id: 0, name: 1, email: 1, username: 1 },
+    ).lean()) as { name: string; username: string; email: string } | null
     if (result) {
       return result
     }
@@ -112,11 +111,11 @@ export const editAccount = async (form: FormData) => {
   const id = await protector(cookies().get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
   if (!data.name || !data.username || !data.email) {
-    return { message: "Bad request" }
+    return
   }
   await dbConnect()
   try {
-    const result = await User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { _id: id },
       {
         $set: {
@@ -127,14 +126,9 @@ export const editAccount = async (form: FormData) => {
       },
       { new: true },
     )
-    if (!result) {
-      return { message: "Invalid credentials" }
-    }
     revalidatePath("/protected/account", "page")
-    return { message: "Account updated" }
   } catch (error) {
     console.log(error)
-    return { message: "Something went wrong" }
   } finally {
     redirect("/protected/account")
   }
@@ -144,25 +138,28 @@ export const changePassword = async (form: FormData) => {
   const id = await protector(cookies().get("_scrpt")!.value)
   const oldPassword = form.get("oldPassword")!.toString()
   const newPassword = form.get("newPassword")!.toString()
+  let redirectURL = "/protected/account?"
   if (!oldPassword || !newPassword) {
-    return { message: "Please fill all fields" }
+    redirectURL += "error=missing-fields"
+    redirect(redirectURL)
   }
   await dbConnect()
-  let redirectURL = null
   try {
     const user = await User.findOne({ _id: id }, { password: 1 })
     if (!user) {
-      return { message: "Invalid credentials" }
+      await logout()
     }
     const isMatch = await compare(oldPassword, user.password)
     if (!isMatch) {
-      redirectURL = "/protected/account?error=no-match"
+      redirectURL += "error=no-match"
+      redirect(redirectURL)
     } else {
       const passwordRegex = new RegExp(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
       )
       if (!passwordRegex.test(newPassword)) {
-        redirectURL = "/protected/account?error=password"
+        redirectURL = "error=password"
+        redirect(redirectURL)
       } else {
         const hashedPassword = await hash(newPassword, 12)
         const result = await User.findOneAndUpdate(
@@ -171,15 +168,17 @@ export const changePassword = async (form: FormData) => {
           { new: true },
         )
         if (!result) {
-          return { message: "Invalid credentials" }
+          redirectURL += "error=internal"
+          redirect(redirectURL)
         }
       }
     }
   } catch (error) {
     console.log(error)
-    return { message: "Something went wrong" }
+    redirectURL += "error=internal"
+    redirect(redirectURL)
   }
-  redirectURL = redirectURL || "/protected/account?status=password-changed"
+  redirectURL = "/protected/account?status=password-changed"
   redirect(redirectURL)
 }
 
@@ -193,14 +192,11 @@ export const deleteAccount = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
   await dbConnect()
   try {
-    const result = await User.findOneAndDelete({ _id: id })
-    if (!result) {
-      return { message: "Invalid credentials" }
-    }
+    await User.findOneAndDelete({ _id: id })
     cookies().set("_scrpt", "", { maxAge: 0 })
   } catch (error) {
     console.log(error)
-    return { message: "Something went wrong" }
+    redirect("/protected/account?error=not-deleted")
   }
   redirect("/")
 }

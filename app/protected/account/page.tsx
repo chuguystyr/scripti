@@ -21,6 +21,22 @@ const Account: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined }
 }> = async ({ searchParams }) => {
   const { name, username, email } = await getAccount()
+  let message = null
+  switch (searchParams?.error) {
+    case "no-match":
+      message = "Invalid old password"
+      break
+    case "password":
+      message =
+        "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character."
+      break
+    case "missing-fields":
+      message = "Please fill all required fields"
+      break
+    case "internal":
+      message = "Someting went wrong. Please try again later"
+      break
+  }
   return (
     <main className="md:grid md:grid-cols-2">
       <div>
@@ -76,20 +92,14 @@ const Account: React.FC<{
             className="flex flex-col w-fit mx-auto mb-4 rounded-md p-2 gap-4 bg-white"
             action={changePassword}
           >
-            {searchParams?.error === "no-match" && (
-              <p className="text-center w-[15vw] block mx-auto text-red-500">
-                Invalid old password
-              </p>
-            )}
-            {searchParams?.error === "password" && (
-              <p className="text-center w-[15vw] block mx-auto text-red-500">
-                Password must have 8-20 characters, including an uppercase
-                letter, a lowercase letter, a digit, and a special character.
-              </p>
-            )}
             {searchParams?.status === "password-changed" && (
               <p className="text-center w-[15vw] block mx-auto text-green-500">
-                Password&apos;s benn changed successfully
+                Password&apos;s been changed successfully
+              </p>
+            )}
+            {message && (
+              <p className="text-center w-[15vw] block mx-auto text-red-500">
+                {message}
               </p>
             )}
             <input
@@ -112,6 +122,11 @@ const Account: React.FC<{
             </button>
           </form>
           <form action={deleteAccount}>
+            {searchParams?.error === "not-deleted" && (
+              <p className="text-center text-red-500">
+                Account not deleted. Something went wrong
+              </p>
+            )}
             <button
               className="bg-red-600 text-white block mx-auto py-2 px-4 rounded-md hover:bg-red-700 transition-all duration-500 my-2"
               type="submit"
