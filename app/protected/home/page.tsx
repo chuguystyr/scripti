@@ -7,6 +7,14 @@ import {
   setTaskEditableAtHome as setEditable,
   setTaskNonEditableAtHome as resetEditable,
 } from "server/actions/tasks"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Home | Scripti",
+  description: "Access your personalized Scripti dashboard",
+  robots: "noindex, nofollow",
+}
+
 const Home: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined }
 }> = async ({ searchParams }) => {

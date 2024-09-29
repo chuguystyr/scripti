@@ -1,6 +1,13 @@
 "use client"
 import SubmitButton from "components/SubmitButton"
 import { useSetSchedule } from "hooks/useSetSchedule"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Set Schedule | Scripti",
+  description: "Add your schedule to Scripti",
+  robots: "noindex, nofollow",
+};
 
 const SetSchedule: React.FC = () => {
   const {

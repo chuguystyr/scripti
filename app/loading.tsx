@@ -1,4 +1,11 @@
 "use client"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Loading... | Scripti",
+  description: "Please wait while we prepare your content.",
+  robots: "noindex, nofollow",
+}
 
 const Loader: React.FC = () => {
   return (

@@ -5,6 +5,13 @@ import { getCourses } from "server/actions/courses"
 import { closeAddCourse } from "server/actions/courses"
 import AddCourseForm from "components/courses/AddCourseForm"
 import NoCoursesBlock from "components/courses/NoCoursesBlock"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Courses | Scripti",
+  description: "manage all of your courses in one place",
+  robots: "noindex, nofollow",
+}
 
 const Courses: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined }

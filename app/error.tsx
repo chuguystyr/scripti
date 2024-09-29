@@ -1,5 +1,27 @@
 "use client"
+import { Metadata } from "next"
 import Link from "next/link"
+export const generateMetadata = async ({
+  error,
+}: {
+  error: Error & { digest?: string }
+}): Promise<Metadata> => {
+  return {
+    title: `${error.message === "Unauthorized" ? "Unauthorized" : "InternalError"} | Scripti`,
+    description: "An error occurred",
+    robots: "noindex, nofollow",
+    openGraph: {
+      title: "Error",
+      description: "An error occurred",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: "Error",
+      description: "An error occurred",
+    },
+  }
+}
 const Error: React.FC<{
   error: Error & { digest?: string }
   reset: () => void

@@ -1,11 +1,9 @@
 import WithProtection from "utils/WithProtection"
 import Navigation from "components/Navigation"
 
-export default function AppLayout({
+const ProtectedLayout: React.FC<{ children: React.JSX.Element }> = ({
   children,
-}: {
-  children: React.JSX.Element
-}) {
+}) => {
   return (
     <WithProtection>
       <div className="px-5 md:px-10 py-5">
@@ -17,3 +15,5 @@ export default function AppLayout({
     </WithProtection>
   )
 }
+
+export default ProtectedLayout

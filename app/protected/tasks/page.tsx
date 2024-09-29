@@ -8,6 +8,13 @@ import {
   setTaskNonEditableAtTasks as resetEditable,
 } from "server/actions/tasks"
 import SearchBar from "components/SearchBar"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Tasks | Scripti",
+  description: "manage all of your tasks in one place",
+  robots: "noindex, nofollow",
+}
 
 const Tasks: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined }

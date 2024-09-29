@@ -1,5 +1,34 @@
 import Image from "next/image"
 import Link from "next/link"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Scirpti: A New Approach to Planning Your Studies",
+  description:
+    "Get everything you need at hand any time: from schedules and tasks to notes. Streamline your study process with our comprehensive tool designed for student success.",
+  keywords: [
+    "study planner",
+    "student app",
+    "task management",
+    "scheduling",
+    "education",
+  ],
+  openGraph: {
+    title: "Scirpti: Revolutionize Your Study Routine",
+    description:
+      "Efficient scheduling, task management, and note-taking all in one place. Start planning smarter today!",
+    images: [
+      { url: "/Logo.png", width: 512, height: 206, alt: "StudyPlanner Logo" },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Scripti: Your All-in-One Study Companion",
+    description:
+      "Organize your classes, assignments, and exams with ease. Join now and boost your academic performance!",
+    images: ["/Logo.png"],
+  },
+}
 
 const Main: React.FC = () => {
   return (

@@ -9,6 +9,13 @@ import {
   openEdit,
   closeEdit,
 } from "server/actions/account"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Account | Scripti",
+  description: "Access your account settings",
+  robots: "noindex, nofollow",
+}
 
 const Account: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined }
