@@ -33,7 +33,7 @@ const Tasks: React.FC<{
       {searchParams && searchParams?.add && (
         <SetTask close={closeAddTaskAtHome} searchParams={searchParams} />
       )}
-      <section className="mt-10 h-[55vh] flex flex-wrap gap-3" id="tasks">
+      <section className="mt-10 grid grid-cols-2 gap-3" id="tasks">
         {tasks && tasks.length === 0 && (
           <div className="card h-fit block mx-auto text-center">
             <p className="inline">

@@ -22,7 +22,7 @@ const TaskCard: React.FC<{
       break
   }
   return (
-    <div className="card w-fit h-fit">
+    <div className="card">
       {!searchParams?.edit ?
         <>
           <div className="flex justify-between">
