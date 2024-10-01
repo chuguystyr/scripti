@@ -9,7 +9,7 @@ import { revalidatePath } from "next/cache"
 export const getSchedule = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
   const date = new Date()
-  const day = date.toLocaleDateString("uk-UA", { weekday: "long" })
+  const day = date.toLocaleDateString("en-US", { weekday: "long" })
   try {
     await dbConnect()
     const result = await User.aggregate([
@@ -18,14 +18,14 @@ export const getSchedule = async () => {
       {
         $match: {
           $and: [
-            { "schedules.from": { $lte: new Date().toLocaleDateString("de") } },
-            { "schedules.to": { $gte: new Date().toLocaleDateString("de") } },
+            { "schedules.from": { $lte: new Date().toLocaleDateString("ua-UK") } },
+            { "schedules.to": { $gte: new Date().toLocaleDateString("ua-UK") } },
           ],
         },
       },
       {
         $addFields: {
-          currentDaySchedule: day,
+          currentDaySchedule: `$schedules.${day}`,
         },
       },
       {
@@ -95,7 +95,7 @@ export const setSchedule = async (prevState: unknown, form: FormData) => {
   if (
     formData["from"] !== "" &&
     formData["to"] !== "" &&
-    fromDate < toDate &&
+    fromDate <= toDate &&
     fromDate.getDay() >= new Date().getDay()
   ) {
     const id = await protector(cookies().get("_scrpt")!.value)
