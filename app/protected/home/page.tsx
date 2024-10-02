@@ -32,7 +32,7 @@ const Home: React.FC<{
           </div>
           <Quote />
         </section>
-        <section className="card mt-10" id="schedule">
+        <section className="card mt-10 flex justify-center" id="schedule">
           <Schedule />
         </section>
       </section>

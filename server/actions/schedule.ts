@@ -6,71 +6,106 @@ import { cookies } from "next/headers"
 import { protector } from "server/protection"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
+import { ObjectId } from "mongodb"
 export const getSchedule = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
-  const date = new Date()
-  const day = date.toLocaleDateString("en-US", { weekday: "long" })
   try {
     await dbConnect()
     const result = await User.aggregate([
-      { $match: { _id: id } },
-      { $unwind: "$schedules" },
+      // Find user by username (later replace wih id)
+      {
+        $match: {
+          _id: new ObjectId(id),
+        },
+      },
+      // Get user's schedules
+      {
+        $project: {
+          schedules: 1,
+        },
+      },
+      // Target schedules that are actual now
+      {
+        $unwind: "$schedules",
+      },
       {
         $match: {
           $and: [
-            { "schedules.from": { $lte: new Date().toLocaleDateString("ua-UK") } },
-            { "schedules.to": { $gte: new Date().toLocaleDateString("ua-UK") } },
+            {
+              "schedules.from": {
+                $lte: new Date().toLocaleDateString("ua-UK"),
+              },
+            },
+            {
+              "schedules.to": { $gte: new Date().toLocaleDateString("ua-UK") },
+            },
           ],
         },
       },
-      {
-        $addFields: {
-          currentDaySchedule: `$schedules.${day}`,
-        },
-      },
+      // Get schedules for today
       {
         $project: {
-          schedule: {
+          schedules: `$schedules.${new Date().toLocaleDateString("en-US", { weekday: "long" })}`,
+        },
+      },
+      // Turn schedules into array
+      {
+        $addFields: {
+          schedules: {
             $map: {
-              input: { $objectToArray: "$currentDaySchedule" },
-              as: "day",
-              in: {
-                k: "$$day.k",
-                v: {
-                  $mergeObjects: [
-                    "$$day.v",
-                    {
-                      $arrayElemAt: [
-                        {
-                          $filter: {
-                            input: "$courses",
-                            as: "course",
-                            cond: { $eq: ["$$course.title", "$$day.v.course"] },
-                          },
-                        },
-                        0,
-                      ],
-                    },
-                  ],
-                },
-              },
+              input: { $objectToArray: "$schedules" },
+              as: "schedule",
+              in: "$$schedule.v",
             },
           },
         },
       },
+      // Iterate over courses in array and make a lookup from courses collection
+      {
+        $unwind: "$schedules",
+      },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "schedules.course",
+          foreignField: "title",
+          as: "course",
+        },
+      },
       {
         $project: {
-          _id: 0,
-          schedule: {
-            $arrayToObject: "$schedule",
+          schedules: {
+            course: {
+              course: "$schedules.course",
+              type: "$schedules.type",
+              room: "$schedules.room",
+              lecturesLink: "$course.lecturesLink",
+              practicesLink: "$course.practicesLink",
+            },
           },
         },
       },
+      // Group all schedules into one array
+      {
+        $group: {
+          _id: "null",
+          schedule: {
+            $push: "$schedules",
+          },
+        },
+      },
+      {
+        $project: {
+          schedule: 1,
+          _id: 0,
+        },
+      },
     ])
+    console.log(result[0].schedule)
     if (result.length === 0) {
       return { schedule: null }
     } else {
-      return result[0].schedule
+      return result[0].schedule[0]
     }
   } catch (err) {
     console.log(err)
