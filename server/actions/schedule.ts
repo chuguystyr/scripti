@@ -101,7 +101,6 @@ export const getSchedule = async () => {
         },
       },
     ])
-    console.log(result[0].schedule)
     if (result.length === 0) {
       return { schedule: null }
     } else {
