@@ -3,7 +3,7 @@ const Quote = async () => {
   try {
     const response = await fetch("https://api.quotable.io/random")
     quote = await response.json()
-  } catch (error) {
+  } catch {
     quote = {
       content:
         "Live as if you were to die tomorrow. Learn as if you were to live forever.",
