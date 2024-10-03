@@ -33,13 +33,13 @@ const TaskCard: React.FC<{
               </button>
             </form>
             <form action={checkTask}>
-              <input type="hidden" name="id" value={task._id} />
+              <input type="hidden" name="id" value={task._id?.toString()} />
               <button>
                 <FaCheckCircle className="inline cursor-pointer self-center" />
               </button>
             </form>
             <form action={deleteTask}>
-              <input type="hidden" name="id" value={task._id} />
+              <input type="hidden" name="id" value={task._id?.toString()} />
               <button>
                 <RiDeleteBin7Fill className="inline cursor-pointer self-center" />
               </button>

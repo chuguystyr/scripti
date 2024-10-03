@@ -163,7 +163,10 @@ export const checkTask = async (form: FormData) => {
   }
   await dbConnect()
   try {
-    await Task.findOneAndUpdate({ _id: id }, { status: "done" })
+    await Task.findOneAndUpdate(
+      { _id: new ObjectId(id.toString()) },
+      { status: "done" },
+    )
     revalidatePath("/protected/home")
     revalidatePath("/protected/tasks")
   } catch (error) {
@@ -180,7 +183,7 @@ export const deleteTask = async (form: FormData) => {
   }
   await dbConnect()
   try {
-    await Task.findOneAndDelete({ _id: id })
+    await Task.findOneAndDelete({ _id: new ObjectId(id.toString()) })
     revalidatePath("/protected/home")
     revalidatePath("/protected/tasks")
   } catch (error) {
