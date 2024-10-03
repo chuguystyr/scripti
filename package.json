@@ -22,7 +22,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.1.0",
-    "scribe.js-ocr": "^0.2.7"
+    "scribe.js-ocr": "^0.2.7",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
