@@ -1,8 +1,7 @@
+import { SearchParams } from "types/Utilities"
 import AddCourseForm from "./AddCourseForm"
 
-const NoCoursesBlock: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined }
-}> = ({ searchParams }) => {
+const NoCoursesBlock: React.FC<SearchParams> = ({ searchParams }) => {
   return (
     <>
       {!searchParams?.add && (

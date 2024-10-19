@@ -9,6 +9,7 @@ import {
 } from "server/actions/tasks"
 import SearchBar from "components/SearchBar"
 import { Metadata } from "next"
+import { SearchParams } from "types/Utilities"
 
 export const metadata: Metadata = {
   title: "Tasks | Scripti",
@@ -16,9 +17,7 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Tasks: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined }
-}> = async ({ searchParams }) => {
+const Tasks: React.FC<SearchParams> = async ({ searchParams }) => {
   const tasks = await getAllTasks(searchParams?.query?.toString())
   return (
     <main>

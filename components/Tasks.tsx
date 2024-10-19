@@ -2,12 +2,14 @@ import { getTasks, openAddTaskAtHome } from "server/actions/tasks"
 import TaskCard from "components/TaskCard"
 import SetTask from "components/SetTask"
 import { closeAddTaskAtHome } from "server/actions/tasks"
+import { SearchParams } from "types/Utilities"
 
-const Tasks: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined }
-  setEditable: () => Promise<never>
-  resetEditable: () => Promise<never>
-}> = async ({ searchParams, setEditable, resetEditable }) => {
+const Tasks: React.FC<
+  SearchParams & {
+    setEditable: () => Promise<never>
+    resetEditable: () => Promise<never>
+  }
+> = async ({ searchParams, setEditable, resetEditable }) => {
   const { tasks, done } = (await getTasks()) ?? { tasks: [], done: 0 }
   const statistics = {
     inProgress:

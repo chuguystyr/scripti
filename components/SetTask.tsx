@@ -1,10 +1,12 @@
 import SubmitButton from "components/SubmitButton"
 import { setTask } from "server/actions/tasks"
 import { FaWindowClose } from "react-icons/fa"
-const SetTask: React.FC<{
-  close: () => void
-  searchParams?: { [key: string]: string | string[] | undefined }
-}> = ({ close, searchParams }) => {
+import { SearchParams } from "types/Utilities"
+const SetTask: React.FC<
+  SearchParams & {
+    close: () => void
+  }
+> = ({ close, searchParams }) => {
   let message = ""
   switch (searchParams?.error) {
     case "fields":

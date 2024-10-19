@@ -6,6 +6,7 @@ import { closeAddCourse } from "server/actions/courses"
 import AddCourseForm from "components/courses/AddCourseForm"
 import NoCoursesBlock from "components/courses/NoCoursesBlock"
 import { Metadata } from "next"
+import { SearchParams } from "types/Utilities"
 
 export const metadata: Metadata = {
   title: "Courses | Scripti",
@@ -13,9 +14,7 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Courses: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined }
-}> = async ({ searchParams }) => {
+const Courses: React.FC<SearchParams> = async ({ searchParams }) => {
   const courses = await getCourses(searchParams?.query?.toString())
   return (
     <main>

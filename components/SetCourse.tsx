@@ -1,10 +1,12 @@
+import { SearchParams } from "types/Utilities"
 import SubmitButton from "./SubmitButton"
 import { setCourse } from "server/actions/courses"
 
-const SetCourse: React.FC<{
-  close: () => Promise<never>
-  searchParams?: { [key: string]: string | string[] | undefined }
-}> = ({ close, searchParams }) => {
+const SetCourse: React.FC<
+  SearchParams & {
+    close: () => Promise<never>
+  }
+> = ({ close, searchParams }) => {
   let message = ""
   switch (searchParams?.error) {
     case "fields":

@@ -2,6 +2,7 @@ import Link from "next/link"
 import SubmitButton from "components/SubmitButton"
 import { signUp } from "server/actions/account"
 import { Metadata } from "next"
+import { SearchParams } from "types/Utilities"
 
 export const metadata: Metadata = {
   title: "Sign Up | Scripti",
@@ -30,9 +31,7 @@ export const metadata: Metadata = {
   },
 }
 
-const SignUp: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined }
-}> = ({ searchParams }) => {
+const SignUp: React.FC<SearchParams> = ({ searchParams }) => {
   let message = ""
   switch (searchParams?.error) {
     case "fields":

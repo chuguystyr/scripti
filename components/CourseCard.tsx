@@ -9,10 +9,12 @@ import {
   openEditCourse,
   closeEditCourse,
 } from "server/actions/courses"
-const CourseCard: React.FC<{
-  course: Course
-  searchParams?: { [key: string]: string | string[] | undefined }
-}> = ({ course, searchParams }) => {
+import { SearchParams } from "types/Utilities"
+const CourseCard: React.FC<
+  SearchParams & {
+    course: Course
+  }
+> = ({ course, searchParams }) => {
   let message = ""
   switch (searchParams?.error) {
     case "fields":

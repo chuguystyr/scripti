@@ -10,6 +10,7 @@ import {
   closeEdit,
 } from "server/actions/account"
 import { Metadata } from "next"
+import { SearchParams } from "types/Utilities"
 
 export const metadata: Metadata = {
   title: "Account | Scripti",
@@ -17,9 +18,7 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Account: React.FC<{
-  searchParams?: { [key: string]: string | string[] | undefined }
-}> = async ({ searchParams }) => {
+const Account: React.FC<SearchParams> = async ({ searchParams }) => {
   const { name, username, email } = await getAccount()
   let message = null
   switch (searchParams?.error) {
