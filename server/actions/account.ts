@@ -8,12 +8,14 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { protector } from "server/protection"
 import { revalidatePath } from "next/cache"
+import IUser from "types/User"
+import { HydratedDocument, Types } from "mongoose"
 
 export const signUp = async (form: FormData) => {
-  const name = form.get("name")!.toString()
-  const username = form.get("username")!.toString()
-  const email = form.get("email")!.toString()
-  const password = form.get("password")!.toString()
+  const name = form.get("name") as string | null
+  const username = form.get("username") as string | null
+  const email = form.get("email") as string | null
+  const password = form.get("password") as string | null
   if (!name || !username || !email || !password) {
     redirect("/signup?error=fields")
   }
@@ -30,7 +32,7 @@ export const signUp = async (form: FormData) => {
   try {
     await dbConnect()
     const hashedPassword = await hash(password, 12)
-    const newUser = new User({
+    const newUser: HydratedDocument<IUser> = new User({
       name,
       username,
       email,
@@ -39,6 +41,7 @@ export const signUp = async (form: FormData) => {
     await newUser.save()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+    // TODOL check for the ways to use built-in instruments instead of manual if-check
     if (error.code === 11000) {
       redirect("/signup?error=username")
     }
@@ -49,8 +52,8 @@ export const signUp = async (form: FormData) => {
 }
 
 export const login = async (form: FormData) => {
-  const username = form.get("username")!.toString()
-  const password = form.get("password")!.toString()
+  const username = form.get("username") as string | null
+  const password = form.get("password") as string | null
   if (!username || !password) {
     redirect("/login?error=fields")
   }
@@ -60,10 +63,9 @@ export const login = async (form: FormData) => {
     console.log(error)
     redirect("/login?error=internal")
   }
-  const user = await User.findOne(
-    { username: username },
-    { password: 1 },
-  ).orFail(() => redirect("/login?error=credentials"))
+  const user = await User.findOne({ username: username }, { password: 1 })
+    .orFail(() => redirect("/login?error=credentials"))
+    .lean<IUser & { _id: Types.ObjectId }>()
   let match
   try {
     const isMatch = await compare(password, user.password)
@@ -86,17 +88,18 @@ export const getAccount = async () => {
   const id = await protector(cookies().get("_scrpt")!.value)
   try {
     await dbConnect()
-    const result = (await User.findOne(
+    const result = await User.findOne(
       { _id: id },
       { _id: 0, name: 1, email: 1, username: 1 },
-    ).lean()) as { name: string; username: string; email: string } | null
-    if (result) {
-      return result
-    }
+    )
+      .orFail(() => {
+        throw new Error("Internal")
+      })
+      .lean<Omit<IUser, "password">>()
+    return result
   } catch {
     throw new Error("Internal")
   }
-  throw new Error("Internal")
 }
 
 export const openEdit = async () => {
@@ -136,8 +139,8 @@ export const editAccount = async (form: FormData) => {
 
 export const changePassword = async (form: FormData) => {
   const id = await protector(cookies().get("_scrpt")!.value)
-  const oldPassword = form.get("oldPassword")!.toString()
-  const newPassword = form.get("newPassword")!.toString()
+  const oldPassword = form.get("oldPassword") as string | null
+  const newPassword = form.get("newPassword") as string | null
   let redirectURL = "/protected/account?"
   if (!oldPassword || !newPassword) {
     redirectURL += "error=missing-fields"
@@ -145,10 +148,11 @@ export const changePassword = async (form: FormData) => {
   }
   await dbConnect()
   try {
-    const user = await User.findOne({ _id: id }, { password: 1 })
-    if (!user) {
-      await logout()
-    }
+    const user = await User.findOne({ _id: id }, { password: 1, _id: 0 })
+      .orFail(() => {
+        throw new Error("Unathorised")
+      })
+      .lean<{ password: string }>()
     const isMatch = await compare(oldPassword, user.password)
     if (!isMatch) {
       redirectURL += "error=no-match"
@@ -162,15 +166,14 @@ export const changePassword = async (form: FormData) => {
         redirect(redirectURL)
       } else {
         const hashedPassword = await hash(newPassword, 12)
-        const result = await User.findOneAndUpdate(
+        await User.findOneAndUpdate(
           { _id: id },
           { $set: { password: hashedPassword } },
           { new: true },
-        )
-        if (!result) {
+        ).orFail(() => {
           redirectURL += "error=internal"
           redirect(redirectURL)
-        }
+        })
       }
     }
   } catch (error) {
