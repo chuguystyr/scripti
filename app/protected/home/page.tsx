@@ -16,7 +16,8 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Home: React.FC<SearchParams> = async ({ searchParams }) => {
+const Home: React.FC<SearchParams> = async (props) => {
+  const searchParams = await props
   return (
     <main className="flex flex-col md:flex-row gap-5 md:gap-10">
       <h1 className="sr-only">Scripti app&apos;s home page</h1>

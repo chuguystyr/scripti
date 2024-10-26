@@ -10,11 +10,10 @@ import {
   closeEditCourse,
 } from "server/actions/courses"
 import { SearchParams } from "types/Utilities"
-const CourseCard: React.FC<
-  SearchParams & {
-    course: Course
-  }
-> = ({ course, searchParams }) => {
+const CourseCard: React.FC<{
+  searchParams: Awaited<SearchParams>
+  course: Course
+}> = ({ course, searchParams }) => {
   let message = ""
   switch (searchParams?.error) {
     case "fields":

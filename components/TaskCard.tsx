@@ -4,13 +4,12 @@ import Task from "types/Task"
 import { checkTask, deleteTask, editTask } from "server/actions/tasks"
 import { SearchParams } from "types/Utilities"
 
-const TaskCard: React.FC<
-  SearchParams & {
-    task: Task
-    setEditable: () => Promise<never>
-    resetEditable: () => Promise<never>
-  }
-> = ({ task, searchParams, setEditable, resetEditable }) => {
+const TaskCard: React.FC<{
+  searchParams: Awaited<SearchParams>
+  task: Task
+  setEditable: () => Promise<never>
+  resetEditable: () => Promise<never>
+}> = ({ task, searchParams, setEditable, resetEditable }) => {
   let message = ""
   switch (searchParams?.error) {
     case "fields":

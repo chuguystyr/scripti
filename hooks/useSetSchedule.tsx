@@ -1,14 +1,13 @@
 import { getCourses } from "server/actions/courses"
 import { setSchedule } from "server/actions/schedule"
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState, useMemo, useActionState } from "react"
 import { useRouter } from "next/navigation"
 import Course from "types/Course"
-import { useFormState } from "react-dom"
 import { useDebounce } from "./useDebounce"
 
 export const useSetSchedule = () => {
   const router = useRouter()
-  const [state, formAction] = useFormState(setSchedule, { error: "" })
+  const [state, formAction] = useActionState(setSchedule, { error: "" })
   const [courses, setCourses] = useState<Course[] | null>(null)
 
   useEffect(() => {

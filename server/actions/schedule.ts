@@ -8,7 +8,7 @@ import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { ObjectId } from "mongodb"
 export const getSchedule = async () => {
-  const id = await protector(cookies().get("_scrpt")!.value)
+  const id = await protector((await cookies()).get("_scrpt")!.value)
   try {
     await dbConnect()
     const result = await User.aggregate([
@@ -132,7 +132,7 @@ export const setSchedule = async (prevState: unknown, form: FormData) => {
     fromDate <= toDate &&
     fromDate.getDay() >= new Date().getDay()
   ) {
-    const id = await protector(cookies().get("_scrpt")!.value)
+    const id = await protector((await cookies()).get("_scrpt")!.value)
     const schedule = transformData(formData)
     await dbConnect()
     try {

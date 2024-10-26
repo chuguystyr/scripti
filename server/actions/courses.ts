@@ -11,7 +11,7 @@ import { Error as MongooseError } from "mongoose"
 import { MongoServerError } from "mongodb"
 
 export const getCourses = async (searchTerm?: string) => {
-  const id = await protector(cookies().get("_scrpt")!.value)
+  const id = await protector((await cookies()).get("_scrpt")!.value)
   await dbConnect()
   try {
     const courses = (await Course.find({
@@ -36,7 +36,7 @@ export const closeAddCourse = async () => {
 }
 
 export const setCourse = async (form: FormData) => {
-  const id = await protector(cookies().get("_scrpt")!.value)
+  const id = await protector((await cookies()).get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
   await dbConnect()
   try {
@@ -62,7 +62,7 @@ export const setCourse = async (form: FormData) => {
 }
 
 export const editCourse = async (form: FormData) => {
-  const userId = await protector(cookies().get("_scrpt")!.value)
+  const userId = await protector((await cookies()).get("_scrpt")!.value)
   const title = form.get("title")!.toString()
   const controlForm = form.get("controlForm")!.toString()
   const teacherLectures = form.get("teacherLectures")!.toString()
@@ -107,7 +107,7 @@ export const editCourse = async (form: FormData) => {
 }
 
 export const deleteCourse = async (form: FormData) => {
-  const user = await protector(cookies().get("_scrpt")!.value)
+  const user = await protector((await cookies()).get("_scrpt")!.value)
   const id = form.get("id")!.toString()
   if (!user || !id) {
     return

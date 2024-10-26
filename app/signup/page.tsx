@@ -31,7 +31,8 @@ export const metadata: Metadata = {
   },
 }
 
-const SignUp: React.FC<SearchParams> = ({ searchParams }) => {
+const SignUp: React.FC<SearchParams> = async (props) => {
+  const searchParams = await props
   let message = ""
   switch (searchParams?.error) {
     case "fields":

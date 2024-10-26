@@ -17,7 +17,8 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Tasks: React.FC<SearchParams> = async ({ searchParams }) => {
+const Tasks: React.FC<SearchParams> = async (props) => {
+  const searchParams = await props
   const tasks = await getAllTasks(searchParams?.query?.toString())
   return (
     <main>

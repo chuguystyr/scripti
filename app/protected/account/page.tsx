@@ -18,7 +18,8 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Account: React.FC<SearchParams> = async ({ searchParams }) => {
+const Account: React.FC<SearchParams> = async (props) => {
+  const searchParams = await props
   const { name, username, email } = await getAccount()
   let message = null
   switch (searchParams?.error) {

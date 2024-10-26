@@ -12,7 +12,7 @@ import { MongoServerError } from "mongodb"
 import Course from "models/Course"
 
 export const getTasks = async () => {
-  const id = await protector(cookies().get("_scrpt")!.value)
+  const id = await protector((await cookies()).get("_scrpt")!.value)
   await dbConnect()
   try {
     const tasks = await Task.aggregate([
@@ -49,7 +49,7 @@ export const getTasks = async () => {
 }
 
 export const getAllTasks = async (searchTerm?: string) => {
-  const id = await protector(cookies().get("_scrpt")!.value)
+  const id = await protector((await cookies()).get("_scrpt")!.value)
   await dbConnect()
   try {
     const tasks = await Task.aggregate([
@@ -108,7 +108,7 @@ export const closeAddTaskAtHome = async () => {
 }
 
 export const setTask = async (form: FormData) => {
-  const id = await protector(cookies().get("_scrpt")!.value)
+  const id = await protector((await cookies()).get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
   await dbConnect()
   try {
@@ -157,7 +157,7 @@ export const closeEditTask = async () => {
 
 export const checkTask = async (form: FormData) => {
   const id = form.get("id")
-  const userId = await protector(cookies().get("_scrpt")!.value)
+  const userId = await protector((await cookies()).get("_scrpt")!.value)
   if (!userId || !id) {
     return
   }
@@ -176,7 +176,7 @@ export const checkTask = async (form: FormData) => {
 
 export const deleteTask = async (form: FormData) => {
   const id = form.get("id")
-  const userId = await protector(cookies().get("_scrpt")!.value)
+  const userId = await protector((await cookies()).get("_scrpt")!.value)
   if (!userId || !id) {
     console.log("Bad request")
     return
@@ -192,7 +192,7 @@ export const deleteTask = async (form: FormData) => {
 }
 
 export const editTask = async (form: FormData) => {
-  const id = await protector(cookies().get("_scrpt")!.value)
+  const id = await protector((await cookies()).get("_scrpt")!.value)
   const data = Object.fromEntries(form.entries())
   await dbConnect()
   try {

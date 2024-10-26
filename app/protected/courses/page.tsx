@@ -14,7 +14,8 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Courses: React.FC<SearchParams> = async ({ searchParams }) => {
+const Courses: React.FC<SearchParams> = async (props) => {
+  const searchParams = await props
   const courses = await getCourses(searchParams?.query?.toString())
   return (
     <main>
@@ -23,7 +24,7 @@ const Courses: React.FC<SearchParams> = async ({ searchParams }) => {
         <SetCourse close={closeAddCourse} searchParams={searchParams} />
       )}
       {Array.isArray(courses) && courses.length === 0 && !searchParams?.query ?
-        <NoCoursesBlock searchParams={searchParams} />
+        <NoCoursesBlock {...searchParams} />
       : <>
           <SearchBar>
             <AddCourseForm />

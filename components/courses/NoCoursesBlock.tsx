@@ -1,7 +1,7 @@
 import { SearchParams } from "types/Utilities"
 import AddCourseForm from "./AddCourseForm"
 
-const NoCoursesBlock: React.FC<SearchParams> = ({ searchParams }) => {
+const NoCoursesBlock: React.FC<Awaited<SearchParams>> = (searchParams) => {
   return (
     <>
       {!searchParams?.add && (
