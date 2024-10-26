@@ -27,7 +27,7 @@ export const getCourses = async (searchTerm?: string) => {
   }
 }
 
-export const openAddCourse = () => {
+export const openAddCourse = async () => {
   redirect("/protected/courses?add=true")
 }
 
@@ -121,7 +121,7 @@ export const deleteCourse = async (form: FormData) => {
   revalidatePath("/protected/courses")
 }
 
-export const openEditCourse = () => {
+export const openEditCourse = async () => {
   redirect("/protected/courses?edit=true")
 }
 

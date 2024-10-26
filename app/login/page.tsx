@@ -2,7 +2,7 @@ import Link from "next/link"
 import SubmitButton from "components/SubmitButton"
 import { login } from "server/actions/account"
 import { Metadata } from "next"
-import { SearchParams } from "types/Utilities"
+import { BasicPageProps } from "types/Utilities"
 
 export const metadata: Metadata = {
   title: "Log In | Scripti",
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   },
 }
 
-const Login: React.FC<SearchParams> = async (props) => {
-  const searchParams = await props
+const Login: React.FC<BasicPageProps> = async (props) => {
+  const searchParams = await props.searchParams
   let message = ""
   switch (searchParams?.error) {
     case "fields":

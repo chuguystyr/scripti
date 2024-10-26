@@ -10,7 +10,7 @@ import {
   closeEdit,
 } from "server/actions/account"
 import { Metadata } from "next"
-import { SearchParams } from "types/Utilities"
+import { BasicPageProps } from "types/Utilities"
 
 export const metadata: Metadata = {
   title: "Account | Scripti",
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Account: React.FC<SearchParams> = async (props) => {
-  const searchParams = await props
+const Account: React.FC<BasicPageProps> = async (props) => {
+  const searchParams = await props.searchParams
   const { name, username, email } = await getAccount()
   let message = null
   switch (searchParams?.error) {

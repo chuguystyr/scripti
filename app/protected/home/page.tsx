@@ -8,7 +8,7 @@ import {
   setTaskNonEditableAtHome as resetEditable,
 } from "server/actions/tasks"
 import { Metadata } from "next"
-import { SearchParams } from "types/Utilities"
+import { BasicPageProps } from "types/Utilities"
 
 export const metadata: Metadata = {
   title: "Home | Scripti",
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Home: React.FC<SearchParams> = async (props) => {
-  const searchParams = await props
+const Home: React.FC<BasicPageProps> = async (props) => {
+  const searchParams = await props.searchParams
   return (
     <main className="flex flex-col md:flex-row gap-5 md:gap-10">
       <h1 className="sr-only">Scripti app&apos;s home page</h1>
