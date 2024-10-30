@@ -79,7 +79,7 @@ const Main: React.FC = () => {
             </div>
           </article>
           <Link href="/signup" className="btn-outlined">
-            Get Started
+            Get started
           </Link>
         </section>
       </main>

@@ -15,8 +15,12 @@ vi.mock("react-dom", () => {
 })
 
 describe("signup page: general structure", () => {
-  beforeAll(() => {
-    render(<Signup />)
+  beforeAll(async () => {
+    const awaitedRSC = await Signup({
+      searchParams: new Promise((resolve) => resolve({})),
+      params: new Promise((resolve) => resolve({ slug: "" })),
+    })
+    render(awaitedRSC)
   })
   it("should contain app's name and signup label", () => {
     const heading = screen.getByRole("heading", { name: /Scripti/i })
@@ -48,18 +52,30 @@ describe("signup page: messages", () => {
   beforeEach(() => {
     cleanup()
   })
-  it("should display error message for missing fields", () => {
-    render(<Signup searchParams={{ error: "fields" }} />)
+  it("should display error message for missing fields", async () => {
+    const awaitedRSC = await Signup({
+      searchParams: new Promise((resolve) => resolve({ error: "fields" })),
+      params: new Promise((resolve) => resolve({ slug: "" })),
+    })
+    render(awaitedRSC)
     const message = screen.getByText(/Please fill in all fields/i)
     expect(message).toBeDefined()
   })
-  it("should display error message for taken username", () => {
-    render(<Signup searchParams={{ error: "username" }} />)
+  it("should display error message for taken username", async () => {
+    const awaitedRSC = await Signup({
+      searchParams: new Promise((resolve) => resolve({ error: "username" })),
+      params: new Promise((resolve) => resolve({ slug: "" })),
+    })
+    render(awaitedRSC)
     const message = screen.getByText(/Username is already taken/i)
     expect(message).toBeDefined()
   })
-  it("should display error message for internal error", () => {
-    render(<Signup searchParams={{ error: "internal" }} />)
+  it("should display error message for internal error", async () => {
+    const awaitedRSC = await Signup({
+      searchParams: new Promise((resolve) => resolve({ error: "internal" })),
+      params: new Promise((resolve) => resolve({ slug: "" })),
+    })
+    render(awaitedRSC)
     const message = screen.getByText(/Something went wrong. Please try again/i)
     expect(message).toBeDefined()
   })

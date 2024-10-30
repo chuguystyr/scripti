@@ -20,7 +20,10 @@ describe("main page: general structure", () => {
     expect(links).toHaveLength(3)
     expect(
       links.every(
-        (link) => link.textContent === "Login" || "Sign Up" || "Get started",
+        (link) =>
+          link.textContent === "Login" ||
+          link.textContent === "Sign Up" ||
+          link.textContent === "Get started",
       ),
     ).toBeTruthy()
   })
