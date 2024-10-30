@@ -1,10 +1,11 @@
+import { Schema } from "mongoose"
 export default interface Course {
-  _id: string
+  userId: Schema.Types.ObjectId
   title: string
   teacherLectures: string
-  lecturesLink: string
+  lecturesLink?: string
   teacherPractices: string
-  practicesLink: string
+  practicesLink?: string
   controlForm: string
-  notes: string
+  notes?: string
 }

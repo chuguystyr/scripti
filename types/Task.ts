@@ -1,9 +1,10 @@
+import { Schema } from "mongoose"
+
 export default interface Task {
-  _id: string | number | readonly string[] | undefined
-  userId: string
+  userId: Schema.Types.ObjectId
   title: string
   deadline: Date
-  course: string
+  course: Schema.Types.ObjectId
   status: string
-  description: string
+  description?: string
 }

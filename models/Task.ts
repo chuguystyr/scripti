@@ -1,7 +1,8 @@
-import { Schema, model, models } from "mongoose"
+import { Model, Schema, model, models } from "mongoose"
 import Course from "models/Course"
+import ITask from "types/Task"
 
-const TaskSchema = new Schema({
+const TaskSchema = new Schema<ITask, Model<ITask>>({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -40,6 +41,7 @@ const TaskSchema = new Schema({
   },
 })
 
-const TaskModel = models.tasks || model("tasks", TaskSchema)
+const TaskModel: Model<ITask> =
+  models.tasks || model<ITask>("tasks", TaskSchema)
 
 export default TaskModel

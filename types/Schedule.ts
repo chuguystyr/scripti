@@ -5,8 +5,8 @@ export default interface Schedule {
     teacher: string
     link: string
     room: string
-    lecturesLink: string
-    practicesLink: string
+    lecturesLink?: string
+    practicesLink?: string
     teacherLectures: string
     teacherPractices: string
   }

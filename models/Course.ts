@@ -1,6 +1,7 @@
-import { Schema, model, models } from "mongoose"
+import { Schema, Model, model, models } from "mongoose"
+import ICourse from "types/Course"
 
-const CourseSchema = new Schema({
+const CourseSchema = new Schema<ICourse, Model<ICourse>>({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -48,6 +49,7 @@ const CourseSchema = new Schema({
   },
 })
 
-const CourseModel = models.courses || model("courses", CourseSchema)
+const CourseModel: Model<ICourse> =
+  models.courses || model<ICourse>("courses", CourseSchema)
 
 export default CourseModel
