@@ -80,12 +80,15 @@ export const login = async (form: FormData) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
     expiresIn: "3h",
   })
-  ;(await cookies()).set("_scrpt", token, { maxAge: 60 * 60 * 3 })
+  const cookieStore = await cookies()
+  cookieStore.set("_scrpt", token, { maxAge: 60 * 60 * 3 })
   redirect("/protected/home")
 }
 
 export const getAccount = async () => {
-  const id = await protector((await cookies()).get("_scrpt")!.value)
+  const cookieStore = await cookies()
+  const token = cookieStore.get("_scrpt")!.value
+  const id = await protector(token)
   try {
     await dbConnect()
     const result = await User.findOne(
@@ -111,7 +114,9 @@ export const closeEdit = async () => {
 }
 
 export const editAccount = async (form: FormData) => {
-  const id = await protector((await cookies()).get("_scrpt")!.value)
+  const cookieStore = await cookies()
+  const token = cookieStore.get("_scrpt")!.value
+  const id = await protector(token)
   const data = Object.fromEntries(form.entries())
   if (!data.name || !data.username || !data.email) {
     return
@@ -138,7 +143,9 @@ export const editAccount = async (form: FormData) => {
 }
 
 export const changePassword = async (form: FormData) => {
-  const id = await protector((await cookies()).get("_scrpt")!.value)
+  const cookieStore = await cookies()
+  const token = cookieStore.get("_scrpt")!.value
+  const id = await protector(token)
   const oldPassword = form.get("oldPassword") as string | null
   const newPassword = form.get("newPassword") as string | null
   let redirectURL = "/protected/account?"
@@ -187,14 +194,16 @@ export const changePassword = async (form: FormData) => {
 
 export const logout = async () => {
   const cookieStore = await cookies()
-  await protector(cookieStore.get("_scrpt")!.value)
+  const token = cookieStore.get("_scrpt")!.value
+  await protector(token)
   cookieStore.set("_scrpt", "", { maxAge: 0 })
   redirect("/")
 }
 
 export const deleteAccount = async () => {
   const cookieStore = await cookies()
-  const id = await protector(cookieStore.get("_scrpt")!.value)
+  const token = cookieStore.get("_scrpt")!.value
+  const id = await protector(token)
   await dbConnect()
   try {
     await User.findOneAndDelete({ _id: id })
