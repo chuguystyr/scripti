@@ -20,7 +20,7 @@ describe("SetCourse component", () => {
   })
   beforeEach(() => {
     cleanup()
-    render(<SetCourse close={mockClose} />)
+    render(<SetCourse close={mockClose} searchParams={{}}/>)
   })
   it("should render form fields and labels", () => {
     const title = screen.getByLabelText("Title")

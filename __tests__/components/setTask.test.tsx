@@ -19,7 +19,7 @@ describe("SetTask component", () => {
 
   beforeEach(() => {
     cleanup()
-    render(<SetTask close={mockClose} />)
+    render(<SetTask close={mockClose} searchParams={{}}/>)
   })
 
   it("should render form fields and labels", () => {

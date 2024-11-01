@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
 import TaskCard from "components/TaskCard"
+import mongoose from "mongoose"
 
 const mockTask = {
-  _id: "1",
-  userId: "1",
+  _id: new mongoose.Types.ObjectId(),
+  userId: new mongoose.Types.ObjectId(),
   title: "Test Task",
-  deadline: "2023-01-01",
+  deadline: new Date(),
   course: "Test Course",
   status: "new",
   description: "Test Description",
@@ -28,6 +29,7 @@ describe("TaskCard component", () => {
         task={mockTask}
         setEditable={mockSetEditable}
         resetEditable={mockResetEditable}
+        searchParams={{}}
       />,
     )
   })

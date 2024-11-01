@@ -6,7 +6,7 @@ import { SearchParams } from "types/Utilities"
 
 const TaskCard: React.FC<{
   searchParams: Awaited<SearchParams>
-  task: Task & { course: string }
+  task: Omit<Task, "course"> & { course: string }
   setEditable: () => Promise<never>
   resetEditable: () => Promise<never>
 }> = ({ task, searchParams, setEditable, resetEditable }) => {
