@@ -37,7 +37,7 @@ const CourseCard: React.FC<{
               </button>
             </form>
             <form action={deleteCourse} className="cursor-pointer">
-              <input type="text" name="id" value={course._id} hidden />
+              <input type="text" name="id" value={course._id.toString()} hidden />
               <button type="submit">
                 <RiDeleteBin7Fill />
               </button>
@@ -52,7 +52,7 @@ const CourseCard: React.FC<{
             <span>Lectures</span>
             <span>{course.teacherLectures}</span>
             <Link
-              href={course.lecturesLink}
+              href={course?.lecturesLink || "#"}
               className="text-blue-600 hover:text-blue-800"
             >
               Link
@@ -62,7 +62,7 @@ const CourseCard: React.FC<{
             <span>Practices</span>
             <span>{course.teacherPractices}</span>
             <Link
-              href={course.practicesLink}
+              href={course?.practicesLink || "#"}
               className="text-blue-600 hover:text-blue-800"
             >
               Link
@@ -143,7 +143,7 @@ const CourseCard: React.FC<{
                 defaultValue={course.notes}
                 name="notes"
               ></textarea>
-              <input type="text" name="id" value={course._id} hidden />
+              <input type="text" name="id" value={course._id.toString()} hidden />
               <SubmitButton text="Save" />
             </div>
           </form>

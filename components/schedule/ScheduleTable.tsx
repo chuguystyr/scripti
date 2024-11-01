@@ -25,8 +25,8 @@ const ScheduleTable: React.FC<{
                 <Link
                   href={
                     course.type === "lecture" ?
-                      course.lecturesLink
-                    : course.practicesLink
+                      course.lecturesLink || "#"
+                    : course.practicesLink || "#"
                   }
                   className="text-blue-400 hover:text-blue-800"
                 >

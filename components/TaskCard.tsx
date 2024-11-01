@@ -6,7 +6,7 @@ import { SearchParams } from "types/Utilities"
 
 const TaskCard: React.FC<{
   searchParams: Awaited<SearchParams>
-  task: Task
+  task: Task & { course: string }
   setEditable: () => Promise<never>
   resetEditable: () => Promise<never>
 }> = ({ task, searchParams, setEditable, resetEditable }) => {
@@ -111,7 +111,7 @@ const TaskCard: React.FC<{
                 defaultValue={task.description}
                 name="description"
               ></textarea>
-              <input type="text" name="id" hidden value={task._id} />
+              <input type="text" name="id" hidden value={task._id.toString()} />
               <button
                 className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-all duration-500"
                 type="submit"

@@ -1,8 +1,10 @@
 import Course from "types/Course"
 import Task from "types/Task"
 import Schedule from "types/Schedule"
+import { Schema } from "mongoose"
 
 export default interface IUser {
+  _id: Schema.Types.ObjectId
   name: string
   username: string
   email: string
