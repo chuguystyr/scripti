@@ -19,15 +19,7 @@ const userSchema = new Schema<IUser, Model<IUser>>({
     type: String,
     required: true,
   },
-  courses: {
-    type: Array,
-    required: false,
-  },
   schedules: {
-    type: Array,
-    required: false,
-  },
-  tasks: {
     type: Array,
     required: false,
   },
