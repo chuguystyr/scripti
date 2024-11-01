@@ -12,7 +12,7 @@ import {
 import { SearchParams } from "types/Utilities"
 const CourseCard: React.FC<{
   searchParams: Awaited<SearchParams>
-  course: Course
+  course: Omit<Course, "userId">
 }> = ({ course, searchParams }) => {
   let message = ""
   switch (searchParams?.error) {

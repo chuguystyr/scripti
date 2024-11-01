@@ -1,7 +1,7 @@
-import { Schema } from "mongoose"
+import { Types } from "mongoose"
 export default interface Course {
-  _id: Schema.Types.ObjectId
-  userId: Schema.Types.ObjectId
+  _id: Types.ObjectId
+  userId: Types.ObjectId
   title: string
   teacherLectures: string
   lecturesLink?: string

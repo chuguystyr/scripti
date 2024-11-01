@@ -1,11 +1,11 @@
-import { Schema } from "mongoose"
+import { Types } from "mongoose"
 
 export default interface Task {
-  _id: Schema.Types.ObjectId
-  userId: Schema.Types.ObjectId
+  _id: Types.ObjectId
+  userId: Types.ObjectId
   title: string
   deadline: Date
-  course: Schema.Types.ObjectId
+  course: Types.ObjectId
   status: string
   description?: string
 }

@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
 import CourseCard from "components/CourseCard"
+import mongoose from "mongoose"
 
 const mockCourse = {
-  id: "1",
+  _id: new mongoose.Types.ObjectId(),
   title: "Test Course",
   controlForm: "Exam",
   teacherLectures: "John Doe",
@@ -34,7 +35,7 @@ describe("CourseCard component", () => {
   })
 
   it("should render course details", () => {
-    render(<CourseCard course={mockCourse} />)
+    render(<CourseCard course={mockCourse} searchParams={{}} />)
     expect(screen.getByText(mockCourse.title)).toBeDefined()
     expect(screen.getByText(mockCourse.controlForm)).toBeDefined()
     expect(screen.getByText(mockCourse.teacherLectures)).toBeDefined()
@@ -46,7 +47,7 @@ describe("CourseCard component", () => {
   })
 
   it("should render edit and delete buttons when not in edit mode", () => {
-    render(<CourseCard course={mockCourse} />)
+    render(<CourseCard course={mockCourse} searchParams={{}} />)
     const buttons = screen.getAllByRole("button")
     expect(buttons).toHaveLength(2)
   })
