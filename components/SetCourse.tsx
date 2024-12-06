@@ -1,11 +1,12 @@
-import { SearchParams } from "types/Utilities"
+import { BasicPageProps } from "types/Utilities"
 import SubmitButton from "./SubmitButton"
 import { setCourse } from "server/actions/courses"
 
 const SetCourse: React.FC<{
-  searchParams: Awaited<SearchParams>
   close: () => Promise<never>
-}> = ({ close, searchParams }) => {
+} & BasicPageProps> = async ({ close, searchParams:Sp, params }) => {
+  const {major} = await params
+  const searchParams = await Sp
   let message = ""
   switch (searchParams?.error) {
     case "fields":
@@ -104,6 +105,7 @@ const SetCourse: React.FC<{
             className="p-2 border border-gray-300 rounded-md w-full"
           />
         </div>
+        <input type="hidden" name="major" value={major} />
         <div className="flex justify-center gap-3 mt-4">
           <SubmitButton text="Add" />
         </div>

@@ -1,3 +1,4 @@
+// TODO: improve typing for Schedule possibly introducing a mongoose model
 export default interface Schedule {
   [key: string]: {
     course: string

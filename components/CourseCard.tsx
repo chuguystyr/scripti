@@ -11,9 +11,9 @@ import {
 } from "server/actions/courses"
 import { SearchParams } from "types/Utilities"
 const CourseCard: React.FC<{
-  searchParams: Awaited<SearchParams>
   course: Omit<Course, "userId">
-}> = ({ course, searchParams }) => {
+} & SearchParams> = async ({ course, searchParams:Sp }) => {
+  const searchParams = await Sp
   let message = ""
   switch (searchParams?.error) {
     case "fields":

@@ -1,8 +1,9 @@
 import { ReactElement } from "react"
-import { cookies, type UnsafeUnwrappedCookies } from "next/headers"
+import { cookies } from "next/headers"
 
-const WithProtection: React.FC<{ children: ReactElement }> = ({ children }) => {
-  const isAuthenticated = (cookies() as unknown as UnsafeUnwrappedCookies).get(
+const WithProtection: React.FC<{ children: ReactElement }> = async ({ children }) => {
+  const cookieStore = await cookies()
+  const isAuthenticated = cookieStore.get(
     "_scrpt",
   )?.value
   if (!isAuthenticated) {

@@ -37,11 +37,12 @@ export const signUp = async (form: FormData) => {
       username,
       email,
       password: hashedPassword,
+      majors: ["default"],
     })
     await newUser.save()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    // TODOL check for the ways to use built-in instruments instead of manual if-check
+    // TODO: check for the ways to use built-in instruments instead of manual if-check
     if (error.code === 11000) {
       redirect("/signup?error=username")
     }
@@ -82,7 +83,7 @@ export const login = async (form: FormData) => {
   })
   const cookieStore = await cookies()
   cookieStore.set("_scrpt", token, { maxAge: 60 * 60 * 3 })
-  redirect("/protected/home")
+  redirect("/protected/home/0")
 }
 
 export const getAccount = async () => {
@@ -93,12 +94,12 @@ export const getAccount = async () => {
     await dbConnect()
     const result = await User.findOne(
       { _id: id },
-      { _id: 0, name: 1, email: 1, username: 1 },
+      { _id: 0, name: 1, email: 1, username: 1, majors: 1 },
     )
       .orFail(() => {
         throw new Error("Internal")
       })
-      .lean<Omit<IUser, "password">>()
+      .lean<Omit<IUser, "password" | "schedules">>()
     return result
   } catch {
     throw new Error("Internal")

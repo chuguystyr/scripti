@@ -9,15 +9,20 @@ import { revalidatePath } from "next/cache"
 import { ObjectId } from "mongodb"
 import { Error as MongooseError } from "mongoose"
 import { MongoServerError } from "mongodb"
+import User from "models/User"
+import IUser from "types/User"
 
-export const getCourses = async (searchTerm?: string) => {
+export const getCourses = async (major:number, searchTerm?: string) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const id = await protector(token)
   await dbConnect()
   try {
+    const { majors } = await User.findOne({ _id: new ObjectId(id) }, { majors: 1 }).lean<IUser>().orFail()
+    const majorValue = majors[major]
     const courses = await Course.find({
       userId: new ObjectId(id),
+      major: majorValue,
       title: { $regex: new RegExp(searchTerm || "", "i") },
     }).lean<ICourse[]>()
     if (!courses) {

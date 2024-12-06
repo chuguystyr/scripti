@@ -8,4 +8,5 @@ export default interface IUser {
   email: string
   password: string
   schedules?: Schedule[]
+  majors: string[]
 }

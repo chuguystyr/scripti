@@ -14,17 +14,18 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Courses: React.FC<BasicPageProps> = async (props) => {
-  const searchParams = await props.searchParams
-  const courses = await getCourses(searchParams?.query?.toString())
+const Courses: React.FC<BasicPageProps> = async ({params, searchParams: sP}) => {
+  const searchParams = await sP
+  const { major } = await params
+  const courses = await getCourses(+major, searchParams?.query?.toString())
   return (
     <main>
       <h1 className="sr-only">Courses page</h1>
       {searchParams?.add && (
-        <SetCourse close={closeAddCourse} searchParams={searchParams} />
+        <SetCourse close={closeAddCourse} searchParams={sP} params={params}/>
       )}
       {Array.isArray(courses) && courses.length === 0 && !searchParams?.query ?
-        <NoCoursesBlock {...searchParams} />
+        <NoCoursesBlock searchParams={sP} />
       : <>
           <SearchBar>
             <AddCourseForm />
@@ -37,7 +38,7 @@ const Courses: React.FC<BasicPageProps> = async (props) => {
                   <CourseCard
                     key={index}
                     course={course}
-                    searchParams={searchParams}
+                    searchParams={sP}
                   />
                 )
               })}

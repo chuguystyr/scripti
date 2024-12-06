@@ -17,18 +17,19 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Tasks: React.FC<BasicPageProps> = async (props) => {
-  const searchParams = await props.searchParams
-  const tasks = await getAllTasks(searchParams?.query?.toString())
+const Tasks: React.FC<BasicPageProps> = async ({params, searchParams}) => {
+  const sParams = await searchParams
+  const {major} = await params
+  const tasks = await getAllTasks(+major,sParams?.query?.toString())
   return (
     <main>
       <h1 className="sr-only">Tasks page</h1>
       {(
         !tasks ||
-        (Array.isArray(tasks) && tasks.length === 0 && !searchParams?.query)
+        (Array.isArray(tasks) && tasks.length === 0 && !sParams?.query)
       ) ?
         <>
-          {!searchParams?.add && (
+          {!sParams?.add && (
             <>
               <p className="text-center">
                 Looks like you&apos;re first time here. Let&apos;s add some
@@ -41,8 +42,8 @@ const Tasks: React.FC<BasicPageProps> = async (props) => {
               </form>
             </>
           )}
-          {searchParams?.add && (
-            <SetTask close={closeAddTask} searchParams={searchParams} />
+          {sParams?.add && (
+            <SetTask close={closeAddTask} searchParams={searchParams} params={params}/>
           )}
         </>
       : <>
@@ -52,8 +53,8 @@ const Tasks: React.FC<BasicPageProps> = async (props) => {
                 Add Task
               </button>
             </form>
-            {searchParams?.add && (
-              <SetTask close={closeAddTask} searchParams={searchParams} />
+            {sParams?.add && (
+              <SetTask close={closeAddTask} searchParams={searchParams} params={params}/>
             )}
           </SearchBar>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

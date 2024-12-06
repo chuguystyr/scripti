@@ -2,14 +2,15 @@ import { getTasks, openAddTaskAtHome } from "server/actions/tasks"
 import TaskCard from "components/TaskCard"
 import SetTask from "components/SetTask"
 import { closeAddTaskAtHome } from "server/actions/tasks"
-import { SearchParams } from "types/Utilities"
+import { BasicPageProps } from "types/Utilities"
 
 const Tasks: React.FC<{
-  searchParams: Awaited<SearchParams>
   setEditable: () => Promise<never>
   resetEditable: () => Promise<never>
-}> = async ({ searchParams, setEditable, resetEditable }) => {
-  const { tasks, done } = (await getTasks()) ?? { tasks: [], done: 0 }
+} & BasicPageProps> = async ({ searchParams: sP, params, setEditable, resetEditable }) => {
+  const { major } = await params
+  const searchParams = await sP
+  const { tasks, done } = (await getTasks(+major)) ?? { tasks: [], done: 0 }
   const statistics = {
     inProgress:
       tasks.filter((task) => task.status === "in progress").length ?? 0,
@@ -32,7 +33,7 @@ const Tasks: React.FC<{
         </p>
       </section>
       {searchParams && searchParams?.add && (
-        <SetTask close={closeAddTaskAtHome} searchParams={searchParams} />
+        <SetTask close={closeAddTaskAtHome} searchParams={sP} params={params}/>
       )}
       <section className="mt-10 grid grid-cols-2 gap-3" id="tasks">
         {tasks && tasks.length === 0 && (
@@ -55,7 +56,7 @@ const Tasks: React.FC<{
             <TaskCard
               key={index}
               task={task}
-              searchParams={searchParams}
+              searchParams={sP}
               setEditable={setEditable}
               resetEditable={resetEditable}
             />

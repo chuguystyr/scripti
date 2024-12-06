@@ -1,53 +1,44 @@
-"use client"
 import Link from "next/link"
-import Image from "next/image"
-import { useState } from "react"
-import Logo from "public/Logo.png"
+import ClickableLogo from "./ClickableLogo"
+import MajorsTumbler from "components/MajorsTumbler"
+import { Params } from "types/Utilities"
 
-const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false)
+const Navigation: React.FC<Params> = async ({
+  params
+}) => {
+  const index = Number((await params).major)
   return (
-    <nav className="flex mb-5 justify-between" role="navigation">
-      <Link href="/protected/home">
-        <Image
-          src={Logo}
-          width={512}
-          height={206}
-          alt="logo"
-          className="w-40 h-30 rounded-xl"
-          priority
-        />
-      </Link>
+    <nav className="flex mb-5 justify-between items-center" role="navigation">
+      <ClickableLogo />
+      <MajorsTumbler />
       <ul className="hidden md:flex md:gap-10 md:my-auto">
         <li className="btn-outlined">
-          <Link href="/protected/courses">Courses</Link>
+          <Link href={`/protected/courses/${index}`}>Courses</Link>
         </li>
         <li className="btn-outlined">
-          <Link href="/protected/tasks">Tasks</Link>
+          <Link href={`/protected/tasks/${index}`}>Tasks</Link>
         </li>
         <li className="btn-outlined">
           <Link href="/protected/account">Account</Link>
         </li>
       </ul>
       <div className="md:hidden self-center">
-        <button
-          className="btn-filled w-fit"
-          onClick={() => setIsOpen((prev) => !prev)}
-        >
-          {isOpen ? "Close" : "Menu"}
-        </button>
-        <ul
-          className={`${
-            isOpen ? "flex" : "hidden"
-          } px-2 rounded-md z-10 absolute flex-col right-5 bg-white md:static md:w-auto md:flex md:flex-row gap-3 md:gap-4 my-auto`}
-        >
-          <li className="mobileMenuLink">
+        <input type="checkbox" id="menu-toggle" className="hidden peer" />
+        <label htmlFor="menu-toggle" className="cursor-pointer">
+          <div className="space-y-1">
+            <span className="block w-6 h-0.5 bg-black"></span>
+            <span className="block w-6 h-0.5 bg-black"></span>
+            <span className="block w-6 h-0.5 bg-black"></span>
+          </div>
+        </label>
+        <ul className="hidden card peer-checked:mobileLinks">
+          <li className="mobileLink">
             <Link href="/protected/courses">Courses</Link>
           </li>
-          <li className="mobileMenuLink">
+          <li className="mobileLink">
             <Link href="/protected/tasks">Tasks</Link>
           </li>
-          <li className="mobileMenuLink">
+          <li className="mobileLink">
             <Link href="/protected/account">Account</Link>
           </li>
         </ul>

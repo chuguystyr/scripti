@@ -10,13 +10,17 @@ import Task from "models/Task"
 import { Error } from "mongoose"
 import { MongoServerError } from "mongodb"
 import Course from "models/Course"
+import User from "models/User"
+import IUser from "types/User"
 
-export const getTasks = async () => {
+export const getTasks = async (major:number) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const id = await protector(token)
   await dbConnect()
   try {
+    const { majors } = await User.findOne({ _id: new ObjectId(id) }, { majors: 1 }).lean<IUser>().orFail()
+    const majorValue = majors[major]
     const tasks = await Task.aggregate([
       { $match: { userId: new ObjectId(id), status: { $ne: "done" } } },
       {
@@ -26,6 +30,9 @@ export const getTasks = async () => {
           foreignField: "_id",
           as: "courseDetails",
         },
+      },
+      {
+        $match: { "courseDetails.major": majorValue },
       },
       {
         $unwind: "$courseDetails",
@@ -50,12 +57,14 @@ export const getTasks = async () => {
   }
 }
 
-export const getAllTasks = async (searchTerm?: string) => {
+export const getAllTasks = async (major:number,searchTerm?: string) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const id = await protector(token)
   await dbConnect()
   try {
+    const { majors } = await User.findOne({ _id: new ObjectId(id) }, { majors: 1 }).lean<IUser>().orFail()
+    const majorValue = majors[major]
     const tasks = await Task.aggregate([
       {
         $match: {
@@ -70,6 +79,9 @@ export const getAllTasks = async (searchTerm?: string) => {
           foreignField: "_id",
           as: "courseDetails",
         },
+      },
+      {
+        $match: { "courseDetails.major": majorValue },
       },
       {
         $unwind: "$courseDetails",

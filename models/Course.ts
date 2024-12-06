@@ -6,6 +6,13 @@ const CourseSchema = new Schema<ICourse, Model<ICourse>>({
     type: Schema.Types.ObjectId,
     required: true,
   },
+  major: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (value: string) => value.length > 0,
+    },
+  },
   title: {
     type: String,
     required: true,

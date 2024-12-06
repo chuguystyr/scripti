@@ -23,6 +23,10 @@ const userSchema = new Schema<IUser, Model<IUser>>({
     type: Array,
     required: false,
   },
+  majors: {
+    type: [String],
+    required: true,
+  },
 })
 
 const UserModel: Model<IUser> =

@@ -4,12 +4,14 @@ import Task from "types/Task"
 import { checkTask, deleteTask, editTask } from "server/actions/tasks"
 import { SearchParams } from "types/Utilities"
 
-const TaskCard: React.FC<{
-  searchParams: Awaited<SearchParams>
-  task: Omit<Task, "course"> & { course: string }
-  setEditable: () => Promise<never>
-  resetEditable: () => Promise<never>
-}> = ({ task, searchParams, setEditable, resetEditable }) => {
+const TaskCard: React.FC<
+  {
+    task: Omit<Task, "course"> & { course: string }
+    setEditable: () => Promise<never>
+    resetEditable: () => Promise<never>
+  } & SearchParams
+> = async ({ task, setEditable, resetEditable, searchParams: Sp }) => {
+  const searchParams = await Sp
   let message = ""
   switch (searchParams?.error) {
     case "fields":

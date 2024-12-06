@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useActionState } from "react"
 import { useRouter } from "next/navigation"
 import Course from "types/Course"
 import { useDebounce } from "./useDebounce"
-
+// TODO: introduce chabge connected with majors
 export const useSetSchedule = () => {
   const router = useRouter()
   const [state, formAction] = useActionState(setSchedule, { error: "" })

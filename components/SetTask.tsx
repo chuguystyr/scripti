@@ -1,11 +1,12 @@
 import SubmitButton from "components/SubmitButton"
 import { setTask } from "server/actions/tasks"
 import { FaWindowClose } from "react-icons/fa"
-import { SearchParams } from "types/Utilities"
+import { BasicPageProps } from "types/Utilities"
 const SetTask: React.FC<{
-  searchParams: Awaited<SearchParams>
   close: () => void
-}> = ({ close, searchParams }) => {
+} & BasicPageProps> = async ({ close, searchParams:sP, params }) => {
+  const searchParams = await sP
+  const {major} = await params
   let message = ""
   switch (searchParams?.error) {
     case "fields":
@@ -76,7 +77,7 @@ const SetTask: React.FC<{
           id="description"
           className="p-2 border border-gray-300 rounded-md"
         />
-
+        <input type="hidden" name="major" value={major}/>
         <SubmitButton text="Save" />
       </form>
     </div>
