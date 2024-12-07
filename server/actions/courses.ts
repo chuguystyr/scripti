@@ -6,22 +6,26 @@ import Course from "models/Course"
 import ICourse from "types/Course"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { ObjectId } from "mongodb"
-import { Error as MongooseError } from "mongoose"
+import { Error as MongooseError, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
 import User from "models/User"
 import IUser from "types/User"
 
-export const getCourses = async (major:number, searchTerm?: string) => {
+export const getCourses = async (major: number, searchTerm?: string) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const id = await protector(token)
   await dbConnect()
   try {
-    const { majors } = await User.findOne({ _id: new ObjectId(id) }, { majors: 1 }).lean<IUser>().orFail()
+    const { majors } = await User.findOne(
+      { _id: new Types.ObjectId(id) },
+      { majors: 1 },
+    )
+      .lean<IUser>()
+      .orFail()
     const majorValue = majors[major]
     const courses = await Course.find({
-      userId: new ObjectId(id),
+      userId: new Types.ObjectId(id),
       major: majorValue,
       title: { $regex: new RegExp(searchTerm || "", "i") },
     }).lean<ICourse[]>()
@@ -50,7 +54,7 @@ export const setCourse = async (form: FormData) => {
   await dbConnect()
   try {
     await Course.create({
-      userId: new ObjectId(id),
+      userId: new Types.ObjectId(id),
       ...data,
     })
   } catch (error) {
@@ -85,10 +89,10 @@ export const editCourse = async (form: FormData) => {
   await dbConnect()
   try {
     await Course.findOneAndUpdate(
-      { _id: new ObjectId(id) },
+      { _id: new Types.ObjectId(id) },
       {
         $set: {
-          userId: new ObjectId(userId),
+          userId: new Types.ObjectId(userId),
           title,
           controlForm,
           teacherLectures,
@@ -127,7 +131,7 @@ export const deleteCourse = async (form: FormData) => {
   }
   await dbConnect()
   try {
-    await Course.deleteOne({ _id: new ObjectId(id) })
+    await Course.deleteOne({ _id: new Types.ObjectId(id) })
   } catch (error) {
     console.log(error)
   }

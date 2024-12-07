@@ -6,7 +6,7 @@ import { cookies } from "next/headers"
 import { protector } from "server/protection"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { ObjectId } from "mongodb"
+import { Types } from "mongoose"
 export const getSchedule = async () => {
   const id = await protector((await cookies()).get("_scrpt")!.value)
   try {
@@ -15,7 +15,7 @@ export const getSchedule = async () => {
       // Find user by username (later replace wih id)
       {
         $match: {
-          _id: new ObjectId(id),
+          _id: new Types.ObjectId(id),
         },
       },
       // Get user's schedules

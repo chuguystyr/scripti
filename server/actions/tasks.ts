@@ -3,26 +3,30 @@
 import dbConnect from "server/db"
 import { cookies } from "next/headers"
 import { protector } from "server/protection"
-import { ObjectId } from "mongodb"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import Task from "models/Task"
-import { Error } from "mongoose"
+import { Error, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
 import Course from "models/Course"
 import User from "models/User"
 import IUser from "types/User"
 
-export const getTasks = async (major:number) => {
+export const getTasks = async (major: number) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const id = await protector(token)
   await dbConnect()
   try {
-    const { majors } = await User.findOne({ _id: new ObjectId(id) }, { majors: 1 }).lean<IUser>().orFail()
+    const { majors } = await User.findOne(
+      { _id: new Types.ObjectId(id) },
+      { majors: 1 },
+    )
+      .lean<IUser>()
+      .orFail()
     const majorValue = majors[major]
     const tasks = await Task.aggregate([
-      { $match: { userId: new ObjectId(id), status: { $ne: "done" } } },
+      { $match: { userId: new Types.ObjectId(id), status: { $ne: "done" } } },
       {
         $lookup: {
           from: "courses",
@@ -48,8 +52,9 @@ export const getTasks = async (major:number) => {
         },
       },
     ])
-    const done = (await Task.find({ userId: new ObjectId(id), status: "done" }))
-      .length
+    const done = (
+      await Task.find({ userId: new Types.ObjectId(id), status: "done" })
+    ).length
     return { tasks, done }
   } catch (error) {
     console.log(error)
@@ -57,18 +62,23 @@ export const getTasks = async (major:number) => {
   }
 }
 
-export const getAllTasks = async (major:number,searchTerm?: string) => {
+export const getAllTasks = async (major: number, searchTerm?: string) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const id = await protector(token)
   await dbConnect()
   try {
-    const { majors } = await User.findOne({ _id: new ObjectId(id) }, { majors: 1 }).lean<IUser>().orFail()
+    const { majors } = await User.findOne(
+      { _id: new Types.ObjectId(id) },
+      { majors: 1 },
+    )
+      .lean<IUser>()
+      .orFail()
     const majorValue = majors[major]
     const tasks = await Task.aggregate([
       {
         $match: {
-          userId: new ObjectId(id),
+          userId: new Types.ObjectId(id),
           title: { $regex: new RegExp(searchTerm || "", "i") },
         },
       },
@@ -131,12 +141,12 @@ export const setTask = async (form: FormData) => {
   await dbConnect()
   try {
     const courseId = await Course.findOne(
-      { userId: new ObjectId(id), title: data.course.toString() },
+      { userId: new Types.ObjectId(id), title: data.course.toString() },
       { _id: 1 },
     )
     await Task.create({
       ...data,
-      userId: new ObjectId(id),
+      userId: new Types.ObjectId(id),
       course: courseId?._id,
       status: "new",
       deadline: new Date(data.date.toString()),
@@ -184,7 +194,7 @@ export const checkTask = async (form: FormData) => {
   await dbConnect()
   try {
     await Task.findOneAndUpdate(
-      { _id: new ObjectId(id.toString()) },
+      { _id: new Types.ObjectId(id.toString()) },
       { status: "done" },
     )
     revalidatePath("/protected/home")
@@ -205,7 +215,7 @@ export const deleteTask = async (form: FormData) => {
   }
   await dbConnect()
   try {
-    await Task.findOneAndDelete({ _id: new ObjectId(id.toString()) })
+    await Task.findOneAndDelete({ _id: new Types.ObjectId(id.toString()) })
     revalidatePath("/protected/home")
     revalidatePath("/protected/tasks")
   } catch (error) {
@@ -221,7 +231,7 @@ export const editTask = async (form: FormData) => {
   await dbConnect()
   try {
     const courseId = await Course.findOne(
-      { userId: new ObjectId(id), title: data.course },
+      { userId: new Types.ObjectId(id), title: data.course },
       { _id: 1 },
     )
     await Task.findOneAndUpdate(
