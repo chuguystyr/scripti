@@ -1,14 +1,16 @@
 import { getCourses } from "server/actions/courses"
 import { setSchedule } from "server/actions/schedule"
 import { useEffect, useState, useMemo, useActionState } from "react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import Course from "types/Course"
 import { useDebounce } from "./useDebounce"
-// TODO: introduce chabge connected with majors
+
 export const useSetSchedule = () => {
   const router = useRouter()
   const [state, formAction] = useActionState(setSchedule, { error: "" })
   const [courses, setCourses] = useState<Course[] | null>(null)
+  const pathname = usePathname()
+  const major = pathname.split("/").at(3)!
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
@@ -67,12 +69,12 @@ export const useSetSchedule = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const courses = await getCourses()
+      const courses = await getCourses(+major)
       if ("message" in courses) throw new Error(courses.message)
       setCourses(courses)
     }
     getData()
-  }, [])
+  }, [major])
 
   const titles = useMemo(
     () => courses?.map((course) => course.title) || [],
