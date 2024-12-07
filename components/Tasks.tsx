@@ -4,10 +4,12 @@ import SetTask from "components/SetTask"
 import { closeAddTaskAtHome } from "server/actions/tasks"
 import { BasicPageProps } from "types/Utilities"
 
-const Tasks: React.FC<{
-  setEditable: () => Promise<never>
-  resetEditable: () => Promise<never>
-} & BasicPageProps> = async ({ searchParams: sP, params, setEditable, resetEditable }) => {
+const Tasks: React.FC<
+  {
+    setEditable: () => Promise<never>
+    resetEditable: () => Promise<never>
+  } & BasicPageProps
+> = async ({ searchParams: sP, params, setEditable, resetEditable }) => {
   const { major } = await params
   const searchParams = await sP
   const { tasks, done } = (await getTasks(+major)) ?? { tasks: [], done: 0 }
@@ -33,9 +35,12 @@ const Tasks: React.FC<{
         </p>
       </section>
       {searchParams && searchParams?.add && (
-        <SetTask close={closeAddTaskAtHome} searchParams={sP} params={params}/>
+        <SetTask close={closeAddTaskAtHome} searchParams={sP} params={params} />
       )}
-      <section className="mt-10 grid grid-cols-2 gap-3" id="tasks">
+      <section
+        className="mt-10 flex flex-col md:grid md:grid-cols-2 gap-3"
+        id="tasks"
+      >
         {tasks && tasks.length === 0 && (
           <div className="card h-fit block mx-auto text-center">
             <p className="inline">
@@ -62,8 +67,11 @@ const Tasks: React.FC<{
             />
           ))}
         {tasks && tasks.length !== 0 && (
-          <form action={openAddTaskAtHome}>
-            <button className="font-bold btn-outlined mt-7 text-3xl text-center">
+          <form
+            action={openAddTaskAtHome}
+            className="self-center justify-self-center md:col-start-1 md:col-end-3"
+          >
+            <button className="font-bold btn-outlined text-3xl text-center">
               +
             </button>
           </form>
