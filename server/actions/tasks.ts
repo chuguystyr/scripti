@@ -38,6 +38,8 @@ export const getTasks = async (major: number) => {
       {
         $match: { "courseDetails.major": majorValue },
       },
+      { $sort: { deadline: 1 } },
+      { $limit: 4 },
       {
         $unwind: "$courseDetails",
       },
