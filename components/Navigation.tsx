@@ -3,9 +3,7 @@ import ClickableLogo from "./ClickableLogo"
 import MajorsTumbler from "components/MajorsTumbler"
 import { Params } from "types/Utilities"
 
-const Navigation: React.FC<Params> = async ({
-  params
-}) => {
+const Navigation: React.FC<Params> = async ({ params }) => {
   const index = Number((await params).major)
   return (
     <nav className="flex mb-5 justify-between items-center" role="navigation">
@@ -33,10 +31,10 @@ const Navigation: React.FC<Params> = async ({
         </label>
         <ul className="hidden card peer-checked:mobileLinks">
           <li className="mobileLink">
-            <Link href="/protected/courses">Courses</Link>
+            <Link href={`/protected/courses/${index}`}>Courses</Link>
           </li>
           <li className="mobileLink">
-            <Link href="/protected/tasks">Tasks</Link>
+            <Link href={`/protected/tasks/${index}`}>Tasks</Link>
           </li>
           <li className="mobileLink">
             <Link href="/protected/account">Account</Link>

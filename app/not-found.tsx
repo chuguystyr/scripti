@@ -27,7 +27,7 @@ const NotFoundPage: React.FC = () => {
       <p className="text-xl text-center mt-5 px-2">
         We&apos;re sorry, the page you are looking for cannot be found.
       </p>
-      <Link href="/protected/home" className="mt-5 btn-outlined">
+      <Link href="/protected/home/0" className="mt-5 btn-outlined">
         Back to Home
       </Link>
     </main>
