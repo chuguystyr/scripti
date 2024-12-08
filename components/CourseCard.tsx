@@ -10,9 +10,11 @@ import {
   closeEditCourse,
 } from "server/actions/courses"
 import { SearchParams } from "types/Utilities"
-const CourseCard: React.FC<{
-  course: Omit<Course, "userId">
-} & SearchParams> = async ({ course, searchParams:Sp }) => {
+const CourseCard: React.FC<
+  {
+    course: Omit<Course, "userId">
+  } & SearchParams
+> = async ({ course, searchParams: Sp }) => {
   const searchParams = await Sp
   let message = ""
   switch (searchParams?.error) {
@@ -37,7 +39,13 @@ const CourseCard: React.FC<{
               </button>
             </form>
             <form action={deleteCourse} className="cursor-pointer">
-              <input type="text" name="id" value={course._id.toString()} hidden />
+              <input
+                type="text"
+                name="id"
+                value={course._id.toString()}
+                hidden
+                readOnly
+              />
               <button type="submit">
                 <RiDeleteBin7Fill />
               </button>
@@ -143,7 +151,13 @@ const CourseCard: React.FC<{
                 defaultValue={course.notes}
                 name="notes"
               ></textarea>
-              <input type="text" name="id" value={course._id.toString()} hidden />
+              <input
+                type="text"
+                name="id"
+                value={course._id.toString()}
+                hidden
+                readOnly
+              />
               <SubmitButton text="Save" />
             </div>
           </form>
