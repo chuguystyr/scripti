@@ -10,24 +10,34 @@ import { protector } from "server/protection"
 import { revalidatePath } from "next/cache"
 import IUser from "types/User"
 import { HydratedDocument, Types } from "mongoose"
+import { SignUpFormValidationErrors } from "types/Utilities"
 
-export const signUp = async (form: FormData) => {
+export const signUp = async (prevState: unknown, form: FormData) => {
   const name = form.get("name") as string | null
   const username = form.get("username") as string | null
   const email = form.get("email") as string | null
   const password = form.get("password") as string | null
   if (!name || !username || !email || !password) {
-    redirect("/signup?error=fields")
+    return {
+      currentState: form,
+      error: SignUpFormValidationErrors.EMPTY_MANDATORY_FIELD,
+    }
   }
-  const emailRegex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)
+  const emailRegex = new RegExp(/^[\w.-]+@[\w.-]+\.\w{2,}$/)
   if (!emailRegex.test(email)) {
-    redirect("/signup?error=email")
+    return {
+      currentState: form,
+      error: SignUpFormValidationErrors.INVALID_EMAIL,
+    }
   }
   const passwordRegex = new RegExp(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
   )
   if (!passwordRegex.test(password)) {
-    redirect("/signup?error=password")
+    return {
+      currentState: form,
+      error: SignUpFormValidationErrors.WEAK_PASSWORD,
+    }
   }
   try {
     await dbConnect()
@@ -44,10 +54,16 @@ export const signUp = async (form: FormData) => {
   } catch (error: any) {
     // TODO: check for the ways to use built-in instruments instead of manual if-check
     if (error.code === 11000) {
-      redirect("/signup?error=username")
+      return {
+        currentState: form,
+        error: SignUpFormValidationErrors.USERNAME_TAKEN,
+      }
     }
     console.log(error)
-    redirect("/signup?error=internal")
+    return {
+      currentState: form,
+      error: SignUpFormValidationErrors.INTERNAL_ERROR,
+    }
   }
   redirect("/login?status=signed up")
 }

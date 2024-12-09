@@ -1,5 +1,5 @@
 "use client"
-
+// TODO: may be replaced with introduction of stable React 19 in Next 15 and turning all forms into client-side components
 import { useFormStatus } from "react-dom"
 
 const SubmitButton: React.FC<{ text: string }> = ({ text }) => {
