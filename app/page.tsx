@@ -51,7 +51,7 @@ const Main: React.FC = () => {
           </li>
         </ul>
       </nav>
-      <main className="text-center px-4 md:px-10">
+      <main className="text-center px-4 pb-4 md:px-10">
         <h1 className="text-4xl md:text-6xl font-bold font-mono mb-3">
           Another approach <br />
           to planning your studies

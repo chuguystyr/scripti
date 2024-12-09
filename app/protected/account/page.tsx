@@ -49,7 +49,7 @@ const Account: React.FC<BasicPageProps> = async (props) => {
               </button>
             </form>
             <form
-              className="mt-2 mx-auto flex flex-col w-[20vw] p-2 gap-4 bg-white"
+              className="mt-2 mx-auto flex flex-col w-fit p-2 gap-4 bg-white"
               action={editAccount}
             >
               <input

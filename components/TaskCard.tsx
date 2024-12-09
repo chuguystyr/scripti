@@ -29,7 +29,7 @@ const TaskCard: React.FC<
       {!searchParams?.edit ?
         <>
           <div className="flex justify-between">
-            <h1 className="font-bold mr-[4vw]">{task.title}</h1>
+            <h1 className="font-bold w-3/4">{task.title}</h1>
             <form action={setEditable}>
               <button type="submit">
                 <FaEdit className="inline cursor-pointer self-center" />
@@ -58,7 +58,7 @@ const TaskCard: React.FC<
             | <span>{task.course}</span> |{" "}
             <span className="font-serif">{task.status}</span>
           </h2>
-          <p>{task.description}</p>
+          <p className="line-clamp-1 md:line-clamp-4">{task.description}</p>
         </>
       : <>
           <form action={resetEditable} className="w-fit mx-auto">

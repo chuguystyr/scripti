@@ -23,15 +23,15 @@ const CourseCard: React.FC<
       break
   }
   return (
-    <div className="card w-fit h-fit p-4 bg-white shadow rounded">
+    <div className="card w-full p-4">
       {!searchParams?.edit ?
         <>
           <div className="flex justify-between">
-            <h2 className="text-center text-lg font-bold mb-3">
+            <h2 className="text-center text-lg font-bold mb-3 w-4/5">
               {course.title}
             </h2>
             <form
-              className="inline-block ml-[15vw] cursor-pointer"
+              className="inline-block cursor-pointer"
               action={openEditCourse}
             >
               <button type="submit">
@@ -79,7 +79,9 @@ const CourseCard: React.FC<
           {course.notes && (
             <div className="grid grid-cols-[1fr_2fr_0.5fr] gap-2 mb-2">
               <span>Notes</span>
-              <p className="col-span-2">{course.notes}</p>
+              <p className="col-span-2 line-clamp-2 md:line-clamp-4">
+                {course.notes}
+              </p>
             </div>
           )}
         </>

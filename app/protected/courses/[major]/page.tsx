@@ -14,7 +14,10 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Courses: React.FC<BasicPageProps> = async ({params, searchParams: sP}) => {
+const Courses: React.FC<BasicPageProps> = async ({
+  params,
+  searchParams: sP,
+}) => {
   const searchParams = await sP
   const { major } = await params
   const courses = await getCourses(+major, searchParams?.query?.toString())
@@ -22,7 +25,7 @@ const Courses: React.FC<BasicPageProps> = async ({params, searchParams: sP}) => 
     <main>
       <h1 className="sr-only">Courses page</h1>
       {searchParams?.add && (
-        <SetCourse close={closeAddCourse} searchParams={sP} params={params}/>
+        <SetCourse close={closeAddCourse} searchParams={sP} params={params} />
       )}
       {Array.isArray(courses) && courses.length === 0 && !searchParams?.query ?
         <NoCoursesBlock searchParams={sP} />
@@ -30,16 +33,12 @@ const Courses: React.FC<BasicPageProps> = async ({params, searchParams: sP}) => 
           <SearchBar>
             <AddCourseForm />
           </SearchBar>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {Array.isArray(courses) &&
               courses.length !== 0 &&
               courses.map((course, index) => {
                 return (
-                  <CourseCard
-                    key={index}
-                    course={course}
-                    searchParams={sP}
-                  />
+                  <CourseCard key={index} course={course} searchParams={sP} />
                 )
               })}
           </div>
