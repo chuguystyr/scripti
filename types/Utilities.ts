@@ -15,3 +15,9 @@ export enum SignUpFormValidationErrors {
   USERNAME_TAKEN = "Username is already taken.",
   INTERNAL_ERROR = "Something went wrong.\nPlease try again later.",
 }
+
+export enum LoginFormValidationErrors {
+  EMPTY_MANDATORY_FIELD = "Please fill in\nall fields.",
+  INVALID_CREDENTIALS = "Invalid credentials.",
+  INTERNAL_ERROR = "Something went wrong.\nPlease try again later.",
+}

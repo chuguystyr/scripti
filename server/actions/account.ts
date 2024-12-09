@@ -10,7 +10,10 @@ import { protector } from "server/protection"
 import { revalidatePath } from "next/cache"
 import IUser from "types/User"
 import { HydratedDocument, Types } from "mongoose"
-import { SignUpFormValidationErrors } from "types/Utilities"
+import {
+  SignUpFormValidationErrors,
+  LoginFormValidationErrors,
+} from "types/Utilities"
 
 export const signUp = async (prevState: unknown, form: FormData) => {
   const name = form.get("name") as string | null
@@ -68,37 +71,30 @@ export const signUp = async (prevState: unknown, form: FormData) => {
   redirect("/login?status=signed up")
 }
 
-export const login = async (form: FormData) => {
+export const login = async (prevState: unknown, form: FormData) => {
   const username = form.get("username") as string | null
   const password = form.get("password") as string | null
   if (!username || !password) {
-    redirect("/login?error=fields")
+    return LoginFormValidationErrors.EMPTY_MANDATORY_FIELD
   }
   try {
     await dbConnect()
-  } catch (error) {
-    console.log(error)
-    redirect("/login?error=internal")
-  }
-  const user = await User.findOne({ username: username }, { password: 1 })
-    .orFail(() => redirect("/login?error=credentials"))
-    .lean<IUser & { _id: Types.ObjectId }>()
-  let match
-  try {
+    const user = await User.findOne({ username: username }, { password: 1 })
+      .orFail(() => redirect("/login?error=credentials"))
+      .lean<IUser & { _id: Types.ObjectId }>()
     const isMatch = await compare(password, user.password)
-    match = isMatch
+    if (!isMatch) {
+      return LoginFormValidationErrors.INVALID_CREDENTIALS
+    }
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
+      expiresIn: "3h",
+    })
+    const cookieStore = await cookies()
+    cookieStore.set("_scrpt", token, { maxAge: 60 * 60 * 3 })
   } catch (error) {
     console.log(error)
-    redirect("/login?error=internal")
+    return LoginFormValidationErrors.INTERNAL_ERROR
   }
-  if (!match) {
-    redirect("/login?error=credentials")
-  }
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
-    expiresIn: "3h",
-  })
-  const cookieStore = await cookies()
-  cookieStore.set("_scrpt", token, { maxAge: 60 * 60 * 3 })
   redirect("/protected/home/0")
 }
 
