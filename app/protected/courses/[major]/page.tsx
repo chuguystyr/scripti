@@ -2,9 +2,6 @@ import CourseCard from "components/CourseCard"
 import SearchBar from "components/SearchBar"
 import SetCourse from "components/SetCourse"
 import { getCourses } from "server/actions/courses"
-import { closeAddCourse } from "server/actions/courses"
-import AddCourseForm from "components/courses/AddCourseForm"
-import NoCoursesBlock from "components/courses/NoCoursesBlock"
 import { Metadata } from "next"
 import { BasicPageProps } from "types/Utilities"
 
@@ -24,26 +21,22 @@ const Courses: React.FC<BasicPageProps> = async ({
   return (
     <main>
       <h1 className="sr-only">Courses page</h1>
-      {searchParams?.add && (
-        <SetCourse close={closeAddCourse} searchParams={sP} params={params} />
+      <SearchBar>
+        <SetCourse major={major} />
+      </SearchBar>
+      {courses.length === 0 && (
+        <p className="text-center">
+          Looks like you&apos;re first time here.
+          <br />
+          Let&apos;s add some courses to use in schedule
+        </p>
       )}
-      {Array.isArray(courses) && courses.length === 0 && !searchParams?.query ?
-        <NoCoursesBlock searchParams={sP} />
-      : <>
-          <SearchBar>
-            <AddCourseForm />
-          </SearchBar>
-          <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {Array.isArray(courses) &&
-              courses.length !== 0 &&
-              courses.map((course, index) => {
-                return (
-                  <CourseCard key={index} course={course} searchParams={sP} />
-                )
-              })}
-          </div>
-        </>
-      }
+      <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {courses.length !== 0 &&
+          courses.map((course, index) => {
+            return <CourseCard key={index} {...course} />
+          })}
+      </div>
     </main>
   )
 }

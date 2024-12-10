@@ -10,6 +10,7 @@ import { Error as MongooseError, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
 import User from "models/User"
 import { IUser } from "types/User"
+import { SetCourseValidationErrors } from "types/Utilities"
 
 export const getCourses = async (major: number, searchTerm?: string) => {
   const cookieStore = await cookies()
@@ -30,11 +31,15 @@ export const getCourses = async (major: number, searchTerm?: string) => {
       title: { $regex: new RegExp(searchTerm || "", "i") },
     }).lean<ICourse[]>()
     if (!courses) {
-      return { message: "No courses found" }
+      return []
     }
-    return courses
-  } catch {
-    return { message: "Error fetching courses" }
+    return courses.map((course) => ({
+      ...course,
+      _id: course._id.toString(),
+      userId: course.userId.toString(),
+    }))
+  } catch (error) {
+    throw error
   }
 }
 
@@ -46,13 +51,13 @@ export const closeAddCourse = async () => {
   redirect("/protected/courses")
 }
 
-export const setCourse = async (form: FormData) => {
+export const setCourse = async (prevState: unknown, form: FormData) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const id = await protector(token)
   const data = Object.fromEntries(form.entries())
-  await dbConnect()
   try {
+    await dbConnect()
     await Course.create({
       userId: new Types.ObjectId(id),
       ...data,
@@ -61,20 +66,20 @@ export const setCourse = async (form: FormData) => {
     if (error instanceof MongooseError.ValidationError) {
       for (const key in error.errors) {
         if (error.errors[key].kind === "required") {
-          redirect("/protected/courses?add=true&error=fields")
+          return SetCourseValidationErrors.EMPTY_MANDATORY_FIELD
         }
       }
     } else if (error instanceof MongoServerError && error.code === 11000) {
-      redirect("/protected/courses?add=true&error=title")
+      return SetCourseValidationErrors.COURSE_EXISTS
     } else {
       console.log(error)
+      throw error
     }
   }
   revalidatePath("/protected/courses")
-  await closeAddCourse()
 }
 
-export const editCourse = async (form: FormData) => {
+export const editCourse = async (prevState: unknown, form: FormData) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const userId = await protector(token)
@@ -108,11 +113,11 @@ export const editCourse = async (form: FormData) => {
     if (error instanceof MongooseError.ValidationError) {
       for (const key in error.errors) {
         if (error.errors[key].kind === "required") {
-          redirect("/protected/courses?edit=true&error=fields")
+          return SetCourseValidationErrors.EMPTY_MANDATORY_FIELD
         }
       }
     } else if (error instanceof MongoServerError && error.code === 11000) {
-      redirect("/protected/courses?edit=true&error=title")
+      return SetCourseValidationErrors.COURSE_EXISTS
     } else {
       console.log(error)
     }

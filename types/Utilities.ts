@@ -21,3 +21,8 @@ export enum LoginFormValidationErrors {
   INVALID_CREDENTIALS = "Invalid credentials.",
   INTERNAL_ERROR = "Something went wrong.\nPlease try again later.",
 }
+
+export enum SetCourseValidationErrors {
+  EMPTY_MANDATORY_FIELD = "Please fill in\nall mandatory fields.",
+  COURSE_EXISTS = "Course with this name already exists.",
+}

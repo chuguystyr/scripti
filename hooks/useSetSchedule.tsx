@@ -70,7 +70,6 @@ export const useSetSchedule = () => {
   useEffect(() => {
     const getData = async () => {
       const courses = await getCourses(+major)
-      if ("message" in courses) throw new Error(courses.message)
       setCourses(courses)
     }
     getData()
