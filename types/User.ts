@@ -1,7 +1,7 @@
 import Schedule from "types/Schedule"
 import { Types } from "mongoose"
 
-export default interface IUser {
+export interface IUser {
   _id: Types.ObjectId
   name: string
   username: string
@@ -10,3 +10,8 @@ export default interface IUser {
   schedules?: Schedule[]
   majors: string[]
 }
+
+export type UserBasicInfo = Omit<
+  IUser,
+  "schedules " | "password" | "_id" | "majors"
+>

@@ -9,7 +9,7 @@ import { revalidatePath } from "next/cache"
 import { Error as MongooseError, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
 import User from "models/User"
-import IUser from "types/User"
+import { IUser } from "types/User"
 
 export const getCourses = async (major: number, searchTerm?: string) => {
   const cookieStore = await cookies()

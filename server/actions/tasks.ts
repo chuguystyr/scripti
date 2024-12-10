@@ -10,7 +10,7 @@ import { Error, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
 import Course from "models/Course"
 import User from "models/User"
-import IUser from "types/User"
+import { IUser } from "types/User"
 
 export const getTasks = async (major: number) => {
   const cookieStore = await cookies()

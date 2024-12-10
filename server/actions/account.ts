@@ -8,7 +8,7 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { protector } from "server/protection"
 import { revalidatePath } from "next/cache"
-import IUser from "types/User"
+import { IUser } from "types/User"
 import { HydratedDocument, Types } from "mongoose"
 import {
   SignUpFormValidationErrors,
@@ -79,9 +79,13 @@ export const login = async (prevState: unknown, form: FormData) => {
   }
   try {
     await dbConnect()
-    const user = await User.findOne({ username: username }, { password: 1 })
-      .orFail(() => redirect("/login?error=credentials"))
-      .lean<IUser & { _id: Types.ObjectId }>()
+    const user = await User.findOne(
+      { username: username },
+      { password: 1 },
+    ).lean<IUser & { _id: Types.ObjectId }>()
+    if (!user) {
+      return LoginFormValidationErrors.INVALID_CREDENTIALS
+    }
     const isMatch = await compare(password, user.password)
     if (!isMatch) {
       return LoginFormValidationErrors.INVALID_CREDENTIALS
@@ -126,16 +130,20 @@ export const closeEdit = async () => {
   redirect("/protected/account")
 }
 
-export const editAccount = async (form: FormData) => {
+export const editAccount = async (prevState: unknown, form: FormData) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const id = await protector(token)
   const data = Object.fromEntries(form.entries())
   if (!data.name || !data.username || !data.email) {
-    return
+    return SignUpFormValidationErrors.EMPTY_MANDATORY_FIELD
   }
-  await dbConnect()
+  const emailRegex = new RegExp(/^[\w.-]+@[\w.-]+\.\w{2,}$/)
+  if (!emailRegex.test(data.email.toString())) {
+    return SignUpFormValidationErrors.INVALID_EMAIL
+  }
   try {
+    await dbConnect()
     await User.findOneAndUpdate(
       { _id: id },
       {
@@ -147,62 +155,56 @@ export const editAccount = async (form: FormData) => {
       },
       { new: true },
     )
-    revalidatePath("/protected/account", "page")
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     console.log(error)
-  } finally {
-    redirect("/protected/account")
+    if (error.code === 11000) {
+      return SignUpFormValidationErrors.USERNAME_TAKEN
+    }
+    return SignUpFormValidationErrors.INTERNAL_ERROR
   }
+  revalidatePath("/protected/account", "page")
+  redirect("/protected/account")
 }
 
-export const changePassword = async (form: FormData) => {
+export const changePassword = async (prevState: unknown, form: FormData) => {
   const cookieStore = await cookies()
   const token = cookieStore.get("_scrpt")!.value
   const id = await protector(token)
   const oldPassword = form.get("oldPassword") as string | null
   const newPassword = form.get("newPassword") as string | null
-  let redirectURL = "/protected/account?"
   if (!oldPassword || !newPassword) {
-    redirectURL += "error=missing-fields"
-    redirect(redirectURL)
+    return LoginFormValidationErrors.EMPTY_MANDATORY_FIELD
   }
   await dbConnect()
   try {
-    const user = await User.findOne({ _id: id }, { password: 1, _id: 0 })
-      .orFail(() => {
-        throw new Error("Unathorised")
-      })
-      .lean<{ password: string }>()
+    const user = await User.findOne({ _id: id }, { password: 1, _id: 0 }).lean<{
+      password: string
+    }>()
+    if (!user) {
+      return LoginFormValidationErrors.INVALID_CREDENTIALS
+    }
     const isMatch = await compare(oldPassword, user.password)
     if (!isMatch) {
-      redirectURL += "error=no-match"
-      redirect(redirectURL)
-    } else {
-      const passwordRegex = new RegExp(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
-      )
-      if (!passwordRegex.test(newPassword)) {
-        redirectURL = "error=password"
-        redirect(redirectURL)
-      } else {
-        const hashedPassword = await hash(newPassword, 12)
-        await User.findOneAndUpdate(
-          { _id: id },
-          { $set: { password: hashedPassword } },
-          { new: true },
-        ).orFail(() => {
-          redirectURL += "error=internal"
-          redirect(redirectURL)
-        })
-      }
+      return LoginFormValidationErrors.INVALID_CREDENTIALS
     }
+    const passwordRegex = new RegExp(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
+    )
+    if (!passwordRegex.test(newPassword)) {
+      return SignUpFormValidationErrors.WEAK_PASSWORD
+    }
+    const hashedPassword = await hash(newPassword, 12)
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $set: { password: hashedPassword } },
+      { new: true },
+    )
   } catch (error) {
     console.log(error)
-    redirectURL += "error=internal"
-    redirect(redirectURL)
+    return LoginFormValidationErrors.INTERNAL_ERROR
   }
-  redirectURL = "/protected/account?status=password-changed"
-  redirect(redirectURL)
+  return "Password hase been changed successfully"
 }
 
 export const logout = async () => {
@@ -220,10 +222,10 @@ export const deleteAccount = async () => {
   await dbConnect()
   try {
     await User.findOneAndDelete({ _id: id })
-    cookieStore.set("_scrpt", "", { maxAge: 0 })
-  } catch (error) {
+  } catch (error: unknown) {
     console.log(error)
-    redirect("/protected/account?error=not-deleted")
+    return LoginFormValidationErrors.INTERNAL_ERROR
   }
+  cookieStore.set("_scrpt", "", { maxAge: 0 })
   redirect("/")
 }
