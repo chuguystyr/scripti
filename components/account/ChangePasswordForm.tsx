@@ -1,10 +1,10 @@
 "use client"
 import Modal from "components/Modal"
 import { useState } from "react"
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { changePassword } from "server/actions/account"
 const ChangePasswordForm = () => {
-  const [message, formAction, pending] = useFormState(changePassword, null)
+  const [message, formAction, pending] = useActionState(changePassword, null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   return (
     <>

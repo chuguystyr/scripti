@@ -1,10 +1,10 @@
 "use client"
 import Link from "next/link"
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { signUp } from "server/actions/account"
 
 const SignUpForm = () => {
-  const [state, formAction, pending] = useFormState(signUp, null)
+  const [state, formAction, pending] = useActionState(signUp, null)
   return (
     <form
       action={formAction}

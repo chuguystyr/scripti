@@ -2,7 +2,7 @@
 import { editCourse, setCourse } from "server/actions/courses"
 import Modal from "./Modal"
 import { useState } from "react"
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import Course from "types/Course"
 import { FaEdit } from "react-icons/fa"
 
@@ -19,7 +19,7 @@ type Props = SetCourseProps | EditCourseProps
 const SetCourse: React.FC<Props> = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const isEdit = (props as EditCourseProps).course !== undefined
-  const [message, formAction, pending] = useFormState(
+  const [message, formAction, pending] = useActionState(
     isEdit ? editCourse : setCourse,
     null,
   )

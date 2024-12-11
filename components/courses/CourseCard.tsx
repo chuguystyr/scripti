@@ -1,7 +1,7 @@
 import Modal from "components/Modal"
 import Link from "next/link"
 import { useState } from "react"
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { FaEdit } from "react-icons/fa"
 import { RiDeleteBin7Fill } from "react-icons/ri"
 import { editCourse, deleteCourse } from "server/actions/courses"
@@ -9,7 +9,7 @@ import Course from "types/Course"
 
 const CourseCard: React.FC<Course> = (course) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [message, formAction, pending] = useFormState(editCourse, null)
+  const [message, formAction, pending] = useActionState(editCourse, null)
   return (
     <>
       <div className="flex justify-between">

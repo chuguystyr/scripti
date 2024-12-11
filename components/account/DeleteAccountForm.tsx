@@ -1,8 +1,8 @@
 "use client"
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { deleteAccount } from "server/actions/account"
 const DeleteAccountForm = () => {
-  const [message, formAction, pending] = useFormState(deleteAccount, null)
+  const [message, formAction, pending] = useActionState(deleteAccount, null)
   return (
     <form action={formAction}>
       {message && <p className="text-center text-red-500">{message}</p>}

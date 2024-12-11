@@ -1,10 +1,10 @@
 "use client"
 import Link from "next/link"
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { login } from "server/actions/account"
 
 const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
-  const [message, formAction, pending] = useFormState(login, null)
+  const [message, formAction, pending] = useActionState(login, null)
   return (
     <form
       action={formAction}
