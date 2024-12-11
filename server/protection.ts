@@ -1,14 +1,18 @@
 import jwt from "jsonwebtoken"
-export const protector = async (token: string) => {
-  if (!token) {
-    throw new Error("Unathorised")
+import { cookies } from "next/headers"
+import { unauthorized } from "next/navigation"
+export const protector = async () => {
+  const cookieStore = await cookies()
+  const cookie = cookieStore.get("_scrpt")
+  if (!cookie || !cookie.value) {
+    unauthorized()
   }
   try {
-    const { id } = jwt.verify(token, process.env.JWT_SECRET!) as {
+    const { id } = jwt.verify(cookie.value, process.env.JWT_SECRET!) as {
       id: string
     }
     return id
   } catch {
-    throw new Error("Unathorised")
+    throw new Error("Internal")
   }
 }

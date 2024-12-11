@@ -103,9 +103,7 @@ export const login = async (prevState: unknown, form: FormData) => {
 }
 
 export const getAccount = async () => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
+  const id = await protector()
   try {
     await dbConnect()
     const result = await User.findOne(
@@ -131,9 +129,7 @@ export const closeEdit = async () => {
 }
 
 export const editAccount = async (prevState: unknown, form: FormData) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
+  const id = await protector()
   const data = Object.fromEntries(form.entries())
   if (!data.name || !data.username || !data.email) {
     return SignUpFormValidationErrors.EMPTY_MANDATORY_FIELD
@@ -168,9 +164,7 @@ export const editAccount = async (prevState: unknown, form: FormData) => {
 }
 
 export const changePassword = async (prevState: unknown, form: FormData) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
+  const id = await protector()
   const oldPassword = form.get("oldPassword") as string | null
   const newPassword = form.get("newPassword") as string | null
   if (!oldPassword || !newPassword) {
@@ -208,17 +202,15 @@ export const changePassword = async (prevState: unknown, form: FormData) => {
 }
 
 export const logout = async () => {
+  await protector()
   const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  await protector(token)
   cookieStore.set("_scrpt", "", { maxAge: 0 })
   redirect("/")
 }
 
 export const deleteAccount = async () => {
+  const id = await protector()
   const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
   await dbConnect()
   try {
     await User.findOneAndDelete({ _id: id })

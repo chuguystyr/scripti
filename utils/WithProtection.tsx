@@ -1,14 +1,9 @@
 import { ReactElement } from "react"
-import { cookies } from "next/headers"
-// TODO:replace with unathorized() when publicly available
+import { protector } from "server/protection"
 const WithProtection: React.FC<{ children: ReactElement }> = async ({
   children,
 }) => {
-  const cookieStore = await cookies()
-  const isAuthenticated = cookieStore.get("_scrpt")?.value
-  if (!isAuthenticated) {
-    throw new Error("Unauthorized")
-  }
+  await protector()
   return <>{children}</>
 }
 

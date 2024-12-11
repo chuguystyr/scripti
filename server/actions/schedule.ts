@@ -2,13 +2,12 @@
 
 import dbConnect from "server/db"
 import User from "models/User"
-import { cookies } from "next/headers"
 import { protector } from "server/protection"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { Types } from "mongoose"
 export const getSchedule = async () => {
-  const id = await protector((await cookies()).get("_scrpt")!.value)
+  const id = await protector()
   try {
     await dbConnect()
     const result = await User.aggregate([
@@ -132,7 +131,7 @@ export const setSchedule = async (prevState: unknown, form: FormData) => {
     fromDate <= toDate &&
     fromDate.getDay() >= new Date().getDay()
   ) {
-    const id = await protector((await cookies()).get("_scrpt")!.value)
+    const id = await protector()
     const schedule = transformData(formData)
     await dbConnect()
     try {

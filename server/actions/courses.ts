@@ -1,6 +1,5 @@
 "use server"
 import dbConnect from "server/db"
-import { cookies } from "next/headers"
 import { protector } from "server/protection"
 import Course from "models/Course"
 import ICourse from "types/Course"
@@ -13,9 +12,7 @@ import { IUser } from "types/User"
 import { SetCourseValidationErrors } from "types/Utilities"
 
 export const getCourses = async (major: number, searchTerm?: string) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
+  const id = await protector()
   await dbConnect()
   try {
     const { majors } = await User.findOne(
@@ -52,9 +49,7 @@ export const closeAddCourse = async () => {
 }
 
 export const setCourse = async (prevState: unknown, form: FormData) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
+  const id = await protector()
   const data = Object.fromEntries(form.entries())
   try {
     await dbConnect()
@@ -80,9 +75,7 @@ export const setCourse = async (prevState: unknown, form: FormData) => {
 }
 
 export const editCourse = async (prevState: unknown, form: FormData) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const userId = await protector(token)
+  const userId = await protector()
   const title = form.get("title")!.toString()
   const controlForm = form.get("controlForm")!.toString()
   const teacherLectures = form.get("teacherLectures")!.toString()
@@ -127,9 +120,7 @@ export const editCourse = async (prevState: unknown, form: FormData) => {
 }
 
 export const deleteCourse = async (form: FormData) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const user = await protector(token)
+  const user = await protector()
   const id = form.get("id")!.toString()
   if (!user || !id) {
     return

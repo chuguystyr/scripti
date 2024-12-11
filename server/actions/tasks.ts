@@ -1,7 +1,6 @@
 "use server"
 
 import dbConnect from "server/db"
-import { cookies } from "next/headers"
 import { protector } from "server/protection"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
@@ -13,9 +12,7 @@ import User from "models/User"
 import { IUser } from "types/User"
 
 export const getTasks = async (major: number) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
+  const id = await protector()
   await dbConnect()
   try {
     const { majors } = await User.findOne(
@@ -65,9 +62,7 @@ export const getTasks = async (major: number) => {
 }
 
 export const getAllTasks = async (major: number, searchTerm?: string) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
+  const id = await protector()
   await dbConnect()
   try {
     const { majors } = await User.findOne(
@@ -136,9 +131,7 @@ export const closeAddTaskAtHome = async () => {
 }
 
 export const setTask = async (form: FormData) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
+  const id = await protector()
   const data = Object.fromEntries(form.entries())
   await dbConnect()
   try {
@@ -187,9 +180,7 @@ export const closeEditTask = async () => {
 
 export const checkTask = async (form: FormData) => {
   const id = form.get("id")
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const userId = await protector(token)
+  const userId = await protector()
   if (!userId || !id) {
     return
   }
@@ -208,9 +199,7 @@ export const checkTask = async (form: FormData) => {
 
 export const deleteTask = async (form: FormData) => {
   const id = form.get("id")
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const userId = await protector(token)
+  const userId = await protector()
   if (!userId || !id) {
     console.log("Bad request")
     return
@@ -226,9 +215,7 @@ export const deleteTask = async (form: FormData) => {
 }
 
 export const editTask = async (form: FormData) => {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("_scrpt")!.value
-  const id = await protector(token)
+  const id = await protector()
   const data = Object.fromEntries(form.entries())
   await dbConnect()
   try {
