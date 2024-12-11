@@ -19,8 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.2",
     "next": "^15.0.0",
-    "react": "19.0.0-rc-69d4b800-20241021",
-    "react-dom": "19.0.0-rc-69d4b800-20241021",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-icons": "^5.1.0",
     "sharp": "^0.33.5"
   },
@@ -30,8 +30,8 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^22.0.0",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
     "axe-core": "^4.9.0",
@@ -52,9 +52,5 @@
     "typescript-eslint": "^8.0.0",
     "vite-tsconfig-paths": "^5.0.0",
     "vitest": "^2.0.4"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   }
 }
