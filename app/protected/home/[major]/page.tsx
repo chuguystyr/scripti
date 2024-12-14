@@ -1,4 +1,4 @@
-// import Schedule from "components/schedule/Schedule"
+import Schedule from "components/schedule/Schedule"
 import Tasks from "components/Tasks"
 import Quote from "components/Quote"
 import Name from "components/Name"
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Home: React.FC<BasicPageProps> = async ({params, searchParams}) => {
+const Home: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
   return (
     <main className="flex flex-col md:flex-row gap-5 md:gap-10">
       <h1 className="sr-only">Scripti app&apos;s home page</h1>
@@ -33,7 +33,7 @@ const Home: React.FC<BasicPageProps> = async ({params, searchParams}) => {
         </section>
         <section className="card mt-10 flex justify-center" id="schedule">
           {/* TODO: investigate problem with displaying schedule */}
-          {/* <Schedule /> */}
+          <Schedule params={params} />
         </section>
       </section>
       <Tasks

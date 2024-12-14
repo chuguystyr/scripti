@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-const NoScheduleBlock = () => {
+const NoScheduleBlock: React.FC<{ major: string }> = ({ major }) => {
   return (
     <p className="text-center">
       You don&apos;t have any classes set today. Happy weekend!
@@ -8,7 +8,7 @@ const NoScheduleBlock = () => {
       If you need to add schedule please click{" "}
       <Link
         className="font-semibold hover:underline underline-offset-4"
-        href="/protected/setSchedule"
+        href={`/protected/setSchedule/${major}`}
       >
         here
       </Link>

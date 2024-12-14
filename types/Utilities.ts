@@ -26,3 +26,8 @@ export enum SetCourseValidationErrors {
   EMPTY_MANDATORY_FIELD = "Please fill in\nall mandatory fields.",
   COURSE_EXISTS = "Course with this name already exists.",
 }
+
+export enum SetScheduleValidationErrors {
+  INVALID_DATES = "Invalid dates.",
+  INTERNAL_ERROR = "Something went wrong.\nPlease try again later.",
+}

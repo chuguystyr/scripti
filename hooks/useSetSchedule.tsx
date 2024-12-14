@@ -7,23 +7,10 @@ import { useDebounce } from "./useDebounce"
 
 export const useSetSchedule = () => {
   const router = useRouter()
-  const [state, formAction] = useActionState(setSchedule, { error: "" })
-  const [courses, setCourses] = useState<Course[] | null>(null)
+  const [message, formAction, pending] = useActionState(setSchedule, null)
+  const [courses, setCourses] = useState<Course[]>([])
   const pathname = usePathname()
-  const major = pathname.split("/").at(3)!
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    if (state.error?.length! > 0) {
-      router.push("/protected/home")
-    }
-  }, [state.error, router])
-
-  useEffect(() => {
-    if (Array.isArray(courses) && courses.length === 0) {
-      router.push("/protected/courses?message=no courses")
-    }
-  }, [courses, router])
+  const major = pathname.split("/")[3]
 
   const times = [
     "10:00  11:20",
@@ -70,10 +57,12 @@ export const useSetSchedule = () => {
   useEffect(() => {
     const getData = async () => {
       const courses = await getCourses(+major)
+      if (courses.length === 0)
+        router.push("/protected/courses?message=no courses")
       setCourses(courses)
     }
     getData()
-  }, [major])
+  }, [major, router])
 
   const titles = useMemo(
     () => courses?.map((course) => course.title) || [],
@@ -107,7 +96,18 @@ export const useSetSchedule = () => {
   }, [debouncedCurrentFieldValue, titles])
 
   return {
-    data: { inputs, days, times, suggestions, currentField, blurred },
+    data: {
+      inputs,
+      days,
+      times,
+      suggestions,
+      currentField,
+      blurred,
+      major,
+      message,
+      pending,
+      courses,
+    },
     actions: { handleInputChange, handleInputFocus, setBlurred, formAction },
   }
 }

@@ -1,27 +1,37 @@
 "use client"
-import SubmitButton from "components/SubmitButton"
 import { useSetSchedule } from "hooks/useSetSchedule"
+import { CourseType } from "types/Schedule"
 
 const SetSchedule: React.FC = () => {
   const {
-    data: { inputs, days, times, suggestions, currentField, blurred },
+    data: { inputs, days, times, major, message, pending, courses },
     actions: { handleInputChange, handleInputFocus, setBlurred, formAction },
   } = useSetSchedule()
-
   return (
     <main className="p-4 max-w-4xl mx-auto">
       <h1 className="sr-only">Set schedule page</h1>
       <form action={formAction} className="space-y-4">
+        {message && (
+          <p className="p-2 bg-red-200 text-red-800 rounded">{message}</p>
+        )}
         <div className="flex space-x-4">
+          <label htmlFor="from" className="self-center font-bold">
+            From
+          </label>
           <input
             name="from"
             className="input p-2 border rounded"
-            placeholder={`from: ${new Date().toLocaleDateString("ua")}`}
+            type="date"
+            id="from"
           />
+          <label htmlFor="till" className="self-center font-bold">
+            Till
+          </label>
           <input
-            name="to"
+            name="till"
             className="input p-2 border rounded"
-            placeholder={`to: ${new Date().toLocaleDateString("ua")}`}
+            type="date"
+            id="till"
           />
         </div>
         <div className="overflow-x-auto">
@@ -41,43 +51,32 @@ const SetSchedule: React.FC = () => {
                   {days.map((day) => (
                     <div key={day} className="p-2 border-l">
                       <div>
-                        <input
-                          type="text"
+                        <select
                           name={`${day}${index}`}
                           className="input w-full p-2 border rounded"
-                          placeholder="Type to search courses..."
-                          onChange={(e) =>
+                          onChange={(e) => {
                             handleInputChange(
                               `${day}${index}`,
                               "course",
                               e.target.value,
                             )
-                          }
+                            handleInputChange(
+                              `${day}${index}`,
+                              "type",
+                              CourseType.Lecture,
+                            )
+                          }}
                           onFocus={() => handleInputFocus(`${day}${index}`)}
                           onBlur={() => setBlurred(`${day}${index}`)}
-                        />
-                        {currentField === `${day}${index}` &&
-                          blurred !== `${day}${index}` &&
-                          suggestions.length > 0 && (
-                            <ul className="absolute bg-white border rounded shadow mt-1 z-10">
-                              {suggestions.map((suggestion, sIndex) => (
-                                <li
-                                  key={sIndex}
-                                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                                  onClick={() =>
-                                    handleInputChange(
-                                      `${day}${index}`,
-                                      "course",
-                                      suggestion,
-                                    )
-                                  }
-                                >
-                                  {suggestion}
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        {blurred === `${day}${index}` && (
+                        >
+                          <option value=""></option>
+                          {courses.map((course, cIndex) => (
+                            <option key={cIndex} value={course._id.toString()}>
+                              {course.title}
+                            </option>
+                          ))}
+                        </select>
+                        {inputs[`${day}${index}`].course && (
                           <div className="mt-2 space-y-2">
                             <select
                               name="type"
@@ -91,8 +90,11 @@ const SetSchedule: React.FC = () => {
                                 )
                               }
                             >
-                              <option value="lecture">Lecture</option>
-                              <option value="practice">Practice</option>
+                              {Object.values(CourseType).map((type, tIndex) => (
+                                <option key={tIndex} value={type}>
+                                  {type}
+                                </option>
+                              ))}
                             </select>
                             <input
                               type="text"
@@ -122,7 +124,21 @@ const SetSchedule: React.FC = () => {
             />
           </div>
         </div>
-        <SubmitButton text="Submit" />
+        <input
+          type="text"
+          hidden
+          value={major}
+          name="major"
+          id="major"
+          readOnly
+        />
+        <button
+          type="submit"
+          className="btn-filled block mx-auto"
+          disabled={pending}
+        >
+          {pending ? "Submitting..." : "Add schedule"}
+        </button>
       </form>
     </main>
   )

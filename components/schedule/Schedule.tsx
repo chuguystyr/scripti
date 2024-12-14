@@ -1,9 +1,11 @@
 import { getSchedule } from "server/actions/schedule"
 import ScheduleTable from "./ScheduleTable"
 import NoScheduleBlock from "./NoScheduleBlock"
+import { Params } from "types/Utilities"
 
-const Schedule = async () => {
-  const schedule = await getSchedule()
+const Schedule: React.FC<Params> = async ({ params }) => {
+  const { major } = await params
+  const schedule = await getSchedule(+major)
   const times = [
     "10:00 - 11:20",
     "11:50 - 13:10",
@@ -13,9 +15,9 @@ const Schedule = async () => {
   ]
   return (
     <>
-      {schedule.schedule !== null ?
+      {schedule && Object.keys(schedule).length ?
         <ScheduleTable schedule={schedule} times={times} />
-      : <NoScheduleBlock />}
+      : <NoScheduleBlock major={major} />}
     </>
   )
 }

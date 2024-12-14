@@ -5,106 +5,104 @@ import User from "models/User"
 import { protector } from "server/protection"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
+import Schedule from "models/Schedule"
+import { SetScheduleValidationErrors } from "types/Utilities"
 import { Types } from "mongoose"
-export const getSchedule = async () => {
-  const id = await protector()
+import { DaysOfWeekArray, ScheduleDay } from "types/Schedule"
+export const getSchedule = async (major: number) => {
+  const currentDate = new Date()
+  const currentDay = DaysOfWeekArray[currentDate.getDay()]
   try {
+    const id = await protector()
     await dbConnect()
-    const result = await User.aggregate([
-      // Find user by username (later replace wih id)
+    const majorValue = await User.findById(id)
+      .lean()
+      .orFail(/* TODO:add necessary logic */)
+      .then((user) => user.majors[major])
+    const result = await Schedule.aggregate([
       {
         $match: {
-          _id: new Types.ObjectId(id),
+          userId: new Types.ObjectId(id),
+          major: majorValue,
+          from: { $lte: currentDate },
+          till: { $gte: currentDate },
         },
       },
-      // Get user's schedules
       {
         $project: {
-          schedules: 1,
-        },
-      },
-      // Target schedules that are actual now
-      {
-        $unwind: "$schedules",
-      },
-      {
-        $match: {
-          $and: [
-            {
-              "schedules.from": {
-                $lte: new Date().toLocaleDateString("ua-UK"),
-              },
-            },
-            {
-              "schedules.to": { $gte: new Date().toLocaleDateString("ua-UK") },
-            },
-          ],
-        },
-      },
-      // Get schedules for today
-      {
-        $project: {
-          schedules: `$schedules.${new Date().toLocaleDateString("en-US", { weekday: "long" })}`,
-        },
-      },
-      // Turn schedules into array
-      {
-        $addFields: {
-          schedules: {
-            $map: {
-              input: { $objectToArray: "$schedules" },
-              as: "schedule",
-              in: "$$schedule.v",
-            },
+          scheduleForToday: {
+            $objectToArray: `$${currentDay}`,
           },
         },
       },
-      // Iterate over courses in array and make a lookup from courses collection
       {
-        $unwind: "$schedules",
+        $unwind: "$scheduleForToday",
       },
       {
         $lookup: {
           from: "courses",
-          localField: "schedules.course",
-          foreignField: "title",
-          as: "course",
+          localField: "scheduleForToday.v.course",
+          foreignField: "_id",
+          as: "courseDetails",
+          pipeline: [
+            {
+              $project: {
+                _id: 0,
+                title: 1,
+                teacher: {
+                  $cond: [
+                    { $eq: ["$scheduleForToday.v.type", "Lecture"] },
+                    "$teacherLectures",
+                    "$teacherPractices",
+                  ],
+                },
+                link: {
+                  $cond: [
+                    { $eq: ["$scheduleForToday.v.type", "Lecture"] },
+                    "$lecturesLink",
+                    "$practicesLink",
+                  ],
+                },
+              },
+            },
+          ],
         },
       },
       {
-        $project: {
-          schedules: {
-            course: {
-              course: "$schedules.course",
-              type: "$schedules.type",
-              room: "$schedules.room",
-              lecturesLink: "$course.lecturesLink",
-              practicesLink: "$course.practicesLink",
+        $unwind: "$courseDetails",
+      },
+      {
+        $addFields: {
+          "scheduleForToday.v.course": "$courseDetails.title",
+          "scheduleForToday.v.teacher": "$courseDetails.teacher",
+          "scheduleForToday.v.link": "$courseDetails.link",
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          scheduleForToday: {
+            $push: {
+              k: "$scheduleForToday.k",
+              v: "$scheduleForToday.v",
             },
           },
         },
       },
-      // Group all schedules into one array
       {
-        $group: {
-          _id: "null",
-          schedule: {
-            $push: "$schedules",
+        $replaceRoot: {
+          newRoot: {
+            $arrayToObject: "$scheduleForToday",
           },
         },
       },
       {
         $project: {
-          schedule: 1,
           _id: 0,
         },
       },
     ])
-    if (result.length === 0) {
-      return { schedule: null }
-    } else {
-      return result[0].schedule[0]
-    }
+    return result[0] as ScheduleDay
   } catch (err) {
     console.log(err)
     throw new Error("Internal")
@@ -112,45 +110,45 @@ export const getSchedule = async () => {
 }
 
 export const setSchedule = async (prevState: unknown, form: FormData) => {
-  const formData = Object.fromEntries(form.entries()) as {
-    [key: string]: string
-  }
-  const fromDate = new Date(
-    Number(formData["from"].split(".")[2]),
-    Number(formData["from"].split(".")[1]) - 1,
-    Number(formData["from"].split(".")[0]),
+  // TODO: fix
+  const formData = Object.fromEntries(
+    form.entries().map(([key, value]) => [key, value.toString()]),
   )
-  const toDate = new Date(
-    Number(formData["to"].split(".")[2]),
-    Number(formData["to"].split(".")[1]) - 1,
-    Number(formData["to"].split(".")[0]),
-  )
+  const currentDate = new Date()
+  currentDate.setHours(0, 0, 0, 0)
+  const from = new Date(formData.from.toString())
+  const till = new Date(formData.till.toString())
+  till.setHours(23, 59, 59, 999)
   if (
-    formData["from"] !== "" &&
-    formData["to"] !== "" &&
-    fromDate <= toDate &&
-    fromDate.getDay() >= new Date().getDay()
+    !formData.from ||
+    !formData.till ||
+    till.getTime() < currentDate.getTime() ||
+    from.getTime() > till.getTime()
   ) {
-    const id = await protector()
-    const schedule = transformData(formData)
-    await dbConnect()
-    try {
-      const result = await User.findOneAndUpdate(
-        { _id: id },
-        { $push: { schedules: schedule } },
-        { new: true },
-      )
-      if (!result) {
-        return { error: "Something went wrong." }
-      }
-    } catch {
-      return { error: "Something went wrong." }
-    }
-    revalidatePath("/protected/home")
-    redirect("/protected/home")
-  } else {
-    return { error: "Invalid data." }
+    return SetScheduleValidationErrors.INVALID_DATES
   }
+  const id = await protector()
+  const schedule = transformData(formData)
+  try {
+    await dbConnect()
+    const majorValue = await User.findById(id)
+      .lean()
+      .orFail()
+      .then((user) => user.majors[+formData.major])
+    const result = new Schedule({
+      userId: id,
+      major: majorValue,
+      from: from,
+      till: till,
+      ...schedule,
+    })
+    await result.save()
+  } catch (error) {
+    console.log("Error", error)
+    return SetScheduleValidationErrors.INTERNAL_ERROR
+  }
+  revalidatePath("/protected/home")
+  redirect(`/protected/home/${formData.major}`)
 }
 
 function transformData(input: { [key: string]: string }) {
@@ -170,5 +168,5 @@ function transformData(input: { [key: string]: string }) {
       transformed[day][index] = schedule[key]
     }
   })
-  return { ...transformed, to: input.to, from: input.from }
+  return { ...transformed }
 }

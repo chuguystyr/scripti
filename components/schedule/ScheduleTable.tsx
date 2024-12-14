@@ -1,7 +1,7 @@
 import Link from "next/link"
-import Schedule from "types/Schedule"
+import { ScheduleDay } from "types/Schedule"
 const ScheduleTable: React.FC<{
-  schedule: Schedule
+  schedule: ScheduleDay
   times: string[]
 }> = ({ schedule, times }) => {
   return (
@@ -15,25 +15,21 @@ const ScheduleTable: React.FC<{
         </tr>
       </thead>
       <tbody>
-        {Object.keys(schedule).map((key, index) => {
-          const course = schedule[key]
+        {Object.keys(schedule).map((key) => {
+          const item = schedule[key]
           return (
-            <tr key={index} className="hover:underline">
-              <td className="rounded-md">{times[Number(index)]}</td>
-              <td className="rounded-md">{course.course}</td>
+            <tr key={key} className="hover:underline">
+              <td className="rounded-md">{times[Number(key)]}</td>
+              <td className="rounded-md">{item.course as string}</td>
               <td className="rounded-md">
                 <Link
-                  href={
-                    course.type === "lecture" ?
-                      course.lecturesLink || "#"
-                    : course.practicesLink || "#"
-                  }
+                  href={item.link || ""}
                   className="text-blue-400 hover:text-blue-800"
                 >
                   click
                 </Link>
               </td>
-              <td className="rounded-md">{course.room}</td>
+              <td className="rounded-md">{item.room}</td>
             </tr>
           )
         })}
