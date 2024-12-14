@@ -33,6 +33,7 @@ export type Schedule = {
   major: string
   till: Date
   from: Date
+  times: string[]
 } & {
   [key in DaysOfWeek]?: ScheduleDay
 }

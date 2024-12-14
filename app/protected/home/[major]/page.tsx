@@ -32,7 +32,6 @@ const Home: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
           <Quote />
         </section>
         <section className="card mt-10 flex justify-center" id="schedule">
-          {/* TODO: investigate problem with displaying schedule */}
           <Schedule params={params} />
         </section>
       </section>

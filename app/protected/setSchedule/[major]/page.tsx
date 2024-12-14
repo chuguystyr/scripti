@@ -45,9 +45,14 @@ const SetSchedule: React.FC = () => {
               ))}
             </div>
             <div className="divide-y">
-              {times.map((time, index) => (
+              {times.map((_, index) => (
                 <div key={index} className="grid grid-cols-7 text-center">
-                  <div className="p-2">{time}</div>
+                  <input
+                    type="text"
+                    className="input w-full p-2 border rounded"
+                    placeholder="Begin - End time"
+                    name={`time${index}`}
+                  />
                   {days.map((day) => (
                     <div key={day} className="p-2 border-l">
                       <div>

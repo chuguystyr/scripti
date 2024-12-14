@@ -24,6 +24,7 @@ const ScheduleSchema = new Schema<Schedule, Model<Schedule>>({
   major: { type: String, required: true },
   till: { type: Date, required: true },
   from: { type: Date, required: true },
+  times: { type: [String], required: true },
   // TODO: find a more generalzed aproach
   [DaysOfWeek.Monday]: daySchema,
   [DaysOfWeek.Tuesday]: daySchema,

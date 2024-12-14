@@ -110,10 +110,13 @@ export const getSchedule = async (major: number) => {
 }
 
 export const setSchedule = async (prevState: unknown, form: FormData) => {
-  // TODO: fix
   const formData = Object.fromEntries(
     form.entries().map(([key, value]) => [key, value.toString()]),
   )
+  const times: string[] = []
+  for (let i = 0; i < 6; i++) {
+    times.push(formData[`time${i}`])
+  }
   const currentDate = new Date()
   currentDate.setHours(0, 0, 0, 0)
   const from = new Date(formData.from.toString())
@@ -140,6 +143,7 @@ export const setSchedule = async (prevState: unknown, form: FormData) => {
       major: majorValue,
       from: from,
       till: till,
+      times: times,
       ...schedule,
     })
     await result.save()
@@ -169,4 +173,19 @@ function transformData(input: { [key: string]: string }) {
     }
   })
   return { ...transformed }
+}
+
+export const getTimes = async () => {
+  try {
+    const id = await protector()
+    await dbConnect()
+    const result = await Schedule.findOne({ userId: id }, { _id: 0, times: 1 })
+    if (!result) {
+      return []
+    }
+    return result.times
+  } catch (error) {
+    console.log("Error", error)
+    throw new Error("Internal")
+  }
 }
