@@ -12,10 +12,6 @@ export const openAddCourse = async () => {
   redirect("/protected/courses?add=true")
 }
 
-export const closeAddCourse = async () => {
-  redirect("/protected/courses")
-}
-
 export const setCourse = async (prevState: unknown, form: FormData) => {
   const id = await protector()
   const data = Object.fromEntries(form.entries())
