@@ -12,6 +12,7 @@ const SetSchedule: React.FC<{
     actions: { handleInputChange, handleInputFocus, setBlurred, formAction },
   } = useSetSchedule(courses)
   return (
+    // TODO: Optimize for the mobile view
     <form action={formAction} className="space-y-4">
       {message && (
         <p className="p-2 bg-red-200 text-red-800 rounded">{message}</p>
