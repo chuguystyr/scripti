@@ -1,4 +1,4 @@
-import CourseCard from "components/CourseCard"
+import CourseCard from "components/courses/CourseCard"
 import SearchBar from "components/SearchBar"
 import SetCourse from "components/SetCourse"
 import { getCourses } from "server/fetchers"

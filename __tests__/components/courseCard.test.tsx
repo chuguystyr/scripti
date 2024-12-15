@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
-import CourseCard from "components/CourseCard"
+import CourseCard from "components/courses/CourseCard"
 import mongoose from "mongoose"
 
 const mockCourse = {
