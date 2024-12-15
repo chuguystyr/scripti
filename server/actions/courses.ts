@@ -2,15 +2,10 @@
 import dbConnect from "server/db"
 import { protector } from "server/protection"
 import Course from "models/Course"
-import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { Error as MongooseError, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
 import { SetCourseValidationErrors } from "types/Utilities"
-
-export const openAddCourse = async () => {
-  redirect("/protected/courses?add=true")
-}
 
 export const setCourse = async (prevState: unknown, form: FormData) => {
   const id = await protector()
@@ -79,8 +74,7 @@ export const editCourse = async (prevState: unknown, form: FormData) => {
       console.log(error)
     }
   }
-  revalidatePath("/protected/courses", "page")
-  await closeEditCourse()
+  revalidatePath("/protected/courses")
 }
 
 export const deleteCourse = async (form: FormData) => {
@@ -96,12 +90,4 @@ export const deleteCourse = async (form: FormData) => {
     console.log(error)
   }
   revalidatePath("/protected/courses")
-}
-
-export const openEditCourse = async () => {
-  redirect("/protected/courses?edit=true")
-}
-
-export const closeEditCourse = async () => {
-  redirect("/protected/courses")
 }

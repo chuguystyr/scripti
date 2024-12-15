@@ -1,20 +1,16 @@
-import { SearchParams } from "types/Utilities"
-import AddCourseForm from "./AddCourseForm"
+import SetCourse from "components/SetCourse"
+import { Params } from "types/Utilities"
 
-const NoCoursesBlock: React.FC<SearchParams> = async ({searchParams: props}) => {
-  const searchParams = await props
+const NoCoursesBlock: React.FC<Params> = async ({ params }) => {
+  const { major } = await params
   return (
     <>
-      {!searchParams?.add && (
-        <>
-          <p className="text-center">
-            Looks like you&apos;re first time here.
-            <br />
-            Let&apos;s add some courses to use in schedule
-          </p>
-          <AddCourseForm />
-        </>
-      )}
+      <p className="text-center">
+        Looks like you&apos;re first time here.
+        <br />
+        Let&apos;s add some courses to use in schedule
+      </p>
+      <SetCourse major={major} />
     </>
   )
 }
