@@ -1,7 +1,7 @@
 import CourseCard from "components/CourseCard"
 import SearchBar from "components/SearchBar"
 import SetCourse from "components/SetCourse"
-import { getCourses } from "server/actions/courses"
+import { getCourses } from "server/fetchers"
 import { Metadata } from "next"
 import { BasicPageProps } from "types/Utilities"
 

@@ -1,14 +1,12 @@
-import { getCourses } from "server/actions/courses"
 import { setSchedule } from "server/actions/schedule"
 import { useEffect, useState, useMemo, useActionState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import Course from "types/Course"
 import { useDebounce } from "./useDebounce"
 
-export const useSetSchedule = () => {
+export const useSetSchedule = (courses: Course[]) => {
   const router = useRouter()
   const [message, formAction, pending] = useActionState(setSchedule, null)
-  const [courses, setCourses] = useState<Course[]>([])
   const pathname = usePathname()
   const major = pathname.split("/")[3]
 
@@ -55,14 +53,9 @@ export const useSetSchedule = () => {
   }
 
   useEffect(() => {
-    const getData = async () => {
-      const courses = await getCourses(+major)
-      if (courses.length === 0)
-        router.push("/protected/courses?message=no courses")
-      setCourses(courses)
-    }
-    getData()
-  }, [major, router])
+    if (courses.length === 0)
+      router.push("/protected/courses?message=no courses")
+  }, [courses.length, router])
 
   const titles = useMemo(
     () => courses?.map((course) => course.title) || [],

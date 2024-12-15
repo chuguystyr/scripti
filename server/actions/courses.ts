@@ -2,43 +2,11 @@
 import dbConnect from "server/db"
 import { protector } from "server/protection"
 import Course from "models/Course"
-import ICourse from "types/Course"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { Error as MongooseError, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
-import User from "models/User"
-import { IUser } from "types/User"
 import { SetCourseValidationErrors } from "types/Utilities"
-
-export const getCourses = async (major: number, searchTerm?: string) => {
-  const id = await protector()
-  await dbConnect()
-  try {
-    const { majors } = await User.findOne(
-      { _id: new Types.ObjectId(id) },
-      { majors: 1 },
-    )
-      .lean<IUser>()
-      .orFail()
-    const majorValue = majors[major]
-    const courses = await Course.find({
-      userId: new Types.ObjectId(id),
-      major: majorValue,
-      title: { $regex: new RegExp(searchTerm || "", "i") },
-    }).lean<ICourse[]>()
-    if (!courses) {
-      return []
-    }
-    return courses.map((course) => ({
-      ...course,
-      _id: course._id.toString(),
-      userId: course.userId.toString(),
-    }))
-  } catch (error) {
-    throw error
-  }
-}
 
 export const openAddCourse = async () => {
   redirect("/protected/courses?add=true")

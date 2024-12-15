@@ -1,4 +1,4 @@
-import { getSchedule, getTimes } from "server/actions/schedule"
+import { getSchedule, getTimes } from "server/fetchers"
 import ScheduleTable from "./ScheduleTable"
 import NoScheduleBlock from "./NoScheduleBlock"
 import { Params } from "types/Utilities"
