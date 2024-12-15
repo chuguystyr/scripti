@@ -1,4 +1,3 @@
-import Schedule from "types/Schedule"
 import { Types } from "mongoose"
 
 export interface IUser {
@@ -7,7 +6,6 @@ export interface IUser {
   username: string
   email: string
   password: string
-  schedules?: Schedule[]
   majors: string[]
 }
 

@@ -19,10 +19,6 @@ const userSchema = new Schema<IUser, Model<IUser>>({
     type: String,
     required: true,
   },
-  schedules: {
-    type: Array,
-    required: false,
-  },
   majors: {
     type: [String],
     required: true,
