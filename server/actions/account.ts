@@ -120,14 +120,6 @@ export const getAccount = async () => {
   }
 }
 
-export const openEdit = async () => {
-  redirect("/protected/account?edit=true")
-}
-
-export const closeEdit = async () => {
-  redirect("/protected/account")
-}
-
 export const editAccount = async (prevState: unknown, form: FormData) => {
   const id = await protector()
   const data = Object.fromEntries(form.entries())
