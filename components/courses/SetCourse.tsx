@@ -1,6 +1,6 @@
 "use client"
 import { editCourse, setCourse } from "server/actions/courses"
-import Modal from "./Modal"
+import Modal from "components/Modal"
 import { useState } from "react"
 import { useActionState } from "react"
 import Course from "types/Course"
