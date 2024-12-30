@@ -3,11 +3,11 @@ on:
   pull_request:
     branches:
       - main
-      - dev
+      - development
   push:
     branches:
       - main
-      - dev
+      - development
 jobs:
   unit-test:
     runs-on: ubuntu-latest
