@@ -2,7 +2,7 @@ import { FaCheckCircle } from "react-icons/fa"
 import { RiDeleteBin7Fill } from "react-icons/ri"
 import Task from "types/Task"
 import { checkTask, deleteTask } from "server/actions/tasks"
-import SetTask from "./SetTask"
+import SetTask from "components/tasks/SetTask"
 
 const TaskCard: React.FC<Task> = async ({
   _id,

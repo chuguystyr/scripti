@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { cleanup, render, screen } from "@testing-library/react"
-import SetTask from "components/SetTask"
+import SetTask from "components/tasks/SetTask"
 
 describe("SetTask component", () => {
   vi.mock("server/actions/tasks", () => ({
@@ -19,7 +19,7 @@ describe("SetTask component", () => {
 
   beforeEach(() => {
     cleanup()
-    render(<SetTask close={mockClose} searchParams={{}}/>)
+    render(<SetTask close={mockClose} searchParams={{}} />)
   })
 
   it("should render form fields and labels", () => {

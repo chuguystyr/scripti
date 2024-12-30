@@ -1,5 +1,5 @@
 import Schedule from "components/schedule/Schedule"
-import Tasks from "components/Tasks"
+import Tasks from "components/tasks/Tasks"
 import Quote from "components/Quote"
 import Name from "components/Name"
 import DateTime from "components/DateTime"

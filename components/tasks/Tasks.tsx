@@ -1,7 +1,7 @@
 import { getTasks } from "server/fetchers"
-import TaskCard from "components/TaskCard"
+import TaskCard from "components/tasks/TaskCard"
 import { Params } from "types/Utilities"
-import SetTask from "components/SetTask"
+import SetTask from "components/tasks/SetTask"
 
 const Tasks: React.FC<Params> = async ({ params }) => {
   const { major } = await params
