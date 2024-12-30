@@ -1,4 +1,4 @@
-import { getTasks, openAddTaskAtHome } from "server/actions/tasks"
+import { getTasks } from "server/actions/tasks"
 import TaskCard from "components/TaskCard"
 import { Params } from "types/Utilities"
 import SetTask from "components/SetTask"
@@ -33,16 +33,8 @@ const Tasks: React.FC<Params> = async ({ params }) => {
       >
         {tasks && tasks.length === 0 && (
           <div className="card h-fit block mx-auto text-center">
-            <p className="inline">
-              Doddy is free!
-              <br />
-              If you need to add a task please click{" "}
-            </p>
-            <form action={openAddTaskAtHome} className="inline">
-              <button className="font-semibold hover:underline underline-offset-4">
-                here
-              </button>
-            </form>
+            <p className="inline">Doddy is free!</p>
+            <SetTask task={undefined} />
           </div>
         )}
         {tasks &&
