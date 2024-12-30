@@ -1,4 +1,4 @@
-import { getTasks } from "server/actions/tasks"
+import { getTasks } from "server/fetchers"
 import TaskCard from "components/TaskCard"
 import { Params } from "types/Utilities"
 import SetTask from "components/SetTask"

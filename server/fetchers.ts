@@ -9,6 +9,110 @@ import { protector } from "server/protection"
 import dbConnect from "server/db"
 import Schedule from "models/Schedule"
 import { DaysOfWeekArray, ScheduleDay } from "types/Schedule"
+import Task from "models/Task"
+
+export const getAllTasks = async (major: number, searchTerm?: string) => {
+  const id = await protector()
+  await dbConnect()
+  try {
+    const { majors } = await User.findOne(
+      { _id: new Types.ObjectId(id) },
+      { majors: 1 },
+    )
+      .lean<IUser>()
+      .orFail()
+    const majorValue = majors[major]
+    const tasks = await Task.aggregate([
+      {
+        $match: {
+          userId: new Types.ObjectId(id),
+          title: { $regex: new RegExp(searchTerm || "", "i") },
+        },
+      },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "course",
+          foreignField: "_id",
+          as: "courseDetails",
+        },
+      },
+      {
+        $match: { "courseDetails.major": majorValue },
+      },
+      {
+        $unwind: "$courseDetails",
+      },
+      {
+        $addFields: {
+          course: "$courseDetails.title",
+        },
+      },
+      {
+        $project: {
+          courseDetails: 0,
+        },
+      },
+    ])
+    if (tasks.length > 0) {
+      return tasks
+    } else {
+      return []
+    }
+  } catch {
+    return []
+  }
+}
+
+export const getTasks = async (major: number) => {
+  const id = await protector()
+  await dbConnect()
+  try {
+    const { majors } = await User.findOne(
+      { _id: new Types.ObjectId(id) },
+      { majors: 1 },
+    )
+      .lean<IUser>()
+      .orFail()
+    const majorValue = majors[major]
+    const tasks = await Task.aggregate([
+      { $match: { userId: new Types.ObjectId(id), status: { $ne: "done" } } },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "course",
+          foreignField: "_id",
+          as: "courseDetails",
+        },
+      },
+      {
+        $match: { "courseDetails.major": majorValue },
+      },
+      { $sort: { deadline: 1 } },
+      { $limit: 4 },
+      {
+        $unwind: "$courseDetails",
+      },
+      {
+        $addFields: {
+          course: "$courseDetails.title",
+        },
+      },
+      {
+        $project: {
+          courseDetails: 0,
+        },
+      },
+    ])
+    const done = (
+      await Task.find({ userId: new Types.ObjectId(id), status: "done" })
+    ).length
+    return { tasks, done }
+  } catch (error) {
+    console.log(error)
+    throw new Error("Internal")
+  }
+}
 
 export const getCourses = async (major: number, searchTerm?: string) => {
   const id = await protector()

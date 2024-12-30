@@ -1,6 +1,6 @@
 import TaskCard from "components/TaskCard"
 import SetTask from "components/SetTask"
-import { getAllTasks } from "server/actions/tasks"
+import { getAllTasks } from "server/fetchers"
 import SearchBar from "components/SearchBar"
 import { Metadata } from "next"
 import { BasicPageProps } from "types/Utilities"
