@@ -5,7 +5,7 @@ export default interface Task {
   userId: Types.ObjectId | string
   title: string
   deadline: Date
-  course: Types.ObjectId
+  course: Types.ObjectId | string
   status: string
   description?: string
 }

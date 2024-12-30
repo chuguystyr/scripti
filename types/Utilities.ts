@@ -31,3 +31,10 @@ export enum SetScheduleValidationErrors {
   INVALID_DATES = "Invalid dates.",
   INTERNAL_ERROR = "Something went wrong.\nPlease try again later.",
 }
+
+export enum SetTaskValidationErrors {
+  EMPTY_MANDATORY_FIELD = "Please fill in\nall required fields.",
+  COURSE_NOT_FOUND = "No such course exists.",
+  DATE_OVERDUE = "Can't add task that's already overdue.",
+  TASK_EXISTS = "Task with this title and course\nalready exists.",
+}

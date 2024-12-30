@@ -1,17 +1,10 @@
 import { getTasks, openAddTaskAtHome } from "server/actions/tasks"
 import TaskCard from "components/TaskCard"
+import { Params } from "types/Utilities"
 import SetTask from "components/SetTask"
-import { closeAddTaskAtHome } from "server/actions/tasks"
-import { BasicPageProps } from "types/Utilities"
 
-const Tasks: React.FC<
-  {
-    setEditable: () => Promise<never>
-    resetEditable: () => Promise<never>
-  } & BasicPageProps
-> = async ({ searchParams: sP, params, setEditable, resetEditable }) => {
+const Tasks: React.FC<Params> = async ({ params }) => {
   const { major } = await params
-  const searchParams = await sP
   const { tasks, done } = (await getTasks(+major)) ?? { tasks: [], done: 0 }
   const statistics = {
     inProgress:
@@ -34,9 +27,6 @@ const Tasks: React.FC<
           {done}
         </p>
       </section>
-      {searchParams && searchParams?.add && (
-        <SetTask close={closeAddTaskAtHome} searchParams={sP} params={params} />
-      )}
       <section
         className="mt-10 flex flex-col md:grid md:grid-cols-2 gap-3"
         id="tasks"
@@ -58,24 +48,9 @@ const Tasks: React.FC<
         {tasks &&
           tasks.length !== 0 &&
           tasks.map((task, index) => (
-            <TaskCard
-              key={index}
-              task={task}
-              searchParams={sP}
-              setEditable={setEditable}
-              resetEditable={resetEditable}
-            />
+            <TaskCard key={index} {...{ ...task, _id: task._id.toString() }} />
           ))}
-        {tasks && tasks.length !== 0 && (
-          <form
-            action={openAddTaskAtHome}
-            className="self-center justify-self-center md:col-start-1 md:col-end-3"
-          >
-            <button className="font-bold btn-outlined text-3xl text-center">
-              +
-            </button>
-          </form>
-        )}
+        {tasks && tasks.length !== 0 && <SetTask task={undefined} />}
       </section>
     </section>
   )

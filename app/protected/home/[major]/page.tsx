@@ -3,12 +3,8 @@ import Tasks from "components/Tasks"
 import Quote from "components/Quote"
 import Name from "components/Name"
 import DateTime from "components/DateTime"
-import {
-  setTaskEditableAtHome as setEditable,
-  setTaskNonEditableAtHome as resetEditable,
-} from "server/actions/tasks"
 import { Metadata } from "next"
-import { BasicPageProps } from "types/Utilities"
+import { Params } from "types/Utilities"
 
 export const metadata: Metadata = {
   title: "Home | Scripti",
@@ -16,7 +12,7 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Home: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
+const Home: React.FC<Params> = async ({ params }) => {
   return (
     <main className="flex flex-col md:flex-row gap-5 md:gap-10">
       <h1 className="sr-only">Scripti app&apos;s home page</h1>
@@ -35,12 +31,7 @@ const Home: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
           <Schedule params={params} />
         </section>
       </section>
-      <Tasks
-        setEditable={setEditable}
-        resetEditable={resetEditable}
-        searchParams={searchParams}
-        params={params}
-      />
+      <Tasks params={params} />
     </main>
   )
 }
