@@ -3,7 +3,7 @@ import { RiDeleteBin7Fill } from "react-icons/ri"
 import Course from "types/Course"
 import { deleteCourse } from "server/actions/courses"
 import SetCourse from "components/courses/SetCourse"
-const CourseCard: React.FC<Omit<Course, "userId">> = async (course) => {
+const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
   return (
     <div className="card w-full p-4">
       <div className="flex justify-between">
