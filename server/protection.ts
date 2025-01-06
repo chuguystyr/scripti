@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
 import { cookies } from "next/headers"
 import { unauthorized } from "next/navigation"
+import { DecodedCookieObject } from "types/Utilities"
 export const protector = async () => {
   const cookieStore = await cookies()
   const cookie = cookieStore.get("_scrpt")
@@ -8,11 +9,13 @@ export const protector = async () => {
     unauthorized()
   }
   try {
-    const { id } = jwt.verify(cookie.value, process.env.JWT_SECRET!) as {
-      id: string
-    }
+    const { id } = jwt.verify(
+      cookie.value,
+      process.env.JWT_SECRET!,
+    ) as DecodedCookieObject
     return id
-  } catch {
-    throw new Error("Internal")
+  } catch (error) {
+    console.error("Token verification error", error)
+    unauthorized()
   }
 }

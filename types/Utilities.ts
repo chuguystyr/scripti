@@ -38,3 +38,7 @@ export enum SetTaskValidationErrors {
   DATE_OVERDUE = "Can't add task that's already overdue.",
   TASK_EXISTS = "Task with this title and course\nalready exists.",
 }
+
+export type DecodedCookieObject = {
+  id: string
+}
