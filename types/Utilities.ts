@@ -13,6 +13,7 @@ export enum SignUpFormValidationErrors {
   INVALID_EMAIL = "Please enter a valid email address.",
   WEAK_PASSWORD = "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
   USERNAME_TAKEN = "Username is already taken.",
+  EMAIL_TAKEN = "If account with the email provided is your's, please login.",
   INTERNAL_ERROR = "Something went wrong.\nPlease try again later.",
 }
 

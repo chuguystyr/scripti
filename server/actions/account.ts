@@ -10,6 +10,7 @@ import { protector } from "server/protection"
 import { revalidatePath } from "next/cache"
 import { IUser } from "types/User"
 import { HydratedDocument, Types } from "mongoose"
+import { MongoError } from "mongodb"
 import {
   SignUpFormValidationErrors,
   LoginFormValidationErrors,
@@ -53,16 +54,20 @@ export const signUp = async (prevState: unknown, form: FormData) => {
       majors: ["default"],
     })
     await newUser.save()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    // TODO: check for the ways to use built-in instruments instead of manual if-check
-    if (error.code === 11000) {
-      return {
-        currentState: form,
-        error: SignUpFormValidationErrors.USERNAME_TAKEN,
-      }
+  } catch (error: unknown) {
+    if (error instanceof MongoError && error.code === 11000) {
+      if (error.message.includes("username"))
+        return {
+          currentState: form,
+          error: SignUpFormValidationErrors.USERNAME_TAKEN,
+        }
+      if (error.message.includes("email"))
+        return {
+          currentState: form,
+          error: SignUpFormValidationErrors.EMAIL_TAKEN,
+        }
     }
-    console.log(error)
+    console.error(error)
     return {
       currentState: form,
       error: SignUpFormValidationErrors.INTERNAL_ERROR,
