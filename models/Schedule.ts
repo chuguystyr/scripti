@@ -34,7 +34,7 @@ const ScheduleSchema = new Schema<Schedule, Model<Schedule>>({
   [DaysOfWeek.Saturday]: daySchema,
   [DaysOfWeek.Sunday]: daySchema,
 })
-
+ScheduleSchema.index({ userId: 1, major: 1 })
 const ScheduleModel: Model<Schedule> =
   models.schedules || model<Schedule>("schedules", ScheduleSchema)
 
