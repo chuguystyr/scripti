@@ -56,6 +56,9 @@ const CourseSchema = new Schema<ICourse, Model<ICourse>>({
   },
 })
 
+CourseSchema.index({ userId: 1, major: 1 })
+CourseSchema.index({ userId: 1, major: 1, title: 1 }, { unique: true })
+
 const CourseModel: Model<ICourse> =
   models.courses || model<ICourse>("courses", CourseSchema)
 
