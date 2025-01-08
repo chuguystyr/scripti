@@ -1,6 +1,6 @@
 import { Schema, Model, model, models } from "mongoose"
 import ICourse from "types/Course"
-
+// TODO: add necessary statics, methods and query helpers
 const CourseSchema = new Schema<ICourse, Model<ICourse>>({
   userId: {
     type: Schema.Types.ObjectId,

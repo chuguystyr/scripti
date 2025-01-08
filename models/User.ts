@@ -1,6 +1,6 @@
 import { Model, Schema, model, models } from "mongoose"
 import { IUser } from "types/User"
-
+// TODO: add necessary statics, methods and query helpers
 const userSchema = new Schema<IUser, Model<IUser>>({
   name: {
     type: String,

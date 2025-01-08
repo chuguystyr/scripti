@@ -1,7 +1,7 @@
 import { model, Model, models, Schema } from "mongoose"
 import type { Schedule, ScheduleItem } from "types/Schedule"
 import { DaysOfWeek, CourseType } from "types/Schedule"
-
+// TODO: add necessary statics, methods and query helpers
 const ScheduleItemSchema = new Schema<ScheduleItem, Model<ScheduleItem>>(
   {
     course: { type: Schema.Types.ObjectId, required: true },

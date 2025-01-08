@@ -1,7 +1,7 @@
 import { Model, Schema, model, models } from "mongoose"
 import Course from "models/Course"
 import ITask from "types/Task"
-
+// TODO: add necessary statics, methods and query helpers
 const TaskSchema = new Schema<ITask, Model<ITask>>({
   userId: {
     type: Schema.Types.ObjectId,
