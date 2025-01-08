@@ -40,7 +40,8 @@ const TaskSchema = new Schema<ITask, Model<ITask>>({
     required: false,
   },
 })
-
+TaskSchema.index({ userId: 1 })
+TaskSchema.index({ course: 1, title: 1 }, { unique: true })
 const TaskModel: Model<ITask> =
   models.tasks || model<ITask>("tasks", TaskSchema)
 
