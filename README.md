@@ -7,7 +7,7 @@ Scripti is a study planning tool designed for students to manage their academic 
 ## Features
 
 - **User Authentication**: Secure signup, login, and logout functionality.
-- **Account Management**: Users can create and delete their accounts.
+- **Account Management**: Users can create and delete their accounts. Account details can be modified
 - **Task Management**: create, view, edit, mark as done, delete tasks.
 - **Course Management**: Add, view, edit, and delete academic courses.
 - **Scheduling**: add and view schedule.
