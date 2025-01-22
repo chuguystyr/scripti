@@ -32,8 +32,8 @@ const Tasks: React.FC<Params> = async ({ params }) => {
         id="tasks"
       >
         {tasks && tasks.length === 0 && (
-          <div className="card h-fit block mx-auto text-center">
-            <p className="inline">Doddy is free!</p>
+          <div className="card h-fit block mx-auto text-center col-start-1 col-end-3">
+            <p className="mb-2">Doddy is free!</p>
             <SetTask task={undefined} />
           </div>
         )}
