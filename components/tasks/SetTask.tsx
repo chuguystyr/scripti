@@ -86,7 +86,7 @@ const SetTask: React.FC<{ task: Omit<Task, "userId"> | undefined }> = ({
               {pending ?
                 "Submitting..."
               : task ?
-                "Edit Task"
+                "Save Changes"
               : "Add Task"}
             </button>
           </form>
