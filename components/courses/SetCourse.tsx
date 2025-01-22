@@ -144,7 +144,7 @@ const SetCourse: React.FC<Props> = (props) => {
                 {pending ?
                   "Submitting..."
                 : isEdit ?
-                  "Update Course"
+                  "Save Changes"
                 : "Add Course"}
               </button>
             </div>
