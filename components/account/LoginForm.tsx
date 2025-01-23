@@ -26,7 +26,7 @@ const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
         type="text"
         id="username"
         name="username"
-        className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
+        className="bg-zinc-200 p-2 -mt-2 focus:outline-hidden focus:shadow-xl rounded-md"
         placeholder="john_smith"
         autoComplete="nickname"
       />
@@ -35,7 +35,7 @@ const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
         type="password"
         id="password"
         name="password"
-        className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
+        className="bg-zinc-200 p-2 -mt-2 focus:outline-hidden focus:shadow-xl rounded-md"
         placeholder=""
         autoComplete="current-password"
       />

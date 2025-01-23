@@ -15,7 +15,7 @@ const SetSchedule: React.FC<{
     // TODO: Optimize for the mobile view
     <form action={formAction} className="space-y-4">
       {message && (
-        <p className="p-2 bg-red-200 text-red-800 rounded">{message}</p>
+        <p className="p-2 bg-red-200 text-red-800 rounded-sm">{message}</p>
       )}
       <div className="flex space-x-4">
         <label htmlFor="from" className="self-center font-bold">
@@ -23,7 +23,7 @@ const SetSchedule: React.FC<{
         </label>
         <input
           name="from"
-          className="input p-2 border rounded"
+          className="input p-2 border rounded-sm"
           type="date"
           id="from"
         />
@@ -32,13 +32,13 @@ const SetSchedule: React.FC<{
         </label>
         <input
           name="till"
-          className="input p-2 border rounded"
+          className="input p-2 border rounded-sm"
           type="date"
           id="till"
         />
       </div>
       <div className="overflow-x-auto">
-        <div className="min-w-full bg-white border border-gray-200 rounded-lg shadow">
+        <div className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
           <div className="grid grid-cols-7 text-center border-b bg-gray-100">
             <div className="p-2 font-semibold">Time/Day</div>
             {days.map((day) => (
@@ -52,7 +52,7 @@ const SetSchedule: React.FC<{
               <div key={index} className="grid grid-cols-7 text-center">
                 <input
                   type="text"
-                  className="input w-full p-2 border rounded"
+                  className="input w-full p-2 border rounded-sm"
                   placeholder="Begin - End time"
                   name={`time${index}`}
                 />
@@ -61,7 +61,7 @@ const SetSchedule: React.FC<{
                     <div>
                       <select
                         name={`${day}${index}`}
-                        className="input w-full p-2 border rounded"
+                        className="input w-full p-2 border rounded-sm"
                         onChange={(e) => {
                           handleInputChange(
                             `${day}${index}`,
@@ -89,7 +89,7 @@ const SetSchedule: React.FC<{
                           <select
                             name="type"
                             id="type"
-                            className="input w-full p-2 border rounded"
+                            className="input w-full p-2 border rounded-sm"
                             onChange={(e) =>
                               handleInputChange(
                                 `${day}${index}`,
@@ -107,7 +107,7 @@ const SetSchedule: React.FC<{
                           <input
                             type="text"
                             name="room"
-                            className="input w-full p-2 border rounded"
+                            className="input w-full p-2 border rounded-sm"
                             placeholder="Room"
                             onChange={(e) =>
                               handleInputChange(

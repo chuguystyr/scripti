@@ -5,14 +5,7 @@ const ClickableLogo = () => {
   return (
     <Form action="/protected/home/0">
       <button type="submit">
-        <Image
-          src={Logo}
-          width={512}
-          height={206}
-          alt="logo"
-          className="w-40 h-30 rounded-xl"
-          priority
-        />
+        <Image src={Logo} alt="logo" className="w-50 rounded-2xl" priority />
       </button>
     </Form>
   )

@@ -7,7 +7,7 @@ const Modal: React.FC<{ children: React.ReactNode; onClose: () => void }> = ({
   onClose,
 }) => {
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50">
       <div className="relative bg-white p-6 mx-2 rounded-lg shadow-lg">
         <button
           onClick={onClose}
