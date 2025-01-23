@@ -6,19 +6,11 @@ vi.mock("server/actions/account", () => ({
   login: () => {},
 }))
 
-vi.mock("react-dom", () => {
-  return {
-    useFormStatus: () => ({
-      pending: false,
-    }),
-  }
-})
-
 describe("login page: general structure", () => {
   beforeAll(async () => {
     const awaitedRSC = await Login({
       searchParams: new Promise((resolve) => resolve({})),
-      params: new Promise((resolve) => resolve({ slug: "" })),
+      params: new Promise((resolve) => resolve({ major: "" })),
     })
     render(awaitedRSC)
   })
@@ -47,7 +39,7 @@ describe("login page: general structure", () => {
     expect(link).toBeDefined()
   })
 })
-
+// FIXME: update tests to reflect new error handling logic
 describe("login page: messages", () => {
   beforeEach(() => {
     cleanup()
@@ -56,7 +48,7 @@ describe("login page: messages", () => {
   it("should display error message for missing fields", async () => {
     const awaitedRSC = await Login({
       searchParams: new Promise((resolve) => resolve({ error: "fields" })),
-      params: new Promise((resolve) => resolve({ slug: "" })),
+      params: new Promise((resolve) => resolve({ major: "" })),
     })
     render(awaitedRSC)
 
@@ -67,7 +59,7 @@ describe("login page: messages", () => {
   it("should display error message for invalid credentials", async () => {
     const awaitedRSC = await Login({
       searchParams: new Promise((resolve) => resolve({ error: "credentials" })),
-      params: new Promise((resolve) => resolve({ slug: "" })),
+      params: new Promise((resolve) => resolve({ major: "" })),
     })
     render(awaitedRSC)
 
@@ -78,7 +70,7 @@ describe("login page: messages", () => {
   it("should display error message for internal error", async () => {
     const awaitedRSC = await Login({
       searchParams: new Promise((resolve) => resolve({ error: "internal" })),
-      params: new Promise((resolve) => resolve({ slug: "" })),
+      params: new Promise((resolve) => resolve({ major: "" })),
     })
     render(awaitedRSC)
     const message = screen.getByText(/Something went wrong. Please try again/i)
@@ -88,7 +80,7 @@ describe("login page: messages", () => {
   it("should display success message for signed up status", async () => {
     const awaitedRSC = await Login({
       searchParams: new Promise((resolve) => resolve({ status: "signed up" })),
-      params: new Promise((resolve) => resolve({ slug: "" })),
+      params: new Promise((resolve) => resolve({ major: "" })),
     })
     render(awaitedRSC)
 

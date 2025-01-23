@@ -15,13 +15,7 @@ vi.mock("react-dom", () => {
 })
 
 describe("signup page: general structure", () => {
-  beforeAll(async () => {
-    const awaitedRSC = await Signup({
-      searchParams: new Promise((resolve) => resolve({})),
-      params: new Promise((resolve) => resolve({ slug: "" })),
-    })
-    render(awaitedRSC)
-  })
+  beforeAll(() => render(<Signup />))
   it("should contain app's name and signup label", () => {
     const heading = screen.getByRole("heading", { name: /Scripti/i })
     const label = screen.getByRole("heading", { name: /Sign up/i })
@@ -47,35 +41,23 @@ describe("signup page: general structure", () => {
     expect(link).toBeDefined()
   })
 })
-
+// FIXME: update tests to reflect new error handling logic
 describe("signup page: messages", () => {
   beforeEach(() => {
     cleanup()
   })
   it("should display error message for missing fields", async () => {
-    const awaitedRSC = await Signup({
-      searchParams: new Promise((resolve) => resolve({ error: "fields" })),
-      params: new Promise((resolve) => resolve({ slug: "" })),
-    })
-    render(awaitedRSC)
+    render(<Signup />)
     const message = screen.getByText(/Please fill in all fields/i)
     expect(message).toBeDefined()
   })
   it("should display error message for taken username", async () => {
-    const awaitedRSC = await Signup({
-      searchParams: new Promise((resolve) => resolve({ error: "username" })),
-      params: new Promise((resolve) => resolve({ slug: "" })),
-    })
-    render(awaitedRSC)
+    render(<Signup />)
     const message = screen.getByText(/Username is already taken/i)
     expect(message).toBeDefined()
   })
   it("should display error message for internal error", async () => {
-    const awaitedRSC = await Signup({
-      searchParams: new Promise((resolve) => resolve({ error: "internal" })),
-      params: new Promise((resolve) => resolve({ slug: "" })),
-    })
-    render(awaitedRSC)
+    render(<Signup />)
     const message = screen.getByText(/Something went wrong. Please try again/i)
     expect(message).toBeDefined()
   })
