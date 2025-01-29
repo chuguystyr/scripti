@@ -18,9 +18,9 @@ export enum SignUpFormValidationErrors {
 }
 
 export enum LoginFormValidationErrors {
-  EMPTY_MANDATORY_FIELD = "Please fill in\nall fields.",
+  EMPTY_MANDATORY_FIELD = "Please fill in all fields.",
   INVALID_CREDENTIALS = "Invalid credentials.",
-  INTERNAL_ERROR = "Something went wrong.\nPlease try again later.",
+  INTERNAL_ERROR = "Something went wrong. Please try again later.",
 }
 
 export enum SetCourseValidationErrors {

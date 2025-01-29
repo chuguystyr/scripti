@@ -12,9 +12,7 @@ const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
     >
       <h1 className="text-center font-bold ">Scripti | Log in </h1>
       {message && (
-        <p className="text-center w-[15vw] block mx-auto text-red-500">
-          {message}
-        </p>
+        <p className="text-center block mx-auto text-red-500">{message}</p>
       )}
       {signedUp && (
         <p className="text-center w-[15vw] block mx-auto text-green-500">
