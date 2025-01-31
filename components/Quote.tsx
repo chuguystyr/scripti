@@ -12,7 +12,7 @@ const Quote = async () => {
   }
   return (
     <p
-      className="card h-[15vh] md:w-[55%] overflow-clip hover:cursor-pointer overflow-y-auto"
+      className="card overflow-clip hover:cursor-pointer overflow-y-auto md:col-start-2 md:col-end-3"
       tabIndex={0}
     >
       {quote.content}{" "}

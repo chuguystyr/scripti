@@ -13,7 +13,7 @@ const TaskCard: React.FC<Task> = async ({
   description,
 }) => {
   return (
-    <div className="card flex flex-col gap-2 p-4">
+    <div className="card flex flex-col gap-2 p-4 h-fit">
       <div className="flex justify-between">
         <h1 className="font-bold w-3/4">{title}</h1>
         <SetTask task={{ _id, title, course, status, deadline, description }} />
