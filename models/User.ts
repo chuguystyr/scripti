@@ -1,4 +1,4 @@
-import { Schema, model, models } from "mongoose"
+import { Schema, model } from "mongoose"
 import { IUser, IUserModel, UserProfileInfo } from "types/User"
 // TODO: add necessary statics, methods and query helpers
 const userSchema = new Schema<IUser, IUserModel>(
@@ -49,6 +49,6 @@ const userSchema = new Schema<IUser, IUserModel>(
   },
 )
 
-const UserModel = models.user || model<IUser, IUserModel>("users", userSchema)
+const UserModel = model<IUser, IUserModel>("users", userSchema)
 
 export default UserModel

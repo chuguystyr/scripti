@@ -3,6 +3,7 @@ import AccountInfoSection from "components/account/AccountInfoSection"
 import AccountActionsSection from "components/account/AccountActionsSection"
 import { protector } from "server/protection"
 import User from "models/User"
+import dbConnect from "server/db"
 
 export const metadata: Metadata = {
   title: "Account | Scripti",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 
 const Account = async () => {
   const id = await protector()
+  await dbConnect()
   const { name, username, email } = await User.findProfileDetailsById(id)
   return (
     <main className="md:grid md:grid-cols-2">
