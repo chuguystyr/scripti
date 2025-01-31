@@ -6,10 +6,7 @@ import { login } from "server/actions/account"
 const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
   const [message, formAction, pending] = useActionState(login, null)
   return (
-    <form
-      action={formAction}
-      className="flex flex-col bg-white p-4 shadow-xl rounded-md gap-4"
-    >
+    <form action={formAction} className="card flex flex-col gap-4">
       <h1 className="text-center font-bold ">Scripti | Log in </h1>
       {message && (
         <p className="text-center block mx-auto text-red-500">{message}</p>

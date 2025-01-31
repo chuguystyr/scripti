@@ -6,10 +6,7 @@ import { signUp } from "server/actions/account"
 const SignUpForm = () => {
   const [state, formAction, pending] = useActionState(signUp, null)
   return (
-    <form
-      action={formAction}
-      className="flex flex-col bg-white p-4 shadow-xl rounded-md gap-4"
-    >
+    <form action={formAction} className="card flex flex-col gap-4">
       <h1 className="text-center font-bold ">Scripti | Sign Up </h1>
       {state?.error && (
         <p className="text-center max-w-[15em] text-red-500">{state.error}</p>
