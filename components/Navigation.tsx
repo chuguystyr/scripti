@@ -1,5 +1,5 @@
 import Link from "next/link"
-import ClickableLogo from "./ClickableLogo"
+import ClickableLogo from "components/ClickableLogo"
 import MajorsTumbler from "components/MajorsTumbler"
 import { Params } from "types/Utilities"
 
@@ -7,7 +7,7 @@ const Navigation: React.FC<Params> = async ({ params }) => {
   const index = Number((await params).major)
   return (
     <nav className="flex mb-5 justify-between items-center" role="navigation">
-      <ClickableLogo />
+      <ClickableLogo major={index} />
       <MajorsTumbler />
       <ul className="hidden md:flex md:gap-10 md:my-auto">
         <li className="btn-outlined">
