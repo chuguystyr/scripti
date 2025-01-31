@@ -11,13 +11,13 @@ const Quote = async () => {
     }
   }
   return (
-    <p
+    <section
       className="card overflow-clip hover:cursor-pointer overflow-y-auto md:col-start-2 md:col-end-3"
       tabIndex={0}
     >
-      {quote.content}{" "}
-      <span className="block text-end font-semibold">{quote.author}</span>
-    </p>
+      <p>{quote.content}</p>
+      <p className="block text-end font-semibold">{quote.author}</p>
+    </section>
   )
 }
 export default Quote
