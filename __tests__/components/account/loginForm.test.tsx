@@ -38,7 +38,6 @@ describe("login form: general structure", () => {
     expect(link).toBeDefined()
   })
 })
-// FIXME: update tests to reflect new error handling logic
 describe("login form: signed up message", () => {
   it("should display message for signed up status", async () => {
     render(<LoginForm signedUp={true} />)
