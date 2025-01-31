@@ -9,10 +9,11 @@ export interface IUser {
   majors: string[]
 }
 
-export type UserBasicInfo = Omit<
+export type UserProfileInfo = Omit<
   IUser,
   "schedules " | "password" | "_id" | "majors"
 >
 export interface IUserModel extends Model<IUser> {
-  findNameById(id: string): Promise<string | null>
+  findNameById(id: string): Promise<string>
+  findProfileDetailsById(id: string): Promise<UserProfileInfo>
 }

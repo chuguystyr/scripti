@@ -3,9 +3,9 @@ import Modal from "components/Modal"
 import EditAcountInfoForm from "components/account/EditAccountInfoForm"
 import { useState } from "react"
 import { FaEdit } from "react-icons/fa"
-import { UserBasicInfo } from "types/User"
+import { UserProfileInfo } from "types/User"
 
-const AccountInfoSection: React.FC<UserBasicInfo> = ({
+const AccountInfoSection: React.FC<UserProfileInfo> = ({
   name,
   username,
   email,

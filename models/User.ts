@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose"
-import { IUser, IUserModel } from "types/User"
+import { IUser, IUserModel, UserProfileInfo } from "types/User"
 // TODO: add necessary statics, methods and query helpers
 const userSchema = new Schema<IUser, IUserModel>(
   {
@@ -29,8 +29,21 @@ const userSchema = new Schema<IUser, IUserModel>(
   {
     statics: {
       async findNameById(id: string): Promise<string | null> {
-        const user = await this.findById(id, { name: 1, _id: 0 }).lean()
-        return user?.name || null
+        const user = await this.findById(id, { name: 1, _id: 0 })
+          .lean<Pick<UserProfileInfo, "name">>()
+          .orFail()
+        return user.name
+      },
+      async findProfileDetailsById(id: string): Promise<UserProfileInfo> {
+        const user = await this.findById(id, {
+          name: 1,
+          username: 1,
+          email: 1,
+          _id: 0,
+        })
+          .lean<UserProfileInfo>()
+          .orFail()
+        return user
       },
     },
   },

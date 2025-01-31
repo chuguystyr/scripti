@@ -1,7 +1,8 @@
-import { getAccount } from "server/actions/account"
 import { Metadata } from "next"
 import AccountInfoSection from "components/account/AccountInfoSection"
 import AccountActionsSection from "components/account/AccountActionsSection"
+import { protector } from "server/protection"
+import User from "models/User"
 
 export const metadata: Metadata = {
   title: "Account | Scripti",
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
 }
 
 const Account = async () => {
-  const { name, username, email } = await getAccount()
+  const id = await protector()
+  const { name, username, email } = await User.findProfileDetailsById(id)
   return (
     <main className="md:grid md:grid-cols-2">
       <AccountInfoSection name={name} username={username} email={email} />
