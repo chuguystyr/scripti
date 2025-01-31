@@ -1,4 +1,4 @@
-import { Types } from "mongoose"
+import { Model, Types } from "mongoose"
 
 export interface IUser {
   _id: Types.ObjectId | string
@@ -13,3 +13,6 @@ export type UserBasicInfo = Omit<
   IUser,
   "schedules " | "password" | "_id" | "majors"
 >
+export interface IUserModel extends Model<IUser> {
+  findNameById(id: string): Promise<string | null>
+}
