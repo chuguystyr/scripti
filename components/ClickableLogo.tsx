@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Form from "next/form"
 import Logo from "public/Logo.png"
-const ClickableLogo: React.FC<{ major: number }> = ({ major }) => {
+const ClickableLogo: React.FC<{ major?: number }> = ({ major = 0 }) => {
   return (
     <Form action={`/protected/home/${major}`}>
       <button type="submit">

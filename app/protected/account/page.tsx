@@ -4,6 +4,7 @@ import AccountActionsSection from "components/account/AccountActionsSection"
 import { protector } from "server/protection"
 import User from "models/User"
 import dbConnect from "server/db"
+import ClickableLogo from "components/ClickableLogo"
 
 export const metadata: Metadata = {
   title: "Account | Scripti",
@@ -16,7 +17,8 @@ const Account = async () => {
   await dbConnect()
   const { name, username, email } = await User.findProfileDetailsById(id)
   return (
-    <main className="md:grid md:grid-cols-2">
+    <main className="flex flex-col">
+      <ClickableLogo />
       <AccountInfoSection name={name} username={username} email={email} />
       <AccountActionsSection />
     </main>
