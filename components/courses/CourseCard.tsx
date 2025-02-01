@@ -30,7 +30,7 @@ const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
         </span>
       </div>
       <div className="grid grid-cols-[1fr_2fr_0.5fr] gap-2 mb-2">
-        <span>Lectures</span>
+        <span className="font-semibold italic">Lectures:</span>
         <span>{course.teacherLectures}</span>
         <Link
           href={course?.lecturesLink || "#"}
@@ -40,7 +40,7 @@ const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
         </Link>
       </div>
       <div className="grid grid-cols-[1fr_2fr_0.5fr] gap-2 mb-2">
-        <span>Practices</span>
+        <span className="font-semibold italic">Practices:</span>
         <span>{course.teacherPractices}</span>
         <Link
           href={course?.practicesLink || "#"}
@@ -51,10 +51,8 @@ const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
       </div>
       {course.notes && (
         <div className="grid grid-cols-[1fr_2fr_0.5fr] gap-2 mb-2">
-          <span>Notes</span>
-          <p className="col-span-2 line-clamp-2 md:line-clamp-4">
-            {course.notes}
-          </p>
+          <span className="font-semibold italic">Notes:</span>
+          <p className="col-span-2 line-clamp-1">{course.notes}</p>
         </div>
       )}
     </div>
