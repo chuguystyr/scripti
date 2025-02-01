@@ -1,18 +1,12 @@
 import { describe, it, expect, beforeEach, beforeAll, vi } from "vitest"
-import { cleanup, render, screen } from "@testing-library/react"
-import Signup from "app/signup/page"
+import { cleanup, fireEvent, render, screen } from "@testing-library/react"
+import Signup from "components/account/SignUpForm"
+import * as accountActions from "server/actions/account"
+import { SignUpFormValidationErrors } from "types/Utilities"
 
 vi.mock("server/actions/account", () => ({
-  signUp: () => {},
+  signUp: vi.fn(),
 }))
-
-vi.mock("react-dom", () => {
-  return {
-    useFormStatus: () => ({
-      pending: false,
-    }),
-  }
-})
 
 describe("signup page: general structure", () => {
   beforeAll(() => render(<Signup />))
@@ -41,24 +35,49 @@ describe("signup page: general structure", () => {
     expect(link).toBeDefined()
   })
 })
-// FIXME: update tests to reflect new error handling logic
+
 describe("signup page: messages", () => {
   beforeEach(() => {
     cleanup()
+    vi.resetAllMocks()
   })
   it("should display error message for missing fields", async () => {
+    vi.mocked(accountActions.signUp).mockResolvedValue({
+      error: SignUpFormValidationErrors.EMPTY_MANDATORY_FIELD,
+      currentState: new FormData(),
+    })
     render(<Signup />)
-    const message = screen.getByText(/Please fill in all fields/i)
+    const button = screen.getByRole("button", { name: /Sign up/i })
+    fireEvent.click(button)
+    const message = await screen.findByText(
+      SignUpFormValidationErrors.EMPTY_MANDATORY_FIELD,
+    )
     expect(message).toBeDefined()
   })
   it("should display error message for taken username", async () => {
+    vi.mocked(accountActions.signUp).mockResolvedValue({
+      error: SignUpFormValidationErrors.USERNAME_TAKEN,
+      currentState: new FormData(),
+    })
     render(<Signup />)
-    const message = screen.getByText(/Username is already taken/i)
+    const button = screen.getByRole("button", { name: /Sign up/i })
+    fireEvent.click(button)
+    const message = await screen.findByText(
+      SignUpFormValidationErrors.USERNAME_TAKEN,
+    )
     expect(message).toBeDefined()
   })
   it("should display error message for internal error", async () => {
+    vi.mocked(accountActions.signUp).mockResolvedValue({
+      error: SignUpFormValidationErrors.INTERNAL_ERROR,
+      currentState: new FormData(),
+    })
     render(<Signup />)
-    const message = screen.getByText(/Something went wrong. Please try again/i)
+    const button = screen.getByRole("button", { name: /Sign up/i })
+    fireEvent.click(button)
+    const message = await screen.findByText(
+      SignUpFormValidationErrors.INTERNAL_ERROR,
+    )
     expect(message).toBeDefined()
   })
 })

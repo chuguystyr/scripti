@@ -48,11 +48,10 @@ describe("login form: signed up message", () => {
 describe("login form: error messages", () => {
   beforeEach(() => {
     cleanup()
-    vi.resetAllMocks() // Resets all mocks, including login
+    vi.resetAllMocks()
   })
 
   it("should display error message for missing fields", async () => {
-    // Mock the login function to return the specific error
     vi.mocked(accountActions.login).mockResolvedValue(
       LoginFormValidationErrors.EMPTY_MANDATORY_FIELD,
     )
@@ -61,10 +60,7 @@ describe("login form: error messages", () => {
     const username = screen.getByLabelText(/Username/i)
     fireEvent.change(username, { target: { value: "john_smith" } })
     const button = screen.getByRole("button", { name: /Log in/i })
-
     fireEvent.click(button)
-
-    // Wait for the error message to appear
     const message = await screen.findByText(
       LoginFormValidationErrors.EMPTY_MANDATORY_FIELD,
     )
