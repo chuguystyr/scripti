@@ -9,7 +9,7 @@ const RootLayout: React.FC<{ children: React.ReactElement }> = ({
   children,
 }) => {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-linear-to-r from-gray-200 to-gray-300">
       <body>{children}</body>
     </html>
   )
