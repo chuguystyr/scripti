@@ -2,6 +2,7 @@ import { getTasks } from "server/fetchers"
 import TaskCard from "components/tasks/TaskCard"
 import { Params } from "types/Utilities"
 import SetTask from "components/tasks/SetTask"
+import Link from "next/link"
 
 const Tasks: React.FC<Params> = async ({ params }) => {
   const { major } = await params
@@ -19,7 +20,11 @@ const Tasks: React.FC<Params> = async ({ params }) => {
         tasks.map((task, index) => (
           <TaskCard key={index} {...{ ...task, _id: task._id.toString() }} />
         ))}
-      {tasks && tasks.length !== 0 && <SetTask task={undefined} />}
+      {tasks && tasks.length !== 0 && (
+        <Link href={`/protected/home/0/tasks/new`} className="btn-outlined">
+          New Task
+        </Link>
+      )}
     </section>
   )
 }

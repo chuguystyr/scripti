@@ -4,6 +4,7 @@ import { getAllTasks } from "server/fetchers"
 import SearchBar from "components/SearchBar"
 import { Metadata } from "next"
 import { BasicPageProps } from "types/Utilities"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Tasks | Scripti",
@@ -27,7 +28,12 @@ const Tasks: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
         </div>
       : <>
           <SearchBar>
-            <SetTask task={undefined} />
+            <Link
+              href={`/protected/tasks/${major}/new`}
+              className="btn-outlined"
+            >
+              New Task
+            </Link>
           </SearchBar>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.isArray(tasks) &&
