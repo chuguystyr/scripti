@@ -19,6 +19,7 @@ const TaskCard: React.FC<Task> = async ({
         <Link
           href={`/protected/tasks/0/edit/${_id}`}
           className="flex items-center"
+          scroll={false}
         >
           <FaEdit />
         </Link>

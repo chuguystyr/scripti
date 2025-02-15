@@ -15,6 +15,7 @@ const AccountInfoSection: React.FC<UserProfileInfo> = async ({
           href="/protected/account/edit"
           aria-label="edit"
           className="w-fit self-end"
+          scroll={false}
         >
           <FaEdit className="hover:cursor-pointer" />
         </Link>

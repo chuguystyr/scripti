@@ -21,7 +21,11 @@ const Tasks: React.FC<Params> = async ({ params }) => {
           <TaskCard key={index} {...{ ...task, _id: task._id.toString() }} />
         ))}
       {tasks && tasks.length !== 0 && (
-        <Link href={`/protected/home/0/tasks/new`} className="btn-outlined">
+        <Link
+          href={`/protected/home/0/tasks/new`}
+          className="btn-outlined"
+          scroll={false}
+        >
           New Task
         </Link>
       )}

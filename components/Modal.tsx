@@ -8,6 +8,7 @@ const Modal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Link
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
           href="/protected/account"
+          scroll={false}
         >
           <FaWindowClose />
         </Link>

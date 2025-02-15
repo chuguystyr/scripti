@@ -9,6 +9,7 @@ const AccountActionsSection = () => {
       <Link
         href="/protected/account/changePassword"
         className="btn-outlined block mx-auto mb-2 text-center w-fit"
+        scroll={false}
       >
         Change Password
       </Link>

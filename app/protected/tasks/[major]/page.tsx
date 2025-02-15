@@ -31,6 +31,7 @@ const Tasks: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
             <Link
               href={`/protected/tasks/${major}/new`}
               className="btn-outlined"
+              scroll={false}
             >
               New Task
             </Link>

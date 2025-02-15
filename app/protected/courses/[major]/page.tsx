@@ -22,7 +22,11 @@ const Courses: React.FC<BasicPageProps> = async ({
     <main>
       <h1 className="sr-only">Courses page</h1>
       <SearchBar>
-        <Link href={`/protected/courses/${major}/new`} className="btn-outlined">
+        <Link
+          href={`/protected/courses/${major}/new`}
+          className="btn-outlined"
+          scroll={false}
+        >
           New Course
         </Link>
       </SearchBar>

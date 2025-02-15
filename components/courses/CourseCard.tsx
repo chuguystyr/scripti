@@ -13,6 +13,7 @@ const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
         <Link
           href={`/protected/courses/0/edit/${course._id.toString()}`}
           className="cursor-pointer"
+          scroll={false}
         >
           <FaEdit />
         </Link>
