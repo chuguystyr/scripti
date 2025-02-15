@@ -2,7 +2,7 @@ import Link from "next/link"
 import { RiDeleteBin7Fill } from "react-icons/ri"
 import Course from "types/Course"
 import { deleteCourse } from "server/actions/courses"
-import SetCourse from "components/courses/SetCourse"
+import { FaEdit } from "react-icons/fa"
 const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
   return (
     <div className="card w-full p-4">
@@ -10,7 +10,12 @@ const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
         <h2 className="text-center text-lg font-bold mb-3 w-4/5">
           {course.title}
         </h2>
-        <SetCourse course={course} />
+        <Link
+          href={`/protected/courses/0/edit/${course._id.toString()}`}
+          className="cursor-pointer"
+        >
+          <FaEdit />
+        </Link>
         <form action={deleteCourse} className="cursor-pointer">
           <input
             type="text"

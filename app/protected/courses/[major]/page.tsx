@@ -1,9 +1,9 @@
 import CourseCard from "components/courses/CourseCard"
 import SearchBar from "components/SearchBar"
-import SetCourse from "components/courses/SetCourse"
 import { getCourses } from "server/fetchers"
 import { Metadata } from "next"
 import { BasicPageProps } from "types/Utilities"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Courses | Scripti",
@@ -22,7 +22,9 @@ const Courses: React.FC<BasicPageProps> = async ({
     <main>
       <h1 className="sr-only">Courses page</h1>
       <SearchBar>
-        <SetCourse major={major} />
+        <Link href={`/protected/courses/${major}/new`} className="btn-outlined">
+          New Course
+        </Link>
       </SearchBar>
       {courses.length === 0 && (
         <p className="text-center">
