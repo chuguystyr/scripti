@@ -22,7 +22,7 @@ const Tasks: React.FC<Params> = async ({ params }) => {
         ))}
       {tasks && tasks.length !== 0 && (
         <Link
-          href={`/protected/home/0/tasks/new`}
+          href={`/protected/home/${major}/tasks/new`}
           className="btn-outlined w-fit md:col-start-1 md:col-end-3 mx-auto"
           scroll={false}
         >

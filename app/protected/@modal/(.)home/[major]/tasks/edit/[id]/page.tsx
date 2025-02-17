@@ -8,7 +8,17 @@ const EditTaskModal: React.FC<{ params: Promise<{ id: string }> }> = async ({
 }) => {
   const { id } = await params
   await dbConnect()
-  const task = await Task.findById(id, { userId: 0 }).lean().orFail()
+  const task = await Task.findById(id, { userId: 0 })
+    .populate({ path: "course", select: "title" })
+    .lean()
+    .then((task) => {
+      if (task?.course)
+        return {
+          ...task,
+          course: (task.course as unknown as { title: string }).title,
+          _id: task._id.toString(),
+        }
+    })
   return (
     <Modal>
       <SetTask task={task} />

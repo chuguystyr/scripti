@@ -1,8 +1,8 @@
-import { FaCheckCircle, FaEdit } from "react-icons/fa"
+import { FaCheckCircle } from "react-icons/fa"
 import { RiDeleteBin7Fill } from "react-icons/ri"
 import Task from "types/Task"
 import { checkTask, deleteTask } from "server/actions/tasks"
-import Link from "next/link"
+import EditLink from "components/EditLink"
 
 const TaskCard: React.FC<Task> = async ({
   _id,
@@ -16,13 +16,7 @@ const TaskCard: React.FC<Task> = async ({
     <div className="card flex flex-col gap-2 p-4 h-fit">
       <div className="flex justify-between">
         <h1 className="font-bold w-3/4">{title}</h1>
-        <Link
-          href={`/protected/tasks/0/edit/${_id}`}
-          className="flex items-center"
-          scroll={false}
-        >
-          <FaEdit />
-        </Link>
+        <EditLink _id={_id.toString()} />
         <form action={checkTask}>
           <input type="hidden" name="id" value={_id?.toString()} />
           <button>

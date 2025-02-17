@@ -23,6 +23,7 @@ const TaskSchema = new Schema<ITask, Model<ITask>>({
   },
   course: {
     type: Schema.Types.ObjectId,
+    ref: "courses",
     required: true,
     validate: {
       validator: async (value: Schema.Types.ObjectId) => {
