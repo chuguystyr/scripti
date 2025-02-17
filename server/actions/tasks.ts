@@ -2,7 +2,6 @@
 
 import dbConnect from "server/db"
 import { protector } from "server/protection"
-import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import Task from "models/Task"
 import { Error, Types } from "mongoose"
@@ -43,18 +42,6 @@ export const setTask = async (prevState: unknown, form: FormData) => {
   }
   revalidatePath("/protected/home")
   revalidatePath("/protected/tasks")
-}
-
-export const setTaskEditableAtHome = async () => {
-  redirect("/protected/home?edit=true")
-}
-
-export const setTaskNonEditableAtHome = async () => {
-  redirect("/protected/home")
-}
-
-export const closeEditTask = async () => {
-  redirect("/protected/tasks")
 }
 
 export const checkTask = async (form: FormData) => {
@@ -127,14 +114,6 @@ export const editTask = async (prevState: unknown, form: FormData) => {
   }
   revalidatePath("/protected/home")
   revalidatePath("/protected/tasks")
-}
-
-export const setTaskEditableAtTasks = async () => {
-  redirect("/protected/tasks?edit=true")
-}
-
-export const setTaskNonEditableAtTasks = async () => {
-  redirect("/protected/tasks")
 }
 
 const checkForMissingFields = (error: Error.ValidationError) => {
