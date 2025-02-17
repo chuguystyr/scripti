@@ -1,6 +1,6 @@
 import { Model, Schema, model, models } from "mongoose"
 import Course from "models/Course"
-import ITask from "types/Task"
+import ITask, { TaskStatus, TaskType } from "types/Task"
 // TODO: add necessary statics, methods and query helpers
 const TaskSchema = new Schema<ITask, Model<ITask>>({
   userId: {
@@ -9,6 +9,11 @@ const TaskSchema = new Schema<ITask, Model<ITask>>({
   },
   title: {
     type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: TaskType,
     required: true,
   },
   deadline: {
@@ -33,7 +38,7 @@ const TaskSchema = new Schema<ITask, Model<ITask>>({
   },
   status: {
     type: String,
-    enum: ["new", "in progress", "done"],
+    enum: TaskStatus,
     required: true,
   },
   description: {
