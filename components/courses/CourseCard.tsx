@@ -2,22 +2,17 @@ import Link from "next/link"
 import { RiDeleteBin7Fill } from "react-icons/ri"
 import Course from "types/Course"
 import { deleteCourse } from "server/actions/courses"
-import { FaEdit } from "react-icons/fa"
+import EditLink from "components/EditLink"
 const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
   return (
     <div className="card w-full p-4">
       <div className="flex justify-between">
-        <h2 className="text-center text-lg font-bold mb-3 w-4/5">
-          {course.title}
-        </h2>
-        <Link
-          href={`/protected/courses/0/edit/${course._id.toString()}`}
-          className="cursor-pointer"
-          scroll={false}
+        <h2 className="text-center text-lg font-bold w-4/5">{course.title}</h2>
+        <EditLink _id={course._id.toString()} />
+        <form
+          action={deleteCourse}
+          className="cursor-pointer flex items-center"
         >
-          <FaEdit />
-        </Link>
-        <form action={deleteCourse} className="cursor-pointer">
           <input
             type="text"
             name="id"
