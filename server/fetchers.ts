@@ -4,7 +4,7 @@ import Course from "models/Course"
 import User from "models/User"
 import { Types } from "mongoose"
 import { IUser } from "types/User"
-import ICourse from "types/Course"
+import ICourse, { ControlForm, CourseType } from "types/Course"
 import { protector } from "server/protection"
 import dbConnect from "server/db"
 import Schedule from "models/Schedule"
@@ -89,7 +89,6 @@ export const getTasks = async (major: number) => {
         $match: { "courseDetails.major": majorValue },
       },
       { $sort: { deadline: 1 } },
-      { $limit: 4 },
       {
         $unwind: "$courseDetails",
       },
@@ -99,8 +98,66 @@ export const getTasks = async (major: number) => {
         },
       },
       {
+        $addFields: {
+          priority: {
+            $add: [
+              {
+                $switch: {
+                  branches: [
+                    {
+                      case: { $eq: ["$course.type", CourseType.CORE] },
+                      then: 30,
+                    },
+                    {
+                      case: {
+                        $eq: ["$course.type", CourseType.MAJOR_ELECTIVE],
+                      },
+                      then: 20,
+                    },
+                    {
+                      case: { $eq: ["$course.type", CourseType.FREE_ELECTIVE] },
+                      then: 10,
+                    },
+                  ],
+                  default: 0,
+                },
+              },
+              {
+                $switch: {
+                  branches: [
+                    {
+                      case: {
+                        $eq: [
+                          "$course.controlForm",
+                          ControlForm.EXAM_WITH_PAPER,
+                        ],
+                      },
+                      then: 40,
+                    },
+                    {
+                      case: { $eq: ["$course.controlForm", ControlForm.EXAM] },
+                      then: 35,
+                    },
+                    {
+                      case: {
+                        $eq: ["$course.controlForm", ControlForm.CREDIT],
+                      },
+                      then: 25,
+                    },
+                  ],
+                  default: 0,
+                },
+              },
+            ],
+          },
+        },
+      },
+      { $sort: { priority: -1 } },
+      { $limit: 4 },
+      {
         $project: {
           courseDetails: 0,
+          priority: 0,
         },
       },
     ])
