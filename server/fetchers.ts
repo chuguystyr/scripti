@@ -171,17 +171,23 @@ export const getTasks = async (major: number) => {
   }
 }
 
-export const getCourses = async (major: number, searchTerm?: string) => {
+export const getCourses = async (
+  major: string | number,
+  searchTerm?: string,
+) => {
   const id = await protector()
   await dbConnect()
+  let majorValue
   try {
-    const { majors } = await User.findOne(
-      { _id: new Types.ObjectId(id) },
-      { majors: 1 },
-    )
-      .lean<IUser>()
-      .orFail()
-    const majorValue = majors[major]
+    if (typeof major === "number") {
+      const { majors } = await User.findOne(
+        { _id: new Types.ObjectId(id) },
+        { majors: 1 },
+      )
+        .lean<IUser>()
+        .orFail()
+      majorValue = majors[major]
+    } else majorValue = major
     const courses = await Course.find({
       userId: new Types.ObjectId(id),
       major: majorValue,
@@ -298,13 +304,11 @@ export const getSchedule = async (major: number) => {
       {
         $replaceRoot: {
           newRoot: {
-            $arrayToObject: "$scheduleForToday",
+            $mergeObjects: [
+              { _id: "$_id" },
+              { $arrayToObject: "$scheduleForToday" },
+            ],
           },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
         },
       },
     ])

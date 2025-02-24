@@ -1,12 +1,13 @@
-import { setSchedule } from "server/actions/schedule"
+import { setSchedule, editSchedule } from "server/actions/schedule"
 import { useEffect, useState, useMemo, useActionState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import Course from "types/Course"
 import { useDebounce } from "./useDebounce"
 
-export const useSetSchedule = (courses: Course[]) => {
+export const useSetSchedule = (courses: Course[], isEdited: boolean) => {
+  const action = isEdited ? editSchedule : setSchedule
   const router = useRouter()
-  const [message, formAction, pending] = useActionState(setSchedule, null)
+  const [message, formAction, pending] = useActionState(action, null)
   const pathname = usePathname()
   const major = pathname.split("/")[3]
 

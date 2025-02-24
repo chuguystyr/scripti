@@ -8,7 +8,7 @@ const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
     <div className="card w-full p-4">
       <div className="flex justify-between">
         <h2 className="text-center text-lg font-bold w-4/5">{course.title}</h2>
-        <EditLink _id={course._id.toString()} />
+        <EditLink _id={course._id.toString()} itemType="course" />
         <form
           action={deleteCourse}
           className="cursor-pointer flex items-center"

@@ -8,7 +8,7 @@ const Schedule: React.FC<Params> = async ({ params }) => {
   const schedule = await getSchedule(+major)
   const times = await getTimes()
   return (
-    <section className="card flex justify-center md:col-start-1 md:col-end-3 md:h-fit md:row-start-2 md:row-end-4">
+    <section className="card flex flex-col justify-center md:col-start-1 md:col-end-3 md:h-fit md:row-start-2 md:row-end-4">
       {schedule && Object.keys(schedule).length ?
         <ScheduleTable schedule={schedule} times={times} />
       : <NoScheduleBlock major={major} />}

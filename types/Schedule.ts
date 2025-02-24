@@ -1,4 +1,4 @@
-import { Date, ObjectId } from "mongoose"
+import { Date, ObjectId, Types } from "mongoose"
 
 export enum DaysOfWeek {
   Monday = "Monday",
@@ -25,7 +25,9 @@ export enum CourseType {
   Practice = "Practice",
 }
 
-export type ScheduleDay = Record<string, ScheduleItem>
+export type ScheduleDay = Record<string, ScheduleItem> & {
+  _id: string | Types.ObjectId
+}
 
 export type Schedule = {
   _id: ObjectId | string
