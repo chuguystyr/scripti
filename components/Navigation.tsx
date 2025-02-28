@@ -6,7 +6,10 @@ import { Params } from "types/Utilities"
 const Navigation: React.FC<Params> = async ({ params }) => {
   const index = Number((await params).major)
   return (
-    <nav className="flex mb-5 justify-between items-center" role="navigation">
+    <nav
+      className="flex mb-5 justify-between items-center gap-4"
+      role="navigation"
+    >
       <ClickableLogo major={index} />
       <MajorsTumbler />
       <ul className="hidden md:flex md:gap-10 md:my-auto">
