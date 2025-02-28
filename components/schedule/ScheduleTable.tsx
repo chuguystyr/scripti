@@ -11,7 +11,7 @@ const ScheduleTable: React.FC<{
         <h2 className="text-xl font-semibold text-center">Schedule </h2>
         <EditLink itemType="schedule" _id={schedule._id.toString()} />
       </div>
-      <table className="border-separate border-spacing-5 border-spacing-x-10 text-center">
+      <table className="border-separate border-spacing-3 text-center">
         <thead>
           <tr>
             <th>Time</th>
