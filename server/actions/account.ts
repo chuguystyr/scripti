@@ -73,7 +73,7 @@ export const signUp = async (prevState: unknown, form: FormData) => {
       error: SignUpFormValidationErrors.INTERNAL_ERROR,
     }
   }
-  redirect("/login?status=signed up")
+  redirect("/login?status=signedUp")
 }
 
 export const login = async (prevState: unknown, form: FormData) => {

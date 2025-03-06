@@ -30,10 +30,11 @@ export const metadata: Metadata = {
 }
 
 const Login: React.FC<SearchParams> = async ({ searchParams }) => {
-  const { signedUp } = await searchParams
+  const { status } = await searchParams
+  const signedUp = status === "signedUp"
   return (
     <main className="w-[100vw] h-[100vh] bg-zinc-300 flex items-center justify-center">
-      <LoginForm signedUp={!!signedUp} />
+      <LoginForm signedUp={signedUp} />
     </main>
   )
 }
