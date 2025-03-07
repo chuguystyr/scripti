@@ -188,21 +188,37 @@ export const getCourses = async (
         .orFail()
       majorValue = majors[major]
     } else majorValue = major
-    const courses = await Course.find({
-      userId: new Types.ObjectId(id),
-      major: majorValue,
-      title: { $regex: new RegExp(searchTerm || "", "i") },
-    }).lean<ICourse[]>()
+    const courses = await Course.find(
+      {
+        userId: new Types.ObjectId(id),
+        major: majorValue,
+        title: { $regex: new RegExp(searchTerm || "", "i") },
+      },
+      {
+        _id: { $toString: "$_id" },
+        userId: { $toString: "$userId" },
+        major: 1,
+        title: 1,
+        type: 1,
+        teacherLectures: 1,
+        teacherPractices: 1,
+        controlForm: 1,
+        lecturesLink: 1,
+        practicesLink: 1,
+        notes: 1,
+      },
+    ).lean<
+      {
+        [Key in keyof ICourse]: Key extends "_id" | "userId" ? string
+        : ICourse[Key]
+      }[]
+    >()
     if (!courses) {
       return []
     }
-    return courses.map((course) => ({
-      ...course,
-      _id: course._id.toString(),
-      userId: course.userId.toString(),
-    }))
+    return courses
   } catch (error) {
-    throw error
+    console.error(error)
   }
 }
 
