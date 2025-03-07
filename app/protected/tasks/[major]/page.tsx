@@ -1,5 +1,4 @@
 import TaskCard from "components/tasks/TaskCard"
-import SetTask from "components/tasks/SetTask"
 import { getAllTasks } from "server/fetchers"
 import SearchBar from "components/SearchBar"
 import { Metadata } from "next"
@@ -20,12 +19,17 @@ const Tasks: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
     <main>
       <h1 className="sr-only">Tasks page</h1>
       {tasks.length === 0 ?
-        <div className="flex flex-col w-fit">
-          <p className="text-center">
-            Looks like you&apos;re first time here. Let&apos;s add some tasks
-          </p>
-          <SetTask task={undefined} />
-        </div>
+        <p className="text-center">
+          Looks like you&apos;re first time here. Let&apos;s{" "}
+          <Link
+            href={`/protected/home/${major}/tasks/new`}
+            className="font-semibold hover:underline underline-offset-4"
+            scroll={false}
+          >
+            add
+          </Link>{" "}
+          a new task.
+        </p>
       : <>
           <SearchBar>
             <Link
