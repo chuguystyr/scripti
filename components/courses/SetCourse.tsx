@@ -136,7 +136,6 @@ const SetCourse: React.FC<Props> = (props) => {
           />
         </div>
       </div>
-      {major && <input type="hidden" name="major" value={major} />}
       <div className="flex justify-center gap-3 mt-4">
         <button
           type="submit"
@@ -150,6 +149,20 @@ const SetCourse: React.FC<Props> = (props) => {
           : "Add Course"}
         </button>
       </div>
+      <input
+        hidden
+        name="id"
+        id="id"
+        readOnly
+        defaultValue={isEdit ? course?._id.toString() : ""}
+      />
+      <input
+        hidden
+        readOnly
+        name="major"
+        id="major"
+        defaultValue={major?.length ? major : ""}
+      />
     </form>
   )
 }

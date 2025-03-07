@@ -26,7 +26,7 @@ export enum LoginFormValidationErrors {
 }
 
 export enum SetCourseValidationErrors {
-  EMPTY_MANDATORY_FIELD = "Please fill in\nall mandatory fields.",
+  EMPTY_MANDATORY_FIELD = "Please fill in all mandatory fields.",
   COURSE_EXISTS = "Course with this name already exists.",
 }
 

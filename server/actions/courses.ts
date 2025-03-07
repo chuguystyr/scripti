@@ -45,15 +45,18 @@ export const setCourse = async (prevState: unknown, form: FormData) => {
 }
 
 export const editCourse = async (prevState: unknown, form: FormData) => {
+  console.log(form)
   const userId = await protector()
   const title = form.get("title")!.toString()
   const controlForm = form.get("controlForm")!.toString()
+  const type = form.get("type")!.toString()
   const teacherLectures = form.get("teacherLectures")!.toString()
   const lecturesLink = form.get("lecturesLink")!.toString()
   const teacherPractices = form.get("teacherPractices")!.toString()
   const practicesLink = form.get("practicesLink")!.toString()
   const notes = form.get("notes")!.toString()
   const id = form.get("id")!.toString()
+  const major = form.get("major")!.toString()
   await dbConnect()
   try {
     await Course.findOneAndUpdate(
@@ -63,6 +66,7 @@ export const editCourse = async (prevState: unknown, form: FormData) => {
           userId: new Types.ObjectId(userId),
           title,
           controlForm,
+          type,
           teacherLectures,
           lecturesLink,
           teacherPractices,
@@ -85,7 +89,8 @@ export const editCourse = async (prevState: unknown, form: FormData) => {
       console.log(error)
     }
   }
-  revalidatePath("/protected/courses")
+  revalidatePath(`/protected/courses/${major}`)
+  redirect(`/protected/courses/${major}`)
 }
 
 export const deleteCourse = async (form: FormData) => {
