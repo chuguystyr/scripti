@@ -1,7 +1,7 @@
 "use client"
 import { editCourse, setCourse } from "server/actions/courses"
 import { useActionState } from "react"
-import Course from "types/Course"
+import Course, { ControlForm, CourseType } from "types/Course"
 
 interface SetCourseProps {
   major: string
@@ -51,8 +51,28 @@ const SetCourse: React.FC<Props> = (props) => {
             className="p-2 border border-gray-300 rounded-md w-full"
             defaultValue={isEdit ? course?.controlForm : ""}
           >
-            <option value="exam">Exam</option>
-            <option value="offset">Offset</option>
+            {Object.values(ControlForm).map((controlForm) => (
+              <option key={controlForm} value={controlForm}>
+                {controlForm}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="type" className="font-semibold">
+            Course Type
+          </label>
+          <select
+            name="type"
+            id="type"
+            className="p-2 border border-gray-300 rounded-md w-full"
+            defaultValue={isEdit ? course?.type : ""}
+          >
+            {Object.values(CourseType).map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
           </select>
         </div>
         <div>

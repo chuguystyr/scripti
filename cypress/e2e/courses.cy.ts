@@ -14,6 +14,7 @@ describe("testing courses functionality", () => {
         validCourse.teacherPractices,
       )
       cy.get('select[name="controlForm"]').select(validCourse.formOfControl)
+      cy.get('select[name="type"]').select(validCourse.type)
       cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink)
       cy.get('input[name="practicesLink"]').type(validCourse.practicesLink)
       cy.get('input[name="notes"]').type(validCourse.notes)
