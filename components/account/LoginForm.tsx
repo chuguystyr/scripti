@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { useActionState } from "react"
 import { login } from "server/actions/account"
+import { SuccessMessages } from "types/Utilities"
 
 const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
   const [message, formAction, pending] = useActionState(login, null)
@@ -13,7 +14,7 @@ const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
       )}
       {signedUp && (
         <p className="text-center w-[15vw] block mx-auto text-green-500">
-          Thanks for signing up. Enjoy the app.
+          {SuccessMessages.SIGNED_UP}
         </p>
       )}
       <label htmlFor="username">Username</label>

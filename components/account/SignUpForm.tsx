@@ -33,7 +33,6 @@ const SignUpForm = () => {
       />
       <label htmlFor="email">Email</label>
       <input
-        type="email"
         id="email"
         name="email"
         className="bg-zinc-200 p-2 -mt-2 focus:outline-hidden focus:shadow-xl rounded-md"

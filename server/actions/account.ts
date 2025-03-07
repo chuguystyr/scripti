@@ -14,6 +14,7 @@ import { MongoError } from "mongodb"
 import {
   SignUpFormValidationErrors,
   LoginFormValidationErrors,
+  NonSpecificErrors,
 } from "types/Utilities"
 
 export const signUp = async (prevState: unknown, form: FormData) => {
@@ -70,7 +71,7 @@ export const signUp = async (prevState: unknown, form: FormData) => {
     console.error(error)
     return {
       currentState: form,
-      error: SignUpFormValidationErrors.INTERNAL_ERROR,
+      error: NonSpecificErrors.INTERNAL_ERROR,
     }
   }
   redirect("/login?status=signedUp")
@@ -102,7 +103,7 @@ export const login = async (prevState: unknown, form: FormData) => {
     cookieStore.set("_scrpt", token, { maxAge: 60 * 60 * 3 })
   } catch (error) {
     console.log(error)
-    return LoginFormValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
   redirect("/protected/home/0")
 }
@@ -154,7 +155,7 @@ export const editAccount = async (prevState: unknown, form: FormData) => {
     if (error.code === 11000) {
       return SignUpFormValidationErrors.USERNAME_TAKEN
     }
-    return SignUpFormValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
   revalidatePath("/protected/account", "page")
   redirect("/protected/account")
@@ -193,7 +194,7 @@ export const changePassword = async (prevState: unknown, form: FormData) => {
     )
   } catch (error) {
     console.log(error)
-    return LoginFormValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
   return "Password hase been changed successfully"
 }
@@ -213,7 +214,7 @@ export const deleteAccount = async () => {
     await User.findOneAndDelete({ _id: id })
   } catch (error: unknown) {
     console.log(error)
-    return LoginFormValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
   cookieStore.set("_scrpt", "", { maxAge: 0 })
   redirect("/")

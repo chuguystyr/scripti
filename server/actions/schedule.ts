@@ -6,7 +6,7 @@ import { protector } from "server/protection"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import Schedule from "models/Schedule"
-import { SetScheduleValidationErrors } from "types/Utilities"
+import { NonSpecificErrors, SetScheduleValidationErrors } from "types/Utilities"
 
 export const setSchedule = async (prevState: unknown, form: FormData) => {
   const formData = Object.fromEntries(
@@ -48,7 +48,7 @@ export const setSchedule = async (prevState: unknown, form: FormData) => {
     await result.save()
   } catch (error) {
     console.log("Error", error)
-    return SetScheduleValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
   revalidatePath("/protected/home")
   redirect(`/protected/home/${formData.major}`)
@@ -62,7 +62,7 @@ export const editSchedule = async (prevState: unknown, form: FormData) => {
   // _id for the schedule to be updated must be provided
   const scheduleId = formData.scheduleId
   if (!scheduleId) {
-    return SetScheduleValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
 
   // Retrieve the times data (expecting fields time0 to time5)
@@ -111,11 +111,11 @@ export const editSchedule = async (prevState: unknown, form: FormData) => {
       { new: true, runValidators: true },
     )
     if (!result) {
-      return SetScheduleValidationErrors.INTERNAL_ERROR
+      return NonSpecificErrors.INTERNAL_ERROR
     }
   } catch (error) {
     console.log("Error", error)
-    return SetScheduleValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
   revalidatePath("/protected/home")
   const majorIndex = await User.findById(id)
