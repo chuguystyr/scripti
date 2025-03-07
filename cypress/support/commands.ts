@@ -48,9 +48,7 @@ Cypress.Commands.add("login", (username: string, password: string) => {
 
 Cypress.Commands.add("goToCoursesPage", () => {
   cy.get("a").contains("Courses").click()
-  cy.waitUntil(() =>
-    cy.get("button").contains("Add Course").should("be.visible"),
-  )
+  cy.waitUntil(() => cy.get("a").contains("New Course").should("be.visible"))
 })
 
 Cypress.Commands.add("goToTasksPage", () => {

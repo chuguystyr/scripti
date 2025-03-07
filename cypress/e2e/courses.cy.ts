@@ -6,7 +6,7 @@ describe("testing courses functionality", () => {
     })
   })
   it("should add a new course when all fields are filled, (#CF1)", () => {
-    cy.get("button").contains("Add Course").click()
+    cy.get("a").contains("New Course").click()
     cy.fixture("courses").then(({ validCourse }) => {
       cy.get('input[name="title"]').type(validCourse.title)
       cy.get('input[name="teacherLectures"]').type(validCourse.teacherLectures)
@@ -17,7 +17,7 @@ describe("testing courses functionality", () => {
       cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink)
       cy.get('input[name="practicesLink"]').type(validCourse.practicesLink)
       cy.get('input[name="notes"]').type(validCourse.notes)
-      cy.contains("button", /^Add$/).click()
+      cy.contains("button", /^Add Course$/).click()
 
       cy.get("h2").contains(validCourse.title).should("exist")
       cy.get("span").contains(validCourse.teacherLectures).should("exist")
