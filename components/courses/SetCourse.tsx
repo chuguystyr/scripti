@@ -123,18 +123,18 @@ const SetCourse: React.FC<Props> = (props) => {
             defaultValue={isEdit ? course?.practicesLink : ""}
           />
         </div>
-      </div>
-      <div>
-        <label htmlFor="notes" className="font-semibold">
-          Notes
-        </label>
-        <input
-          type="text"
-          name="notes"
-          id="notes"
-          className="p-2 border border-gray-300 rounded-md w-full"
-          defaultValue={isEdit ? course?.notes : ""}
-        />
+        <div>
+          <label htmlFor="notes" className="font-semibold">
+            Notes
+          </label>
+          <input
+            type="text"
+            name="notes"
+            id="notes"
+            className="p-2 border border-gray-300 rounded-md w-full"
+            defaultValue={isEdit ? course?.notes : ""}
+          />
+        </div>
       </div>
       {major && <input type="hidden" name="major" value={major} />}
       <div className="flex justify-center gap-3 mt-4">

@@ -20,7 +20,7 @@ const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
             hidden
             readOnly
           />
-          <button type="submit">
+          <button type="submit" className="hover:cursor-pointer">
             <RiDeleteBin7Fill />
           </button>
         </form>

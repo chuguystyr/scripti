@@ -6,15 +6,25 @@ import { revalidatePath } from "next/cache"
 import { Error as MongooseError, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
 import { SetCourseValidationErrors } from "types/Utilities"
+import User from "models/User"
+import { redirect } from "next/navigation"
 
 export const setCourse = async (prevState: unknown, form: FormData) => {
   const id = await protector()
   const data = Object.fromEntries(form.entries())
   try {
     await dbConnect()
+    const { majors } = await User.findOne(
+      { _id: new Types.ObjectId(id) },
+      { majors: 1 },
+    )
+      .lean()
+      .orFail()
+    const majorValue = majors[parseInt(data.major.toString())]
     await Course.create({
-      userId: new Types.ObjectId(id),
       ...data,
+      userId: new Types.ObjectId(id),
+      major: majorValue,
     })
   } catch (error) {
     if (error instanceof MongooseError.ValidationError) {
@@ -31,6 +41,7 @@ export const setCourse = async (prevState: unknown, form: FormData) => {
     }
   }
   revalidatePath("/protected/courses")
+  redirect(`/protected/courses/${data.major}`)
 }
 
 export const editCourse = async (prevState: unknown, form: FormData) => {
