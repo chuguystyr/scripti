@@ -45,7 +45,6 @@ export const setCourse = async (prevState: unknown, form: FormData) => {
 }
 
 export const editCourse = async (prevState: unknown, form: FormData) => {
-  console.log(form)
   const userId = await protector()
   const title = form.get("title")!.toString()
   const controlForm = form.get("controlForm")!.toString()
