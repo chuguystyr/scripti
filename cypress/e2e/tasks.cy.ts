@@ -4,7 +4,7 @@ describe("testing tasks functionality", () => {
       cy.login(username, password)
     })
     cy.goToCoursesPage()
-    cy.get("button").contains("Add Course").click()
+    cy.get("a").contains("New Course").click()
     cy.fixture("courses").then(({ validCourse }) => {
       cy.get('input[name="title"]').type(validCourse.title)
       cy.get('input[name="teacherLectures"]').type(validCourse.teacherLectures)
@@ -15,7 +15,7 @@ describe("testing tasks functionality", () => {
       cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink)
       cy.get('input[name="practicesLink"]').type(validCourse.practicesLink)
       cy.get('input[name="notes"]').type(validCourse.notes)
-      cy.contains("button", /^Add$/).click()
+      cy.contains("button", /^Add Course$/).click()
     })
   })
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe("testing tasks functionality", () => {
     cy.goToTasksPage()
   })
   it("should not add a new task with invalid course, (#TF1)", () => {
-    cy.get("button").contains("Add Task").click()
+    cy.get("a").contains("add").click()
     cy.fixture("tasks").then(({ validTask, invalidCourse }) => {
       cy.get('input[name="title"]').type(validTask.title)
       cy.get('input[name="course"]').type(invalidCourse)
@@ -33,20 +33,20 @@ describe("testing tasks functionality", () => {
         new Date(Date.now() + 86400000).toISOString().split("T")[0],
       )
       cy.get('input[name="description"]').type(validTask.description)
-      cy.get('button[type="submit"]').contains("Save").click()
+      cy.get('button[type="submit"]').contains("Add Task").click()
 
       cy.get("p").contains("No such course exists").should("be.visible")
     })
   })
   it("should not add a new task when some fields are missing, (#TF2)", () => {
-    cy.get("button").contains("Add Task").click()
+    cy.get("a").contains("add").click()
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="course"]').type(validTask.course)
       cy.get('input[name="date"]').type(
         new Date(Date.now() + 86400000).toISOString().split("T")[0],
       )
       cy.get('input[name="description"]').type(validTask.description)
-      cy.get('button[type="submit"]').contains("Save").click()
+      cy.get('button[type="submit"]').contains("Add Task").click()
 
       cy.get("p")
         .contains("Please fill in all required fields")
@@ -54,7 +54,7 @@ describe("testing tasks functionality", () => {
     })
   })
   it("should not add a new task with invalid date, (#TF3)", () => {
-    cy.get("button").contains("Add Task").click()
+    cy.get("a").contains("add").click()
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="title"]').type(validTask.title)
       cy.get('input[name="course"]').type(validTask.course)
@@ -62,7 +62,7 @@ describe("testing tasks functionality", () => {
         new Date(Date.now() - 86400000).toISOString().split("T")[0],
       )
       cy.get('input[name="description"]').type(validTask.description)
-      cy.get('button[type="submit"]').contains("Save").click()
+      cy.get('button[type="submit"]').contains("Add Task").click()
 
       cy.get("p")
         .contains("Can't add task that's already overdue")
@@ -70,7 +70,7 @@ describe("testing tasks functionality", () => {
     })
   })
   it("should add a new task when all fields are filled, (#TF4)", () => {
-    cy.get("button").contains("Add Task").click()
+    cy.get("a").contains("add").click()
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="title"]').type(validTask.title)
       cy.get('input[name="course"]').type(validTask.course)
@@ -78,7 +78,7 @@ describe("testing tasks functionality", () => {
         new Date(Date.now() + 86400000).toISOString().split("T")[0],
       )
       cy.get('input[name="description"]').type(validTask.description)
-      cy.get('button[type="submit"]').contains("Save").click()
+      cy.get('button[type="submit"]').contains("Add Task").click()
 
       cy.get("h1").contains(validTask.title).should("be.visible")
       cy.get("h2").contains(`| ${validTask.course} | new`).should("be.visible")

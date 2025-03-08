@@ -53,7 +53,7 @@ Cypress.Commands.add("goToCoursesPage", () => {
 
 Cypress.Commands.add("goToTasksPage", () => {
   cy.get("a").contains("Tasks").click()
-  cy.waitUntil(() => cy.get("button").contains("Add Task").should("be.visible"))
+  cy.waitUntil(() => cy.get("a").contains("add").should("be.visible"))
 })
 
 Cypress.Commands.add("goToAccountPage", () => {
