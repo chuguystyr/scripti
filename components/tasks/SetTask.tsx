@@ -1,6 +1,6 @@
 "use client"
 import { editTask, setTask } from "server/actions/tasks"
-import Task from "types/Task"
+import Task, { TaskType } from "types/Task"
 import { useActionState } from "react"
 const SetTask: React.FC<{ task: Omit<Task, "userId"> | undefined }> = ({
   task,
@@ -40,6 +40,23 @@ const SetTask: React.FC<{ task: Omit<Task, "userId"> | undefined }> = ({
         className="p-2 border border-gray-300 rounded-md"
         defaultValue={task?.course.toString()}
       />
+
+      <label htmlFor="priority" className="font-semibold">
+        Type
+      </label>
+
+      <select
+        name="type"
+        id="type"
+        className="p-2 border border-gray-300 rounded-md"
+        defaultValue={task?.type}
+      >
+        {Object.values(TaskType).map((type) => (
+          <option key={type} value={type}>
+            {type}
+          </option>
+        ))}
+      </select>
 
       <label htmlFor="date" className="font-semibold">
         Deadline
