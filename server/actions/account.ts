@@ -16,6 +16,9 @@ import {
   LoginFormValidationErrors,
   NonSpecificErrors,
 } from "types/Utilities"
+import Schedule from "models/Schedule"
+import Task from "models/Task"
+import Course from "models/Course"
 
 export const signUp = async (prevState: unknown, form: FormData) => {
   const name = form.get("name") as string | null
@@ -211,6 +214,11 @@ export const deleteAccount = async () => {
   const cookieStore = await cookies()
   await dbConnect()
   try {
+    await Schedule.deleteMany({ userId: id })
+    await Task.deleteMany({
+      course: { $in: await Course.find({ userId: id }) },
+    })
+    await Course.deleteMany({ userId: id })
     await User.findOneAndDelete({ _id: id })
   } catch (error: unknown) {
     console.log(error)
