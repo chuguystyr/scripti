@@ -108,34 +108,36 @@ describe("testing tasks functionality", () => {
     })
   })
   it("should edit an existing task with valid data, (#TF7)", () => {
-    cy.get("form").find("button:has(svg)").first().click()
+    cy.get("a:has(svg)").first().click()
     cy.fixture("tasks").then(({ editedTitle, validTask: { title } }) => {
       cy.get('input[name="title"]').clear().type(editedTitle)
-      cy.get("button[type='submit']").contains("Save").click()
-
+      cy.get("button[type='submit']").contains("Save Changes").click()
+      cy.waitUntil(() =>
+        cy.get("div.fixed.inset-0").first().should("not.be.visible"),
+      )
       cy.get("h1").contains(editedTitle).should("be.visible")
 
       cy.get("form").find("button:has(svg)").first().click()
       cy.get('input[name="title"]').clear().type(title)
-      cy.get("button[type='submit']").contains("Save").click()
+      cy.get("button[type='submit']").contains("Save Changes").click()
     })
   })
   it("should not edit an existing course with missing data, (#TF8)", () => {
-    cy.get("form").find("button:has(svg)").first().click()
+    cy.get("a:has(svg)").first().click()
     cy.fixture("tasks").then(() => {
       cy.get('input[name="title"]').clear()
-      cy.get('button[type="submit"]').contains("Save").click()
+      cy.get('button[type="submit"]').contains("Save Changes").click()
 
       cy.contains("Please fill in all required fields").should("be.visible")
     })
   })
   it("should mark existing task as done, (#TF9)", () => {
-    cy.get("form").find("button:has(svg)").eq(1).click()
+    cy.get("form").find("button:has(svg)").first().click()
 
     cy.get("h2").contains("done").should("be.visible")
   })
   it("should not add a new task with repeating title, (#TF10)", () => {
-    cy.get("button").contains("Add Task").click()
+    cy.get("a").contains("New Task").click()
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="title"]').type(validTask.title)
       cy.get('input[name="course"]').type(validTask.course)
@@ -143,7 +145,7 @@ describe("testing tasks functionality", () => {
         new Date(Date.now() + 86400000).toISOString().split("T")[0],
       )
       cy.get('input[name="description"]').type(validTask.description)
-      cy.get('button[type="submit"]').contains("Save").click()
+      cy.get('button[type="submit"]').contains("Add Task").click()
 
       cy.get("p")
         .contains("Task with this title and course already exists")
