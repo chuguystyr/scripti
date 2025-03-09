@@ -8,8 +8,10 @@ import { Error, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
 import Course from "models/Course"
 import { SetTaskValidationErrors } from "types/Utilities"
+import { redirect } from "next/navigation"
 
 export const setTask = async (prevState: unknown, form: FormData) => {
+  const location = form.get("location")
   const id = await protector()
   const data = Object.fromEntries(form.entries())
   try {
@@ -42,6 +44,7 @@ export const setTask = async (prevState: unknown, form: FormData) => {
   }
   revalidatePath("/protected/home")
   revalidatePath("/protected/tasks")
+  if (location) redirect(location.toString())
 }
 
 export const checkTask = async (form: FormData) => {
@@ -81,6 +84,7 @@ export const deleteTask = async (form: FormData) => {
 }
 
 export const editTask = async (prevState: unknown, form: FormData) => {
+  const location = form.get("location")
   const id = await protector()
   const data = Object.fromEntries(form.entries())
   try {
@@ -114,6 +118,7 @@ export const editTask = async (prevState: unknown, form: FormData) => {
   }
   revalidatePath("/protected/home")
   revalidatePath("/protected/tasks")
+  if (location) redirect(location.toString())
 }
 
 const checkForMissingFields = (error: Error.ValidationError) => {

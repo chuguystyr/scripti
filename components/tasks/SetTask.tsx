@@ -79,6 +79,14 @@ const SetTask: React.FC<{ task: Omit<Task, "userId"> | undefined }> = ({
         className="p-2 border border-gray-300 rounded-md"
         defaultValue={task?.description}
       />
+      <input hidden readOnly value={task?._id.toString()} name="id" id="id" />
+      <input
+        hidden
+        readOnly
+        defaultValue={window.location.href}
+        name="location"
+        id="location"
+      />
       <button
         type="submit"
         className="btn-filled block mx-auto"
