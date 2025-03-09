@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, beforeAll, vi } from "vitest"
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import Signup from "components/account/SignUpForm"
 import * as accountActions from "server/actions/account"
-import { SignUpFormValidationErrors } from "types/Utilities"
+import { NonSpecificErrors, SignUpFormValidationErrors } from "types/Utilities"
 
 vi.mock("server/actions/account", () => ({
   signUp: vi.fn(),
@@ -69,15 +69,13 @@ describe("signup page: messages", () => {
   })
   it("should display error message for internal error", async () => {
     vi.mocked(accountActions.signUp).mockResolvedValue({
-      error: SignUpFormValidationErrors.INTERNAL_ERROR,
+      error: NonSpecificErrors.INTERNAL_ERROR,
       currentState: new FormData(),
     })
     render(<Signup />)
     const button = screen.getByRole("button", { name: /Sign up/i })
     fireEvent.click(button)
-    const message = await screen.findByText(
-      SignUpFormValidationErrors.INTERNAL_ERROR,
-    )
+    const message = await screen.findByText(NonSpecificErrors.INTERNAL_ERROR)
     expect(message).toBeDefined()
   })
 })

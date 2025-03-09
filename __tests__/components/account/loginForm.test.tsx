@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, beforeEach, vi } from "vitest"
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import LoginForm from "components/account/LoginForm"
 import React from "react"
-import { LoginFormValidationErrors } from "types/Utilities"
+import { LoginFormValidationErrors, NonSpecificErrors } from "types/Utilities"
 import * as accountActions from "server/actions/account"
 
 vi.mock("server/actions/account", () => ({
@@ -91,7 +91,7 @@ describe("login form: error messages", () => {
 
   it("should display error message for internal error", async () => {
     vi.mocked(accountActions.login).mockResolvedValue(
-      LoginFormValidationErrors.INTERNAL_ERROR,
+      NonSpecificErrors.INTERNAL_ERROR,
     )
 
     render(<LoginForm signedUp={false} />)
@@ -103,9 +103,7 @@ describe("login form: error messages", () => {
 
     fireEvent.click(button)
 
-    const message = await screen.findByText(
-      LoginFormValidationErrors.INTERNAL_ERROR,
-    )
+    const message = await screen.findByText(NonSpecificErrors.INTERNAL_ERROR)
     expect(message).toBeDefined()
     expect(message.classList).toContain("text-red-500")
   })
