@@ -3,7 +3,7 @@ import { Params } from "types/Utilities"
 
 const TaskStatistics: React.FC<Params> = async ({ params }) => {
   const { major } = await params
-  const { tasks, done } = (await getTasks(+major)) ?? { tasks: [], done: 0 }
+  const { tasks, done } = await getTasks(+major)
   const statistics = {
     inProgress:
       tasks.filter((task) => task.status === "in progress").length ?? 0,
