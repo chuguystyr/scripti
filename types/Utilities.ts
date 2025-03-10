@@ -43,6 +43,11 @@ export enum SetTaskValidationErrors {
 
 export enum SuccessMessages {
   SIGNED_UP = "Thanks for signing up. Enjoy the app.",
+  PASSWORD_CHANGED = "Password has been changed successfully.",
+}
+
+export enum ChangePasswordValidationErrors {
+  INVALID_OLD_PASSWORD = "Invalid old password.",
 }
 
 export type DecodedCookieObject = {

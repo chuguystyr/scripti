@@ -15,6 +15,8 @@ import {
   SignUpFormValidationErrors,
   LoginFormValidationErrors,
   NonSpecificErrors,
+  ChangePasswordValidationErrors,
+  SuccessMessages,
 } from "types/Utilities"
 import Schedule from "models/Schedule"
 import Task from "models/Task"
@@ -181,7 +183,7 @@ export const changePassword = async (prevState: unknown, form: FormData) => {
     }
     const isMatch = await compare(oldPassword, user.password)
     if (!isMatch) {
-      return LoginFormValidationErrors.INVALID_CREDENTIALS
+      return ChangePasswordValidationErrors.INVALID_OLD_PASSWORD
     }
     const passwordRegex = new RegExp(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
@@ -199,7 +201,7 @@ export const changePassword = async (prevState: unknown, form: FormData) => {
     console.log(error)
     return NonSpecificErrors.INTERNAL_ERROR
   }
-  return "Password hase been changed successfully"
+  return SuccessMessages.PASSWORD_CHANGED
 }
 
 export const logout = async () => {

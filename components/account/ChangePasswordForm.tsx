@@ -1,6 +1,7 @@
 "use client"
 import { useActionState } from "react"
 import { changePassword } from "server/actions/account"
+import { SuccessMessages } from "types/Utilities"
 const ChangePasswordForm = () => {
   const [message, formAction, pending] = useActionState(changePassword, null)
   return (
@@ -10,7 +11,7 @@ const ChangePasswordForm = () => {
     >
       {message && (
         <p
-          className={`text-center w-[15vw] block mx-auto text-${message === "Password hase been changed successfully" ? "green" : "red"}-500`}
+          className={`text-center w-[15vw] block mx-auto text-${message === SuccessMessages.PASSWORD_CHANGED ? "green" : "red"}-500`}
         >
           {message}
         </p>

@@ -1,3 +1,8 @@
+import {
+  ChangePasswordValidationErrors,
+  SuccessMessages,
+} from "types/Utilities"
+
 describe("testing account functionality", () => {
   it("should edit user's data with valid data, (#AF1)", () => {
     cy.fixture("users").then(({ correctUser: { username, password } }) => {
@@ -5,7 +10,7 @@ describe("testing account functionality", () => {
     })
     cy.goToAccountPage()
 
-    cy.get("button:has(svg)").first().click()
+    cy.get("a:has(svg)").first().click()
     cy.fixture("users").then(({ editedUser }) => {
       cy.get("input[name='name']").clear().type(editedUser.name)
       cy.get("input[name='email']").clear().type(editedUser.email)
@@ -20,6 +25,7 @@ describe("testing account functionality", () => {
       ({ correctUser: { username, password }, newPassword }) => {
         cy.login(username, password)
         cy.goToAccountPage()
+        cy.get("a").contains("Change Password").click()
 
         cy.get("input[name='oldPassword']").type(`${password + "a"}`)
         cy.get("input[name='newPassword']").type(newPassword)
@@ -28,7 +34,9 @@ describe("testing account functionality", () => {
     )
 
     cy.url().should("contain", "/protected/account")
-    cy.get("p").contains("Invalid old password").should("be.visible")
+    cy.get("p")
+      .contains(ChangePasswordValidationErrors.INVALID_OLD_PASSWORD)
+      .should("be.visible")
   })
   it("should not change password to an invalid password, (#AF3)", () => {
     cy.fixture("users").then(
@@ -36,6 +44,7 @@ describe("testing account functionality", () => {
         cy.login(username, password)
         cy.goToAccountPage()
 
+        cy.get("a").contains("Change Password").click()
         cy.get("input[name='oldPassword']").type(password)
         cy.get("input[name='newPassword']").type(shortPasswordUser.password)
         cy.get("button[type='submit']").contains("Change").click()
@@ -55,13 +64,15 @@ describe("testing account functionality", () => {
         cy.login(username, password)
         cy.goToAccountPage()
 
+        cy.get("a").contains("Change Password").click()
         cy.get("input[name='oldPassword']").type(password)
         cy.get("input[name='newPassword']").type(newPassword)
         cy.get("button[type='submit']").contains("Change").click()
 
         cy.get("p")
-          .contains("Password's benn changed successfully")
+          .contains(SuccessMessages.PASSWORD_CHANGED)
           .should("be.visible")
+        cy.get("button:has(svg)").click()
         cy.get("button").contains("Log out").click()
         cy.login(username, newPassword)
       },
