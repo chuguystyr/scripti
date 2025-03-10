@@ -54,9 +54,8 @@ export const useSetSchedule = (courses: Course[], isEdited: boolean) => {
   }
 
   useEffect(() => {
-    if (courses.length === 0)
-      router.push("/protected/courses?message=no courses")
-  }, [courses.length, router])
+    if (courses.length === 0) router.push(`/protected/courses/${major}`)
+  }, [courses.length, router, major])
 
   const titles = useMemo(
     () => courses?.map((course) => course.title) || [],
