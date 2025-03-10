@@ -112,14 +112,12 @@ describe("testing tasks functionality", () => {
     cy.fixture("tasks").then(({ editedTitle, validTask: { title } }) => {
       cy.get('input[name="title"]').clear().type(editedTitle)
       cy.get("button[type='submit']").contains("Save Changes").click()
-      cy.waitUntil(() =>
-        cy.get("div.fixed.inset-0").first().should("not.be.visible"),
-      )
       cy.get("h1").contains(editedTitle).should("be.visible")
 
-      cy.get("form").find("button:has(svg)").first().click()
+      cy.get("a:has(svg)").first().click()
       cy.get('input[name="title"]').clear().type(title)
       cy.get("button[type='submit']").contains("Save Changes").click()
+      cy.get("h1").contains(title).should("be.visible")
     })
   })
   it("should not edit an existing course with missing data, (#TF8)", () => {
