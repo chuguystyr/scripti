@@ -1,7 +1,7 @@
 import { model, Model, models, Schema } from "mongoose"
 import type { Schedule, ScheduleItem } from "types/Schedule"
 import { DaysOfWeek, CourseType } from "types/Schedule"
-
+// TODO: add necessary statics, methods and query helpers
 const ScheduleItemSchema = new Schema<ScheduleItem, Model<ScheduleItem>>(
   {
     course: { type: Schema.Types.ObjectId, required: true },
@@ -34,7 +34,7 @@ const ScheduleSchema = new Schema<Schedule, Model<Schedule>>({
   [DaysOfWeek.Saturday]: daySchema,
   [DaysOfWeek.Sunday]: daySchema,
 })
-
+ScheduleSchema.index({ userId: 1, major: 1 })
 const ScheduleModel: Model<Schedule> =
   models.schedules || model<Schedule>("schedules", ScheduleSchema)
 

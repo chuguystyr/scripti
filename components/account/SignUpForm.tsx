@@ -6,10 +6,7 @@ import { signUp } from "server/actions/account"
 const SignUpForm = () => {
   const [state, formAction, pending] = useActionState(signUp, null)
   return (
-    <form
-      action={formAction}
-      className="flex flex-col bg-white p-4 shadow-xl rounded-md gap-4"
-    >
+    <form action={formAction} className="card flex flex-col gap-4">
       <h1 className="text-center font-bold ">Scripti | Sign Up </h1>
       {state?.error && (
         <p className="text-center max-w-[15em] text-red-500">{state.error}</p>
@@ -19,7 +16,7 @@ const SignUpForm = () => {
         type="text"
         id="name"
         name="name"
-        className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
+        className="bg-zinc-200 p-2 -mt-2 focus:outline-hidden focus:shadow-xl rounded-md"
         placeholder="John"
         autoComplete="name"
         defaultValue={state?.currentState?.get("name")?.toString()}
@@ -29,17 +26,16 @@ const SignUpForm = () => {
         type="text"
         id="username"
         name="username"
-        className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
+        className="bg-zinc-200 p-2 -mt-2 focus:outline-hidden focus:shadow-xl rounded-md"
         placeholder="john_smith"
         autoComplete="nickname"
         defaultValue={state?.currentState?.get("username")?.toString()}
       />
       <label htmlFor="email">Email</label>
       <input
-        type="email"
         id="email"
         name="email"
-        className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
+        className="bg-zinc-200 p-2 -mt-2 focus:outline-hidden focus:shadow-xl rounded-md"
         placeholder="john_smith@gmail.com"
         autoComplete="email"
         defaultValue={state?.currentState?.get("email")?.toString()}
@@ -49,7 +45,7 @@ const SignUpForm = () => {
         type="password"
         id="password"
         name="password"
-        className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
+        className="bg-zinc-200 p-2 -mt-2 focus:outline-hidden focus:shadow-xl rounded-md"
         placeholder=""
         autoComplete="new-password"
         defaultValue={state?.currentState?.get("password")?.toString()}

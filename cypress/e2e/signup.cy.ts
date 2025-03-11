@@ -1,3 +1,5 @@
+import { SignUpFormValidationErrors, SuccessMessages } from "types/Utilities"
+
 describe("testing signup functionality", () => {
   beforeEach(() => {
     cy.visit("/signup")
@@ -11,9 +13,7 @@ describe("testing signup functionality", () => {
       cy.get('button[type="submit"]').click()
 
       cy.url().should("include", "/login")
-      cy.get("p")
-        .contains("Thanks for signing up. Enjoy the app.")
-        .should("be.visible")
+      cy.get("p").contains(SuccessMessages.SIGNED_UP).should("be.visible")
     })
   })
   it("should not register a new user when any field is empty (#SF2)", () => {
@@ -24,7 +24,9 @@ describe("testing signup functionality", () => {
       cy.get('button[type="submit"]').click()
 
       cy.url().should("include", "/signup")
-      cy.get("p").contains("Please fill in all fields").should("be.visible")
+      cy.get("p")
+        .contains(SignUpFormValidationErrors.EMPTY_MANDATORY_FIELD)
+        .should("be.visible")
     })
   })
   it("should not register a new user with username that's already taken (#SF3)", () => {
@@ -37,7 +39,7 @@ describe("testing signup functionality", () => {
 
       cy.url().should("include", "/signup")
       cy.get("p")
-        .contains("This username is already taken")
+        .contains(SignUpFormValidationErrors.USERNAME_TAKEN)
         .should("be.visible")
     })
   })
@@ -51,9 +53,7 @@ describe("testing signup functionality", () => {
 
       cy.url().should("include", "/signup")
       cy.get("p")
-        .contains(
-          "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
-        )
+        .contains(SignUpFormValidationErrors.WEAK_PASSWORD)
         .should("be.visible")
     })
   })
@@ -67,9 +67,7 @@ describe("testing signup functionality", () => {
 
       cy.url().should("include", "/signup")
       cy.get("p")
-        .contains(
-          "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
-        )
+        .contains(SignUpFormValidationErrors.WEAK_PASSWORD)
         .should("be.visible")
     })
   })
@@ -87,9 +85,7 @@ describe("testing signup functionality", () => {
 
       cy.url().should("include", "/signup")
       cy.get("p")
-        .contains(
-          "Password must have 8-20 characters, including an uppercase letter, a lowercase letter, a digit, and a special character.",
-        )
+        .contains(SignUpFormValidationErrors.WEAK_PASSWORD)
         .should("be.visible")
     })
   })
@@ -102,6 +98,23 @@ describe("testing signup functionality", () => {
       cy.get('button[type="submit"]').click()
 
       cy.url().should("include", "/signup")
+      cy.get("p")
+        .contains(SignUpFormValidationErrors.INVALID_EMAIL)
+        .should("be.visible")
+    })
+  })
+  it("should not register a new user when email is already taken (#SF8)", () => {
+    cy.fixture("users").then(({ correctUser }) => {
+      cy.get('input[name="name"]').type(correctUser.name)
+      cy.get('input[name="username"]').type(correctUser.username + "1")
+      cy.get('input[name="email"]').type(correctUser.email)
+      cy.get('input[name="password"]').type(correctUser.password)
+      cy.get('button[type="submit"]').click()
+
+      cy.url().should("include", "/signup")
+      cy.get("p")
+        .contains(SignUpFormValidationErrors.EMAIL_TAKEN)
+        .should("be.visible")
     })
   })
 })

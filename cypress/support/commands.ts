@@ -48,14 +48,14 @@ Cypress.Commands.add("login", (username: string, password: string) => {
 
 Cypress.Commands.add("goToCoursesPage", () => {
   cy.get("a").contains("Courses").click()
-  cy.waitUntil(() =>
-    cy.get("button").contains("Add Course").should("be.visible"),
-  )
+  cy.waitUntil(() => cy.get("a").contains("New Course").should("be.visible"))
 })
 
 Cypress.Commands.add("goToTasksPage", () => {
   cy.get("a").contains("Tasks").click()
-  cy.waitUntil(() => cy.get("button").contains("Add Task").should("be.visible"))
+  cy.waitUntil(() => {
+    return Cypress.$('a:contains("add"), a:contains("New Task")').is(":visible")
+  })
 })
 
 Cypress.Commands.add("goToAccountPage", () => {

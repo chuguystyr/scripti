@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { BasicPageProps } from "types/Utilities"
+import { SearchParams } from "types/Utilities"
 import LoginForm from "components/account/LoginForm"
 
 export const metadata: Metadata = {
@@ -29,11 +29,12 @@ export const metadata: Metadata = {
   },
 }
 
-const Login: React.FC<BasicPageProps> = async ({ searchParams }) => {
-  const { signedUp } = await searchParams
+const Login: React.FC<SearchParams> = async ({ searchParams }) => {
+  const { status } = await searchParams
+  const signedUp = status === "signedUp"
   return (
     <main className="w-[100vw] h-[100vh] bg-zinc-300 flex items-center justify-center">
-      <LoginForm signedUp={!!signedUp} />
+      <LoginForm signedUp={signedUp} />
     </main>
   )
 }

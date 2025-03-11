@@ -2,23 +2,19 @@
 import Link from "next/link"
 import { useActionState } from "react"
 import { login } from "server/actions/account"
+import { SuccessMessages } from "types/Utilities"
 
 const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
   const [message, formAction, pending] = useActionState(login, null)
   return (
-    <form
-      action={formAction}
-      className="flex flex-col bg-white p-4 shadow-xl rounded-md gap-4"
-    >
+    <form action={formAction} className="card flex flex-col gap-4">
       <h1 className="text-center font-bold ">Scripti | Log in </h1>
       {message && (
-        <p className="text-center w-[15vw] block mx-auto text-red-500">
-          {message}
-        </p>
+        <p className="text-center block mx-auto text-red-500">{message}</p>
       )}
       {signedUp && (
         <p className="text-center w-[15vw] block mx-auto text-green-500">
-          Thanks for signing up. Enjoy the app.
+          {SuccessMessages.SIGNED_UP}
         </p>
       )}
       <label htmlFor="username">Username</label>
@@ -26,7 +22,7 @@ const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
         type="text"
         id="username"
         name="username"
-        className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
+        className="bg-zinc-200 p-2 -mt-2 focus:outline-hidden focus:shadow-xl rounded-md"
         placeholder="john_smith"
         autoComplete="nickname"
       />
@@ -35,7 +31,7 @@ const LoginForm: React.FC<{ signedUp: boolean }> = ({ signedUp }) => {
         type="password"
         id="password"
         name="password"
-        className="bg-zinc-200 p-2 -mt-2 focus:outline-none focus:shadow-xl rounded-md"
+        className="bg-zinc-200 p-2 -mt-2 focus:outline-hidden focus:shadow-xl rounded-md"
         placeholder=""
         autoComplete="current-password"
       />

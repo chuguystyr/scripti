@@ -10,10 +10,17 @@ import { protector } from "server/protection"
 import { revalidatePath } from "next/cache"
 import { IUser } from "types/User"
 import { HydratedDocument, Types } from "mongoose"
+import { MongoError } from "mongodb"
 import {
   SignUpFormValidationErrors,
   LoginFormValidationErrors,
+  NonSpecificErrors,
+  ChangePasswordValidationErrors,
+  SuccessMessages,
 } from "types/Utilities"
+import Schedule from "models/Schedule"
+import Task from "models/Task"
+import Course from "models/Course"
 
 export const signUp = async (prevState: unknown, form: FormData) => {
   const name = form.get("name") as string | null
@@ -53,22 +60,26 @@ export const signUp = async (prevState: unknown, form: FormData) => {
       majors: ["default"],
     })
     await newUser.save()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    // TODO: check for the ways to use built-in instruments instead of manual if-check
-    if (error.code === 11000) {
-      return {
-        currentState: form,
-        error: SignUpFormValidationErrors.USERNAME_TAKEN,
-      }
+  } catch (error: unknown) {
+    if (error instanceof MongoError && error.code === 11000) {
+      if (error.message.includes("username"))
+        return {
+          currentState: form,
+          error: SignUpFormValidationErrors.USERNAME_TAKEN,
+        }
+      if (error.message.includes("email"))
+        return {
+          currentState: form,
+          error: SignUpFormValidationErrors.EMAIL_TAKEN,
+        }
     }
-    console.log(error)
+    console.error(error)
     return {
       currentState: form,
-      error: SignUpFormValidationErrors.INTERNAL_ERROR,
+      error: NonSpecificErrors.INTERNAL_ERROR,
     }
   }
-  redirect("/login?status=signed up")
+  redirect("/login?status=signedUp")
 }
 
 export const login = async (prevState: unknown, form: FormData) => {
@@ -97,7 +108,7 @@ export const login = async (prevState: unknown, form: FormData) => {
     cookieStore.set("_scrpt", token, { maxAge: 60 * 60 * 3 })
   } catch (error) {
     console.log(error)
-    return LoginFormValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
   redirect("/protected/home/0")
 }
@@ -118,14 +129,6 @@ export const getAccount = async () => {
   } catch {
     throw new Error("Internal")
   }
-}
-
-export const openEdit = async () => {
-  redirect("/protected/account?edit=true")
-}
-
-export const closeEdit = async () => {
-  redirect("/protected/account")
 }
 
 export const editAccount = async (prevState: unknown, form: FormData) => {
@@ -157,7 +160,7 @@ export const editAccount = async (prevState: unknown, form: FormData) => {
     if (error.code === 11000) {
       return SignUpFormValidationErrors.USERNAME_TAKEN
     }
-    return SignUpFormValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
   revalidatePath("/protected/account", "page")
   redirect("/protected/account")
@@ -180,7 +183,7 @@ export const changePassword = async (prevState: unknown, form: FormData) => {
     }
     const isMatch = await compare(oldPassword, user.password)
     if (!isMatch) {
-      return LoginFormValidationErrors.INVALID_CREDENTIALS
+      return ChangePasswordValidationErrors.INVALID_OLD_PASSWORD
     }
     const passwordRegex = new RegExp(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,20}$/,
@@ -196,9 +199,9 @@ export const changePassword = async (prevState: unknown, form: FormData) => {
     )
   } catch (error) {
     console.log(error)
-    return LoginFormValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
-  return "Password hase been changed successfully"
+  return SuccessMessages.PASSWORD_CHANGED
 }
 
 export const logout = async () => {
@@ -213,10 +216,15 @@ export const deleteAccount = async () => {
   const cookieStore = await cookies()
   await dbConnect()
   try {
+    await Schedule.deleteMany({ userId: id })
+    await Task.deleteMany({
+      course: { $in: await Course.find({ userId: id }) },
+    })
+    await Course.deleteMany({ userId: id })
     await User.findOneAndDelete({ _id: id })
   } catch (error: unknown) {
     console.log(error)
-    return LoginFormValidationErrors.INTERNAL_ERROR
+    return NonSpecificErrors.INTERNAL_ERROR
   }
   cookieStore.set("_scrpt", "", { maxAge: 0 })
   redirect("/")

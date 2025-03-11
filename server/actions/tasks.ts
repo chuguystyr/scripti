@@ -2,139 +2,20 @@
 
 import dbConnect from "server/db"
 import { protector } from "server/protection"
-import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import Task from "models/Task"
 import { Error, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
 import Course from "models/Course"
-import User from "models/User"
-import { IUser } from "types/User"
+import { SetTaskValidationErrors } from "types/Utilities"
+import { redirect } from "next/navigation"
 
-export const getTasks = async (major: number) => {
-  const id = await protector()
-  await dbConnect()
-  try {
-    const { majors } = await User.findOne(
-      { _id: new Types.ObjectId(id) },
-      { majors: 1 },
-    )
-      .lean<IUser>()
-      .orFail()
-    const majorValue = majors[major]
-    const tasks = await Task.aggregate([
-      { $match: { userId: new Types.ObjectId(id), status: { $ne: "done" } } },
-      {
-        $lookup: {
-          from: "courses",
-          localField: "course",
-          foreignField: "_id",
-          as: "courseDetails",
-        },
-      },
-      {
-        $match: { "courseDetails.major": majorValue },
-      },
-      { $sort: { deadline: 1 } },
-      { $limit: 4 },
-      {
-        $unwind: "$courseDetails",
-      },
-      {
-        $addFields: {
-          course: "$courseDetails.title",
-        },
-      },
-      {
-        $project: {
-          courseDetails: 0,
-        },
-      },
-    ])
-    const done = (
-      await Task.find({ userId: new Types.ObjectId(id), status: "done" })
-    ).length
-    return { tasks, done }
-  } catch (error) {
-    console.log(error)
-    throw new Error("Internal")
-  }
-}
-
-export const getAllTasks = async (major: number, searchTerm?: string) => {
-  const id = await protector()
-  await dbConnect()
-  try {
-    const { majors } = await User.findOne(
-      { _id: new Types.ObjectId(id) },
-      { majors: 1 },
-    )
-      .lean<IUser>()
-      .orFail()
-    const majorValue = majors[major]
-    const tasks = await Task.aggregate([
-      {
-        $match: {
-          userId: new Types.ObjectId(id),
-          title: { $regex: new RegExp(searchTerm || "", "i") },
-        },
-      },
-      {
-        $lookup: {
-          from: "courses",
-          localField: "course",
-          foreignField: "_id",
-          as: "courseDetails",
-        },
-      },
-      {
-        $match: { "courseDetails.major": majorValue },
-      },
-      {
-        $unwind: "$courseDetails",
-      },
-      {
-        $addFields: {
-          course: "$courseDetails.title",
-        },
-      },
-      {
-        $project: {
-          courseDetails: 0,
-        },
-      },
-    ])
-    if (tasks.length > 0) {
-      return tasks
-    } else {
-      return { message: "No tasks found" }
-    }
-  } catch {
-    return { error: "Something went wrong." }
-  }
-}
-
-export const openAddTask = async () => {
-  redirect("/protected/tasks?add=true")
-}
-
-export const closeAddTask = async () => {
-  redirect("/protected/tasks")
-}
-
-export const openAddTaskAtHome = async () => {
-  redirect("/protected/home?add=true")
-}
-
-export const closeAddTaskAtHome = async () => {
-  redirect("/protected/home")
-}
-
-export const setTask = async (form: FormData) => {
+export const setTask = async (prevState: unknown, form: FormData) => {
+  const location = form.get("location")
   const id = await protector()
   const data = Object.fromEntries(form.entries())
-  await dbConnect()
   try {
+    await dbConnect()
     const courseId = await Course.findOne(
       { userId: new Types.ObjectId(id), title: data.course.toString() },
       { _id: 1 },
@@ -146,36 +27,24 @@ export const setTask = async (form: FormData) => {
       status: "new",
       deadline: new Date(data.date.toString()),
     })
-    revalidatePath("/protected/home")
-    revalidatePath("/protected/tasks")
   } catch (error) {
     if (error instanceof Error.ValidationError && error.errors) {
       if (error.errors.deadline) {
-        redirect("/protected/tasks?add=true&error=date")
+        return SetTaskValidationErrors.DATE_OVERDUE
       } else if (error.errors.course) {
-        redirect("/protected/tasks?add=true&error=course")
+        return SetTaskValidationErrors.COURSE_NOT_FOUND
       } else if (checkForMissingFields(error)) {
-        redirect("/protected/tasks?add=true&error=fields")
+        return SetTaskValidationErrors.EMPTY_MANDATORY_FIELD
       }
     } else if (error instanceof MongoServerError && error.code === 11000) {
-      redirect("/protected/tasks?add=true&error=title")
+      return SetTaskValidationErrors.TASK_EXISTS
     } else {
       throw error
     }
   }
-  await closeAddTask()
-}
-
-export const setTaskEditableAtHome = async () => {
-  redirect("/protected/home?edit=true")
-}
-
-export const setTaskNonEditableAtHome = async () => {
-  redirect("/protected/home")
-}
-
-export const closeEditTask = async () => {
-  redirect("/protected/tasks")
+  revalidatePath("/protected/home")
+  revalidatePath("/protected/tasks")
+  if (location) redirect(location.toString())
 }
 
 export const checkTask = async (form: FormData) => {
@@ -214,11 +83,12 @@ export const deleteTask = async (form: FormData) => {
   }
 }
 
-export const editTask = async (form: FormData) => {
+export const editTask = async (prevState: unknown, form: FormData) => {
+  const location = form.get("location")
   const id = await protector()
   const data = Object.fromEntries(form.entries())
-  await dbConnect()
   try {
+    await dbConnect()
     const courseId = await Course.findOne(
       { userId: new Types.ObjectId(id), title: data.course },
       { _id: 1 },
@@ -234,29 +104,21 @@ export const editTask = async (form: FormData) => {
   } catch (error) {
     if (error instanceof Error.ValidationError && error.errors) {
       if (error.errors.deadline) {
-        redirect("/protected/tasks?edit=true&error=date")
+        return SetTaskValidationErrors.DATE_OVERDUE
       } else if (error.errors.course) {
-        redirect("/protected/tasks?edit=true&error=course")
+        return SetTaskValidationErrors.COURSE_NOT_FOUND
       } else if (checkForMissingFields(error)) {
-        redirect("/protected/tasks?edit=true&error=fields")
+        return SetTaskValidationErrors.EMPTY_MANDATORY_FIELD
       }
     } else if (error instanceof MongoServerError && error.code === 11000) {
-      redirect("/protected/tasks?edit=true&error=title")
+      return SetTaskValidationErrors.TASK_EXISTS
     } else {
       throw error
     }
   }
   revalidatePath("/protected/home")
   revalidatePath("/protected/tasks")
-  await closeEditTask()
-}
-
-export const setTaskEditableAtTasks = async () => {
-  redirect("/protected/tasks?edit=true")
-}
-
-export const setTaskNonEditableAtTasks = async () => {
-  redirect("/protected/tasks")
+  if (location) redirect(location.toString())
 }
 
 const checkForMissingFields = (error: Error.ValidationError) => {

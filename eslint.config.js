@@ -1,11 +1,13 @@
-import { FlatCompat } from '@eslint/eslintrc'
+import { FlatCompat } from "@eslint/eslintrc"
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
 })
 
 const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'prettier', 'next/typescript'),
+  ...compat.config({
+    extends: ["next/core-web-vitals", "next/typescript", "prettier"],
+  }),
 ]
 
 export default eslintConfig

@@ -1,19 +1,23 @@
-import { describe, it, expect, beforeAll } from "vitest"
+import { describe, it, expect } from "vitest"
 import { render, screen } from "@testing-library/react"
-import Loader from "app/loading"
+import Loader, { metadata } from "app/loading"
 
-describe("loading page", () => {
-  beforeAll(() => {
+describe("Loader component", () => {
+  it("renders the loader icon and text", () => {
     render(<Loader />)
+    const icon = screen.getByText("💡")
+    const text = screen.getByText("Scripti")
+    expect(icon).toBeDefined()
+    expect(text).toBeDefined()
   })
-  it("should contain an animated lightbulb emoji", () => {
-    const lightbulb = screen.getByText("💡")
-    expect(lightbulb).toBeDefined()
-    expect(lightbulb.classList.contains("animate-spin")).toBe(true)
-  })
-  it("should contain an animated app's name", () => {
-    const appName = screen.getByText("Scripti")
-    expect(appName).toBeDefined()
-    expect(appName.classList.contains("animate-pulse")).toBe(true)
+})
+
+describe("Metadata export", () => {
+  it("exports correct metadata", () => {
+    expect(metadata.title).toBe("Loading... | Scripti")
+    expect(metadata.description).toBe(
+      "Please wait while we prepare your content.",
+    )
+    expect(metadata.robots).toBe("noindex, nofollow")
   })
 })

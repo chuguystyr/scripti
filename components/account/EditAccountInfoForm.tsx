@@ -1,9 +1,9 @@
 "use client"
 import { useActionState } from "react"
 import { editAccount } from "server/actions/account"
-import { UserBasicInfo } from "types/User"
+import { UserProfileInfo } from "types/User"
 
-const EditAccountInfoForm: React.FC<UserBasicInfo> = ({
+const EditAccountInfoForm: React.FC<UserProfileInfo> = ({
   name,
   username,
   email,

@@ -28,16 +28,16 @@ describe("testing app's private pages accessibility", () => {
   })
   it("testing courses page's accessibility", () => {
     cy.get("a").contains("Courses").click()
-    cy.waitUntil(
-      () => cy.get("button").contains("Add Course").should("exist"),
-      { timeout: 10000, interval: 1000 },
-    )
+    cy.waitUntil(() => cy.get("a").contains("New Course").should("exist"), {
+      timeout: 10000,
+      interval: 1000,
+    })
     cy.injectAxe()
     cy.checkA11y()
   })
   it("testing tasks page's accessibility", () => {
     cy.get("a").contains("Tasks").click()
-    cy.waitUntil(() => cy.get("button").contains("Add Task").should("exist"), {
+    cy.waitUntil(() => cy.get("a").contains("add").should("exist"), {
       timeout: 10000,
       interval: 1000,
     })
@@ -54,7 +54,7 @@ describe("testing app's private pages accessibility", () => {
     cy.checkA11y()
   })
   it("testing setSchedules page's accessibility", () => {
-    cy.get("a[href='/protected/setSchedule']").click()
+    cy.get("a").contains("here").first().click()
     cy.waitUntil(() => cy.get("input[name='from']").should("exist"), {
       timeout: 10000,
       interval: 1000,
@@ -64,14 +64,14 @@ describe("testing app's private pages accessibility", () => {
   })
   it("testing setCourse component's accessibility", () => {
     cy.get("a").contains("Courses").click()
-    cy.get("button").contains("Add Course").click()
+    cy.get("a").contains("New Course").click()
     cy.waitUntil(() => cy.get("form").then(($form) => $form.length > 0))
     cy.injectAxe()
     cy.checkA11y()
   })
   it("testing setTask components's accessibility", () => {
     cy.get("a").contains("Tasks").click()
-    cy.get("button").contains("Add Task").click()
+    cy.get("a").contains("add").click()
     cy.waitUntil(() => cy.get("form").then(($form) => $form.length > 0))
     cy.injectAxe()
     cy.checkA11y()

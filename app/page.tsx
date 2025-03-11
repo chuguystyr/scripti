@@ -69,14 +69,14 @@ const Main: React.FC = () => {
             student success.
           </p>
           <article className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-            <div className="bg-white p-4 rounded-lg shadow-md">
+            <section className="card">
               <h4 className="text-xl font-semibold">Efficient Scheduling</h4>
               <p>Organize your classes, assignments, and exams with ease.</p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow-md">
+            </section>
+            <section className="card">
               <h4 className="text-xl font-semibold">Task Management</h4>
               <p>Keep track of your daily tasks and long-term goals.</p>
-            </div>
+            </section>
           </article>
           <Link href="/signup" className="btn-outlined">
             Get started

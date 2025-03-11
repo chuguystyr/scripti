@@ -25,7 +25,7 @@ const SearchBar: React.FC<{
         type="text"
         name="search"
         id="search"
-        className="py-2 px-4 rounded-md border border-gray-300 w-full mr-5 md:w-auto"
+        className="bg-white py-2 px-4 rounded-md border border-gray-300 w-full mr-5 md:w-auto"
         placeholder="Search"
         onChange={(e) => handleSearch(e.target.value)}
       />

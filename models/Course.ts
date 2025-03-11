@@ -1,6 +1,6 @@
 import { Schema, Model, model, models } from "mongoose"
-import ICourse from "types/Course"
-
+import ICourse, { ControlForm, CourseType } from "types/Course"
+// TODO: add necessary statics, methods and query helpers
 const CourseSchema = new Schema<ICourse, Model<ICourse>>({
   userId: {
     type: Schema.Types.ObjectId,
@@ -20,6 +20,11 @@ const CourseSchema = new Schema<ICourse, Model<ICourse>>({
       validator: (value: string) => value.length > 0,
     },
     unique: true,
+  },
+  type: {
+    type: String,
+    required: true,
+    enum: CourseType,
   },
   teacherLectures: {
     type: String,
@@ -46,15 +51,16 @@ const CourseSchema = new Schema<ICourse, Model<ICourse>>({
   controlForm: {
     type: String,
     required: true,
-    validate: {
-      validator: (value: string) => value.length > 0,
-    },
+    enum: ControlForm,
   },
   notes: {
     type: String,
     required: false,
   },
 })
+
+CourseSchema.index({ userId: 1, major: 1 })
+CourseSchema.index({ userId: 1, major: 1, title: 1 }, { unique: true })
 
 const CourseModel: Model<ICourse> =
   models.courses || model<ICourse>("courses", CourseSchema)

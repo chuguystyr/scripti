@@ -27,7 +27,7 @@
     ".next/types/**/*.ts",
     "postcss.config.cjs",
     "next.config.ts",
-    "vitest.config.js",
+    "vitest.workspace.ts",
     "__tests__/components/submitButton.test.tsx",
     "eslint.config.js"
   ],
