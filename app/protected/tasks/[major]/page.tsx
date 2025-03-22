@@ -18,7 +18,7 @@ const Tasks: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
   return (
     <main>
       <h1 className="sr-only">Tasks page</h1>
-      {tasks.length === 0 ?
+      {!tasks ?
         <p className="text-center">
           Looks like you&apos;re first time here. Let&apos;s{" "}
           <Link
@@ -41,14 +41,9 @@ const Tasks: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
             </Link>
           </SearchBar>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {Array.isArray(tasks) &&
+            {tasks &&
               tasks.map((task) => {
-                return (
-                  <TaskCard
-                    key={task._id.toString()}
-                    {...{ ...task, _id: task._id.toString() }}
-                  />
-                )
+                return <TaskCard key={task._id} {...task} />
               })}
           </div>
         </>

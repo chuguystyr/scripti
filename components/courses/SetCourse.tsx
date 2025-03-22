@@ -8,7 +8,12 @@ interface SetCourseProps {
 }
 
 interface EditCourseProps {
-  course: Omit<Course, "userId">
+  course: Omit<
+    {
+      [Key in keyof Course]: Key extends "_id" ? string : Course[Key]
+    },
+    "userId"
+  >
 }
 
 type Props = SetCourseProps | EditCourseProps
@@ -154,7 +159,7 @@ const SetCourse: React.FC<Props> = (props) => {
         name="id"
         id="id"
         readOnly
-        defaultValue={isEdit ? course?._id.toString() : ""}
+        defaultValue={isEdit ? course?._id : ""}
       />
       <input
         hidden

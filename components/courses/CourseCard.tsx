@@ -3,23 +3,24 @@ import { RiDeleteBin7Fill } from "react-icons/ri"
 import Course from "types/Course"
 import { deleteCourse } from "server/actions/courses"
 import EditLink from "components/EditLink"
-const CourseCard: React.FC<Omit<Course, "userId">> = (course) => {
+const CourseCard: React.FC<
+  Omit<
+    {
+      [Key in keyof Course]: Key extends "_id" ? string : Course[Key]
+    },
+    "userId"
+  >
+> = (course) => {
   return (
     <div className="card w-full p-4">
       <div className="flex justify-between">
         <h2 className="text-center text-lg font-bold w-4/5">{course.title}</h2>
-        <EditLink _id={course._id.toString()} itemType="course" />
+        <EditLink _id={course._id} itemType="course" />
         <form
           action={deleteCourse}
           className="cursor-pointer flex items-center"
         >
-          <input
-            type="text"
-            name="id"
-            value={course._id.toString()}
-            hidden
-            readOnly
-          />
+          <input type="text" name="id" value={course._id} hidden readOnly />
           <button type="submit" className="hover:cursor-pointer">
             <RiDeleteBin7Fill />
           </button>
