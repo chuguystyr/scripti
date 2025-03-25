@@ -15,7 +15,7 @@ const TaskCard: React.FC<Task> = async ({
   description,
 }) => {
   const date =
-    new Date(deadline) > new Date() ?
+    new Date(deadline) <= new Date() ?
       <AiFillFire className="inline text-amber-500" />
     : new Date(deadline).toLocaleString("ua-UK", {
         day: "2-digit",
