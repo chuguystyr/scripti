@@ -23,6 +23,7 @@ export const getAllTasks = async (major: number, searchTerm?: string) => {
       .lean<IUser>()
       .orFail()
     const majorValue = majors[major]
+    console.log(majorValue)
     const tasks = await Task.aggregate<{
       [Key in keyof ITask]: Key extends "_id" | "userId" ? string : ITask[Key]
     }>([
@@ -53,9 +54,14 @@ export const getAllTasks = async (major: number, searchTerm?: string) => {
       },
       {
         $project: {
-          courseDetails: 0,
           _id: { $toString: "$_id" },
           userId: { $toString: "$userId" },
+          title: 1,
+          type: 1,
+          deadline: 1,
+          course: 1,
+          status: 1,
+          description: 1,
         },
       },
     ])
