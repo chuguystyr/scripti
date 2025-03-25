@@ -25,7 +25,7 @@ describe("testing tasks functionality", () => {
     cy.goToTasksPage()
   })
   it("should not add a new task with invalid course, (#TF1)", () => {
-    cy.get("a").contains("add").click()
+    cy.get("a").contains("New Task").click()
     cy.fixture("tasks").then(({ validTask, invalidCourse }) => {
       cy.get('input[name="title"]').type(validTask.title)
       cy.get('input[name="course"]').type(invalidCourse)
@@ -39,7 +39,7 @@ describe("testing tasks functionality", () => {
     })
   })
   it("should not add a new task when some fields are missing, (#TF2)", () => {
-    cy.get("a").contains("add").click()
+    cy.get("a").contains("New Task").click()
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="course"]').type(validTask.course)
       cy.get('input[name="date"]').type(
@@ -54,7 +54,7 @@ describe("testing tasks functionality", () => {
     })
   })
   it("should not add a new task with invalid date, (#TF3)", () => {
-    cy.get("a").contains("add").click()
+    cy.get("a").contains("New Task").click()
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="title"]').type(validTask.title)
       cy.get('input[name="course"]').type(validTask.course)
@@ -70,7 +70,7 @@ describe("testing tasks functionality", () => {
     })
   })
   it("should add a new task when all fields are filled, (#TF4)", () => {
-    cy.get("a").contains("add").click()
+    cy.get("a").contains("New Task").click()
     cy.fixture("tasks").then(({ validTask }) => {
       cy.get('input[name="title"]').type(validTask.title)
       cy.get('input[name="course"]').type(validTask.course)
@@ -81,7 +81,7 @@ describe("testing tasks functionality", () => {
       cy.get('button[type="submit"]').contains("Add Task").click()
 
       cy.get("h1").contains(validTask.title).should("be.visible")
-      cy.get("h2").contains(`| ${validTask.course} | new`).should("be.visible")
+      cy.get("h2").contains(validTask.course).should("be.visible")
       cy.get("p").contains(validTask.description).should("be.visible")
     })
   })
