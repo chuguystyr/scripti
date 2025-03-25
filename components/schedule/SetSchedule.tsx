@@ -88,6 +88,7 @@ const SetSchedule: React.FC<{
                       <div>
                         <select
                           name={`${day}${index}`}
+                          aria-label={`Select course type for ${day} at slot ${index + 1}`}
                           className="input w-full p-2 border rounded-sm"
                           defaultValue={
                             daySchedule ? daySchedule.course.toString() : ""
