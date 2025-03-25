@@ -3,6 +3,7 @@ import { RiDeleteBin7Fill } from "react-icons/ri"
 import Course from "types/Course"
 import { deleteCourse } from "server/actions/courses"
 import EditLink from "components/EditLink"
+import { RxDividerVertical } from "react-icons/rx"
 const CourseCard: React.FC<
   Omit<
     {
@@ -26,10 +27,10 @@ const CourseCard: React.FC<
           </button>
         </form>
       </div>
-      <div className="flex justify-between items-center mb-2">
-        <span className="block mx-auto font-mono font-semibold">
-          {course.controlForm}
-        </span>
+      <div className="flex justify-center mb-2">
+        <span className="font-mono font-semibold">{course.type}</span>
+        <RxDividerVertical className="self-center" />
+        <span className="font-mono font-semibold">{course.controlForm}</span>
       </div>
       <div className="grid grid-cols-[1fr_2fr_0.5fr] gap-2 mb-2">
         <span className="font-semibold italic">Lectures:</span>
