@@ -23,7 +23,6 @@ export const getAllTasks = async (major: number, searchTerm?: string) => {
       .lean<IUser>()
       .orFail()
     const majorValue = majors[major]
-    console.log(majorValue)
     const tasks = await Task.aggregate<{
       [Key in keyof ITask]: Key extends "_id" | "userId" ? string : ITask[Key]
     }>([

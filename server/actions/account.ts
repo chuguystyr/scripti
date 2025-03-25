@@ -284,7 +284,6 @@ export const deleteMajor = async (form: FormData) => {
     return
   }
   try {
-    console.log("here deliting major")
     await Course.find({ major: major, userId: id }, { _id: 1 }).then(
       async (courses) => {
         await Task.deleteMany({
