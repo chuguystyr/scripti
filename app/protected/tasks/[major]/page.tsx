@@ -18,36 +18,26 @@ const Tasks: React.FC<BasicPageProps> = async ({ params, searchParams }) => {
   return (
     <main>
       <h1 className="sr-only">Tasks page</h1>
-      {!tasks ?
-        <p className="text-center">
-          Looks like you&apos;re first time here. Let&apos;s{" "}
-          <Link
-            href={`/protected/home/${major}/tasks/new`}
-            className="font-semibold hover:underline underline-offset-4"
-            scroll={false}
-          >
-            add
-          </Link>{" "}
-          a new task.
+      <SearchBar>
+        <Link
+          href={`/protected/tasks/${major}/new`}
+          className="btn-outlined"
+          scroll={false}
+        >
+          New Task
+        </Link>
+      </SearchBar>
+      {!tasks.length && (
+        <p className="card w-fit text-center mx-auto">
+          Looks like you&apos;re first time here. Let&apos;s add a new task.
         </p>
-      : <>
-          <SearchBar>
-            <Link
-              href={`/protected/tasks/${major}/new`}
-              className="btn-outlined"
-              scroll={false}
-            >
-              New Task
-            </Link>
-          </SearchBar>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {tasks &&
-              tasks.map((task) => {
-                return <TaskCard key={task._id} {...task} />
-              })}
-          </div>
-        </>
-      }
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {tasks &&
+          tasks.map((task) => {
+            return <TaskCard key={task._id} {...task} />
+          })}
+      </div>
     </main>
   )
 }
