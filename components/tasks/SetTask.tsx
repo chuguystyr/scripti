@@ -13,6 +13,7 @@ const SetTask: React.FC<{ task: Omit<Task, "userId"> | undefined }> = ({
     <form
       className="w-fit h-fit self-center flex flex-col gap-3"
       action={formAction}
+      aria-label={task ? "Edit course form" : "Add course form"}
     >
       {message && (
         <p className="text-center w-[15vw] block mx-auto text-red-500">
@@ -41,7 +42,7 @@ const SetTask: React.FC<{ task: Omit<Task, "userId"> | undefined }> = ({
         defaultValue={task?.course.toString()}
       />
 
-      <label htmlFor="priority" className="font-semibold">
+      <label htmlFor="type" className="font-semibold">
         Type
       </label>
 

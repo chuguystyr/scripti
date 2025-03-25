@@ -27,7 +27,10 @@ const SetCourse: React.FC<Props> = (props) => {
   const course = isEdit ? (props as EditCourseProps).course : null
   const major = !isEdit ? (props as SetCourseProps).major : null
   return (
-    <form action={formAction}>
+    <form
+      action={formAction}
+      aria-label={isEdit ? "Edit course form" : "Add course form"}
+    >
       {message && (
         <p className="text-center w-[15vw] block mx-auto text-red-500">
           {message}
