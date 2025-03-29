@@ -8,7 +8,12 @@ interface SetCourseProps {
 }
 
 interface EditCourseProps {
-  course: Omit<Course, "userId">
+  course: Omit<
+    {
+      [Key in keyof Course]: Key extends "_id" ? string : Course[Key]
+    },
+    "userId"
+  >
 }
 
 type Props = SetCourseProps | EditCourseProps
@@ -22,7 +27,10 @@ const SetCourse: React.FC<Props> = (props) => {
   const course = isEdit ? (props as EditCourseProps).course : null
   const major = !isEdit ? (props as SetCourseProps).major : null
   return (
-    <form action={formAction}>
+    <form
+      action={formAction}
+      aria-label={isEdit ? "Edit course form" : "Add course form"}
+    >
       {message && (
         <p className="text-center w-[15vw] block mx-auto text-red-500">
           {message}
@@ -154,7 +162,7 @@ const SetCourse: React.FC<Props> = (props) => {
         name="id"
         id="id"
         readOnly
-        defaultValue={isEdit ? course?._id.toString() : ""}
+        defaultValue={isEdit ? course?._id : ""}
       />
       <input
         hidden

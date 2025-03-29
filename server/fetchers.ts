@@ -10,6 +10,7 @@ import dbConnect from "server/db"
 import Schedule from "models/Schedule"
 import { DaysOfWeekArray, ScheduleDay } from "types/Schedule"
 import Task from "models/Task"
+import ITask from "types/Task"
 
 export const getAllTasks = async (major: number, searchTerm?: string) => {
   const id = await protector()
@@ -22,7 +23,9 @@ export const getAllTasks = async (major: number, searchTerm?: string) => {
       .lean<IUser>()
       .orFail()
     const majorValue = majors[major]
-    const tasks = await Task.aggregate([
+    const tasks = await Task.aggregate<{
+      [Key in keyof ITask]: Key extends "_id" | "userId" ? string : ITask[Key]
+    }>([
       {
         $match: {
           userId: new Types.ObjectId(id),
@@ -50,7 +53,14 @@ export const getAllTasks = async (major: number, searchTerm?: string) => {
       },
       {
         $project: {
-          courseDetails: 0,
+          _id: { $toString: "$_id" },
+          userId: { $toString: "$userId" },
+          title: 1,
+          type: 1,
+          deadline: 1,
+          course: 1,
+          status: 1,
+          description: 1,
         },
       },
     ])
@@ -88,7 +98,6 @@ export const getTasks = async (major: number) => {
       {
         $match: { "courseDetails.major": majorValue },
       },
-      { $sort: { deadline: 1 } },
       {
         $unwind: "$courseDetails",
       },
@@ -152,7 +161,7 @@ export const getTasks = async (major: number) => {
           },
         },
       },
-      { $sort: { priority: -1 } },
+      { $sort: { deadline: 1, priority: -1 } },
       { $limit: 4 },
       {
         $project: {
@@ -220,6 +229,7 @@ export const getCourses = async (
   } catch (error) {
     console.error(error)
   }
+  return []
 }
 
 export const getTimes = async () => {

@@ -37,7 +37,7 @@ describe("testing app's private pages accessibility", () => {
   })
   it("testing tasks page's accessibility", () => {
     cy.get("a").contains("Tasks").click()
-    cy.waitUntil(() => cy.get("a").contains("add").should("exist"), {
+    cy.waitUntil(() => cy.get("a").contains("New Task").should("exist"), {
       timeout: 10000,
       interval: 1000,
     })
@@ -71,7 +71,7 @@ describe("testing app's private pages accessibility", () => {
   })
   it("testing setTask components's accessibility", () => {
     cy.get("a").contains("Tasks").click()
-    cy.get("a").contains("add").click()
+    cy.get("a").contains("New Task").click()
     cy.waitUntil(() => cy.get("form").then(($form) => $form.length > 0))
     cy.injectAxe()
     cy.checkA11y()

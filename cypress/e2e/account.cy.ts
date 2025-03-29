@@ -79,8 +79,6 @@ describe("testing account functionality", () => {
     )
   })
   it("should logout user, (#AF5)", () => {
-    const baseUrl = Cypress.env("baseUrl")
-    console.log("Base URL:", baseUrl) // Debugging line
     cy.fixture("users").then(({ correctUser: { username }, newPassword }) => {
       cy.login(username, newPassword)
       cy.goToAccountPage()

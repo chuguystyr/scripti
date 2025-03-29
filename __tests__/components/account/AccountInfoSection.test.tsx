@@ -1,6 +1,7 @@
 import { render, screen, cleanup } from "@testing-library/react"
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect, beforeEach, vi } from "vitest"
 import AccountInfoSection from "components/account/AccountInfoSection"
+import User from "models/User"
 
 const props = {
   name: "John Doe",
@@ -9,12 +10,22 @@ const props = {
 }
 
 describe("AccountInfoSection", () => {
+  vi.mock("server/protection", () => ({
+    protector: vi.fn(),
+  }))
+  vi.mock("server/db", () => ({
+    default: vi.fn(),
+  }))
   beforeEach(() => {
     cleanup()
   })
 
+  vi.spyOn(User, "findById").mockReturnValue({
+    orFail: () => Promise.resolve(props),
+  } as never)
+
   const renderComponent = async () => {
-    const element = await AccountInfoSection(props)
+    const element = await AccountInfoSection({})
     return render(element)
   }
 

@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache"
 import Task from "models/Task"
 import { Error, Types } from "mongoose"
 import { MongoServerError } from "mongodb"
-import Course from "models/Course"
 import { SetTaskValidationErrors } from "types/Utilities"
 import { redirect } from "next/navigation"
 
@@ -16,14 +15,9 @@ export const setTask = async (prevState: unknown, form: FormData) => {
   const data = Object.fromEntries(form.entries())
   try {
     await dbConnect()
-    const courseId = await Course.findOne(
-      { userId: new Types.ObjectId(id), title: data.course.toString() },
-      { _id: 1 },
-    )
     await Task.create({
       ...data,
       userId: new Types.ObjectId(id),
-      course: courseId?._id,
       status: "new",
       deadline: new Date(data.date.toString()),
     })
@@ -85,19 +79,14 @@ export const deleteTask = async (form: FormData) => {
 
 export const editTask = async (prevState: unknown, form: FormData) => {
   const location = form.get("location")
-  const id = await protector()
+  await protector()
   const data = Object.fromEntries(form.entries())
   try {
     await dbConnect()
-    const courseId = await Course.findOne(
-      { userId: new Types.ObjectId(id), title: data.course },
-      { _id: 1 },
-    )
     await Task.findOneAndUpdate(
       { _id: data.id },
       {
         ...data,
-        course: courseId?._id,
       },
       { runValidators: true },
     )

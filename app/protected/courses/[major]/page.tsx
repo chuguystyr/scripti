@@ -31,7 +31,7 @@ const Courses: React.FC<BasicPageProps> = async ({
         </Link>
       </SearchBar>
       {courses.length === 0 && (
-        <p className="text-center">
+        <p className="card w-fit text-center mx-auto">
           Looks like you&apos;re first time here.
           <br />
           Let&apos;s add some courses to use in schedule

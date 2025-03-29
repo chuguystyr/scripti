@@ -229,3 +229,78 @@ export const deleteAccount = async () => {
   cookieStore.set("_scrpt", "", { maxAge: 0 })
   redirect("/")
 }
+
+export const addMajor = async (form: FormData) => {
+  const id = await protector()
+  await dbConnect()
+  const major = form.get("major")?.toString()
+  if (!major) {
+    return
+  }
+  try {
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $addToSet: { majors: major } },
+      { new: true },
+    )
+  } catch (error: unknown) {
+    console.log(error)
+    return
+  }
+  revalidatePath("/protected/account", "page")
+  redirect("/protected/account")
+}
+
+export const editMajor = async (form: FormData) => {
+  const id = await protector()
+  await dbConnect()
+  const major = form.get("major")?.toString()
+  if (!major) {
+    return
+  }
+  try {
+    await Course.updateMany(
+      { major: form.get("major") },
+      { major: form.get("newMajor") },
+    )
+    await User.findOneAndUpdate(
+      { _id: id, majors: major },
+      { $set: { "majors.$": form.get("newMajor") } },
+      { new: true },
+    )
+  } catch (error: unknown) {
+    console.log(error)
+    return
+  }
+  revalidatePath("/protected/account", "page")
+  redirect("/protected/account")
+}
+
+export const deleteMajor = async (form: FormData) => {
+  const id = await protector()
+  await dbConnect()
+  const major = form.get("major")?.toString()
+  if (!major) {
+    return
+  }
+  try {
+    await Course.find({ major: major, userId: id }, { _id: 1 }).then(
+      async (courses) => {
+        await Task.deleteMany({
+          course: { $in: courses.map((course) => course._id) },
+        })
+        await Course.deleteMany({ major, userId: id })
+      },
+    )
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $pull: { majors: major } },
+      { new: true },
+    )
+  } catch (error: unknown) {
+    console.log(error)
+    return
+  }
+  revalidatePath("/protected/account", "page")
+  redirect("/protected/account")
+}

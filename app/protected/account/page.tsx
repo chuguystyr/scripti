@@ -1,10 +1,8 @@
 import { Metadata } from "next"
 import AccountInfoSection from "components/account/AccountInfoSection"
 import AccountActionsSection from "components/account/AccountActionsSection"
-import { protector } from "server/protection"
-import User from "models/User"
-import dbConnect from "server/db"
 import ClickableLogo from "components/ClickableLogo"
+import MajorsSection from "components/account/MajorsSection"
 
 export const metadata: Metadata = {
   title: "Account | Scripti",
@@ -12,14 +10,12 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 }
 
-const Account = async () => {
-  const id = await protector()
-  await dbConnect()
-  const { name, username, email } = await User.findProfileDetailsById(id)
+const Account = () => {
   return (
     <main className="flex flex-col">
       <ClickableLogo />
-      <AccountInfoSection name={name} username={username} email={email} />
+      <AccountInfoSection />
+      <MajorsSection />
       <AccountActionsSection />
     </main>
   )

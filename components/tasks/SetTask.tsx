@@ -2,9 +2,11 @@
 import { editTask, setTask } from "server/actions/tasks"
 import Task, { TaskType } from "types/Task"
 import { useActionState } from "react"
-const SetTask: React.FC<{ task: Omit<Task, "userId"> | undefined }> = ({
-  task,
-}) => {
+const SetTask: React.FC<
+  { task: Omit<Task, "userId"> | undefined } & {
+    courses: { _id: string; title: string }[]
+  }
+> = ({ task, courses }) => {
   const [message, formAction, pending] = useActionState(
     task ? editTask : setTask,
     null,
@@ -13,6 +15,7 @@ const SetTask: React.FC<{ task: Omit<Task, "userId"> | undefined }> = ({
     <form
       className="w-fit h-fit self-center flex flex-col gap-3"
       action={formAction}
+      aria-label={task ? "Edit course form" : "Add course form"}
     >
       {message && (
         <p className="text-center w-[15vw] block mx-auto text-red-500">
@@ -33,15 +36,22 @@ const SetTask: React.FC<{ task: Omit<Task, "userId"> | undefined }> = ({
       <label htmlFor="course" className="font-semibold">
         Course
       </label>
-      <input
-        type="text"
+      <select
         name="course"
         id="course"
         className="p-2 border border-gray-300 rounded-md"
-        defaultValue={task?.course.toString()}
-      />
+        defaultValue={
+          courses.find((course) => course.title === task?.course)?._id
+        }
+      >
+        {courses.map((course) => (
+          <option key={course._id} value={course._id}>
+            {course.title}
+          </option>
+        ))}
+      </select>
 
-      <label htmlFor="priority" className="font-semibold">
+      <label htmlFor="type" className="font-semibold">
         Type
       </label>
 
