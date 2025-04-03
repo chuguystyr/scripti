@@ -34,7 +34,8 @@ const Courses: React.FC<BasicPageProps> = async ({
         <p className="card w-fit text-center mx-auto">
           Looks like you&apos;re first time here.
           <br />
-          Let&apos;s add some courses to compose schedule from and add tasks for
+          Let&apos;s add some courses to compose schedule from and add tasks
+          for.
         </p>
       )}
       <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-5">
