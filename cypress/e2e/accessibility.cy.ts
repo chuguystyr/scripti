@@ -53,19 +53,36 @@ describe("testing app's private pages accessibility", () => {
     cy.injectAxe()
     cy.checkA11y()
   })
+  it("testing setCourse component's accessibility", () => {
+    cy.get("a").contains("Courses").click()
+    cy.get("a").contains("New Course").click()
+    cy.waitUntil(() => cy.get("form").then(($form) => $form.length > 0))
+    cy.injectAxe()
+    cy.checkA11y()
+  })
   it("testing setSchedules page's accessibility", () => {
+    cy.goToCoursesPage()
+    cy.get("a").contains("New Course").click()
+    cy.fixture("courses").then(({ validCourse }) => {
+      cy.get('input[name="title"]').type(validCourse.title)
+      cy.get('input[name="teacherLectures"]').type(validCourse.teacherLectures)
+      cy.get('input[name="teacherPractices"]').type(
+        validCourse.teacherPractices,
+      )
+      cy.get('select[name="controlForm"]').select(validCourse.formOfControl)
+      cy.get('select[name="type"]').select(validCourse.type)
+      cy.get('input[name="lecturesLink"]').type(validCourse.lecturesLink)
+      cy.get('input[name="practicesLink"]').type(validCourse.practicesLink)
+      cy.get('input[name="notes"]').type(validCourse.notes)
+      cy.contains("button", /^Add Course$/).click()
+    })
+    // Click on logo to go to home page
+    cy.visit("/protected/home/0")
     cy.get("a").contains("here").first().click()
     cy.waitUntil(() => cy.get("input[name='from']").should("exist"), {
       timeout: 10000,
       interval: 1000,
     })
-    cy.injectAxe()
-    cy.checkA11y()
-  })
-  it("testing setCourse component's accessibility", () => {
-    cy.get("a").contains("Courses").click()
-    cy.get("a").contains("New Course").click()
-    cy.waitUntil(() => cy.get("form").then(($form) => $form.length > 0))
     cy.injectAxe()
     cy.checkA11y()
   })
@@ -75,5 +92,10 @@ describe("testing app's private pages accessibility", () => {
     cy.waitUntil(() => cy.get("form").then(($form) => $form.length > 0))
     cy.injectAxe()
     cy.checkA11y()
+    cy.get("[aria-label='Close modal']").click()
+  })
+  after(() => {
+    cy.goToCoursesPage()
+    cy.get("form").find("button:has(svg)").last().click()
   })
 })
