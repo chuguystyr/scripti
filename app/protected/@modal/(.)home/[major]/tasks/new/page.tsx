@@ -5,6 +5,7 @@ import User from "models/User"
 import { protector } from "server/protection"
 import { Params } from "types/Utilities"
 import dbConnect from "server/db"
+import { redirect } from "next/navigation"
 
 const CreateTaskModal: React.FC<Params> = async ({ params }) => {
   const { major } = await params
@@ -16,7 +17,7 @@ const CreateTaskModal: React.FC<Params> = async ({ params }) => {
     { title: 1, _id: { $toString: "$_id" } },
   )
     .lean<{ _id: string; title: string }[]>()
-    .orFail()
+    .orFail(() => redirect(`/protected/courses/${major}`))
   return (
     <Modal>
       <SetTask task={undefined} courses={courses} />

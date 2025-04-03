@@ -22,7 +22,11 @@ const CourseCard: React.FC<
           className="cursor-pointer flex items-center"
         >
           <input type="text" name="id" value={course._id} hidden readOnly />
-          <button type="submit" className="hover:cursor-pointer">
+          <button
+            type="submit"
+            className="hover:cursor-pointer"
+            aria-label="Delete course"
+          >
             <RiDeleteBin7Fill />
           </button>
         </form>
