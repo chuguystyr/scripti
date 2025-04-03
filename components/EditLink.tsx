@@ -22,7 +22,12 @@ const EditLink: React.FC<{ _id: string; itemType: string }> = ({
       break
   }
   return (
-    <Link href={url} className="flex items-center" scroll={false}>
+    <Link
+      href={url}
+      className="flex items-center"
+      scroll={false}
+      aria-label="Edit"
+    >
       <FaEdit />
     </Link>
   )
