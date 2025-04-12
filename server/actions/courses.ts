@@ -14,13 +14,7 @@ export const setCourse = async (prevState: unknown, form: FormData) => {
   const data = Object.fromEntries(form.entries())
   try {
     await dbConnect()
-    const { majors } = await User.findOne(
-      { _id: new Types.ObjectId(id) },
-      { majors: 1 },
-    )
-      .lean()
-      .orFail()
-    const majorValue = majors[parseInt(data.major.toString())]
+    const majorValue = await User.getMajorValueByNumber(id, +data.major)
     await Course.create({
       ...data,
       userId: new Types.ObjectId(id),

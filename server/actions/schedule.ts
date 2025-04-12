@@ -33,10 +33,7 @@ export const setSchedule = async (prevState: unknown, form: FormData) => {
   const schedule = transformData(formData)
   try {
     await dbConnect()
-    const majorValue = await User.findById(id)
-      .lean()
-      .orFail()
-      .then((user) => user.majors[+formData.major])
+    const majorValue = await User.getMajorValueByNumber(id, +formData.major)
     const result = new Schedule({
       userId: id,
       major: majorValue,
@@ -92,11 +89,7 @@ export const editSchedule = async (prevState: unknown, form: FormData) => {
   try {
     await dbConnect()
 
-    // Resolve the user's major value the same as in the create action
-    const majorValue = await User.findById(id)
-      .lean()
-      .orFail()
-      .then((user) => user.majors[+formData.major])
+    const majorValue = await User.getMajorValueByNumber(id, +formData.major)
 
     // Locate and update the schedule document by its _id and current user id
     const result = await Schedule.findOneAndUpdate(
