@@ -3,7 +3,6 @@ import "server-only"
 import Course from "models/Course"
 import User from "models/User"
 import { Types } from "mongoose"
-import { IUser } from "types/User"
 import ICourse, { ControlForm, CourseType } from "types/Course"
 import { protector } from "server/protection"
 import dbConnect from "server/db"
@@ -16,13 +15,7 @@ export const getAllTasks = async (major: number, searchTerm?: string) => {
   const id = await protector()
   await dbConnect()
   try {
-    const { majors } = await User.findOne(
-      { _id: new Types.ObjectId(id) },
-      { majors: 1 },
-    )
-      .lean<IUser>()
-      .orFail()
-    const majorValue = majors[major]
+    const majorValue = await User.getMajorValueByNumber(id, major)
     const tasks = await Task.aggregate<{
       [Key in keyof ITask]: Key extends "_id" | "userId" ? string : ITask[Key]
     }>([
@@ -78,13 +71,7 @@ export const getTasks = async (major: number) => {
   const id = await protector()
   await dbConnect()
   try {
-    const { majors } = await User.findOne(
-      { _id: new Types.ObjectId(id) },
-      { majors: 1 },
-    )
-      .lean<IUser>()
-      .orFail()
-    const majorValue = majors[major]
+    const majorValue = await User.getMajorValueByNumber(id, major)
     const tasks = await Task.aggregate([
       { $match: { userId: new Types.ObjectId(id), status: { $ne: "done" } } },
       {
@@ -189,13 +176,7 @@ export const getCourses = async (
   let majorValue
   try {
     if (typeof major === "number") {
-      const { majors } = await User.findOne(
-        { _id: new Types.ObjectId(id) },
-        { majors: 1 },
-      )
-        .lean<IUser>()
-        .orFail()
-      majorValue = majors[major]
+      majorValue = await User.getMajorValueByNumber(id, major)
     } else majorValue = major
     const courses = await Course.find(
       {
@@ -232,11 +213,21 @@ export const getCourses = async (
   return []
 }
 
-export const getTimes = async () => {
+export const getTimes = async (major: number) => {
+  const currentDate = new Date()
   try {
     const id = await protector()
+    const majorValue = await User.getMajorValueByNumber(id, major)
     await dbConnect()
-    const result = await Schedule.findOne({ userId: id }, { _id: 0, times: 1 })
+    const result = await Schedule.findOne(
+      {
+        userId: id,
+        major: majorValue,
+        from: { $lte: currentDate },
+        till: { $gte: currentDate },
+      },
+      { _id: 0, times: 1 },
+    )
     if (!result) {
       return []
     }
@@ -253,10 +244,7 @@ export const getSchedule = async (major: number) => {
   try {
     const id = await protector()
     await dbConnect()
-    const majorValue = await User.findById(id)
-      .lean()
-      .orFail(/* TODO:add necessary logic */)
-      .then((user) => user.majors[major])
+    const majorValue = await User.getMajorValueByNumber(id, major)
     const result = await Schedule.aggregate([
       {
         $match: {

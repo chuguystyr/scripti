@@ -6,7 +6,7 @@ import { Params } from "types/Utilities"
 const Schedule: React.FC<Params> = async ({ params }) => {
   const { major } = await params
   const schedule = await getSchedule(+major)
-  const times = await getTimes()
+  const times = await getTimes(+major)
   return (
     <section className="card flex flex-col justify-center md:col-start-1 md:col-end-3 md:h-fit md:row-start-2 md:row-end-4">
       {schedule && Object.keys(schedule).length ?

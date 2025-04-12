@@ -45,6 +45,12 @@ const userSchema = new Schema<IUser, IUserModel>(
           .orFail()
         return user
       },
+      async getMajorValueByNumber(id: string, number: number): Promise<string> {
+        const { majors } = await this.findById(id, { majors: 1, _id: 0 })
+          .lean<Pick<IUser, "majors">>()
+          .orFail()
+        return majors[number]
+      },
     },
   },
 )

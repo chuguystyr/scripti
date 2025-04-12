@@ -16,4 +16,5 @@ export type UserProfileInfo = Omit<
 export interface IUserModel extends Model<IUser> {
   findNameById(id: string): Promise<string>
   findProfileDetailsById(id: string): Promise<UserProfileInfo>
+  getMajorValueByNumber(id: string, number: number): Promise<string>
 }
