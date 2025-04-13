@@ -41,7 +41,12 @@ const TaskCard: React.FC<Task> = async ({
         <RxDividerVertical className="inline" />
         <span className="font-serif">{status}</span>
       </h2>
-      <p className="line-clamp-1 md:line-clamp-4">{description}</p>
+      <div className="relative group">
+        <p className="line-clamp-1">{description}</p>
+        <span className="invisible group-hover:visible absolute left-0 top-full mt-1 z-10 bg-white border border-gray-300 p-2 text-sm whitespace-normal shadow-lg">
+          {description}
+        </span>
+      </div>
     </div>
   )
 }
