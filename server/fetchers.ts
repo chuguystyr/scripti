@@ -9,7 +9,7 @@ import dbConnect from "server/db"
 import Schedule from "models/Schedule"
 import { DaysOfWeekArray, ScheduleDay } from "types/Schedule"
 import Task from "models/Task"
-import ITask from "types/Task"
+import ITask, { TaskStatus } from "types/Task"
 
 export const getAllTasks = async (major: number, searchTerm?: string) => {
   const id = await protector()
@@ -64,6 +64,41 @@ export const getAllTasks = async (major: number, searchTerm?: string) => {
     }
   } catch {
     return []
+  }
+}
+
+export const getStatistics = async (major: number) => {
+  const id = await protector()
+  await dbConnect()
+  try {
+    const majorValue = await User.getMajorValueByNumber(id, major)
+    const courses = await Course.find(
+      { userId: id, major: majorValue },
+      { _id: 1 },
+    )
+    const courseIds = courses.map((course) => course._id)
+
+    const [done, newTasks, inProgress] = await Promise.all([
+      Task.countDocuments({
+        userId: new Types.ObjectId(id),
+        course: { $in: courseIds },
+        status: TaskStatus.DONE,
+      }),
+      Task.countDocuments({
+        userId: new Types.ObjectId(id),
+        course: { $in: courseIds },
+        status: TaskStatus.NEW,
+      }),
+      Task.countDocuments({
+        userId: new Types.ObjectId(id),
+        course: { $in: courseIds },
+        status: TaskStatus.IN_PROGRESS,
+      }),
+    ])
+    return { done, newTasks, inProgress }
+  } catch (error) {
+    console.error(error)
+    return { done: 0, newTasks: 0, inProgress: 0 }
   }
 }
 
@@ -157,10 +192,7 @@ export const getTasks = async (major: number) => {
         },
       },
     ])
-    const done = (
-      await Task.find({ userId: new Types.ObjectId(id), status: "done" })
-    ).length
-    return { tasks, done }
+    return tasks
   } catch (error) {
     console.log(error)
     throw new Error("Internal")
