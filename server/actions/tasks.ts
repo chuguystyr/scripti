@@ -60,6 +60,44 @@ export const checkTask = async (form: FormData) => {
   }
 }
 
+export const makeInProgress = async (form: FormData) => {
+  const id = form.get("id")
+  const userId = await protector()
+  if (!userId || !id) {
+    return
+  }
+  await dbConnect()
+  try {
+    await Task.findOneAndUpdate(
+      { _id: new Types.ObjectId(id.toString()) },
+      { status: "in progress" },
+    )
+    revalidatePath("/protected/home")
+    revalidatePath("/protected/tasks")
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const resetTaskStatus = async (form: FormData) => {
+  const id = form.get("id")
+  const userId = await protector()
+  if (!userId || !id) {
+    return
+  }
+  await dbConnect()
+  try {
+    await Task.findOneAndUpdate(
+      { _id: new Types.ObjectId(id.toString()) },
+      { status: "new" },
+    )
+    revalidatePath("/protected/home")
+    revalidatePath("/protected/tasks")
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const deleteTask = async (form: FormData) => {
   const id = form.get("id")
   const userId = await protector()
