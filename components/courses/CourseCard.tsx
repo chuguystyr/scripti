@@ -59,7 +59,12 @@ const CourseCard: React.FC<
       {course.notes && (
         <div className="grid grid-cols-[1fr_2fr_0.5fr] gap-2 mb-2">
           <span className="font-semibold italic">Notes:</span>
-          <p className="col-span-2 line-clamp-1">{course.notes}</p>
+          <div className="relative group col-span-2">
+            <p className="line-clamp-1">{course.notes}</p>
+            <span className="invisible group-hover:visible absolute left-0 top-full mt-1 z-10 bg-white border border-gray-300 p-2 text-sm whitespace-normal shadow-lg">
+              {course.notes}
+            </span>
+          </div>
         </div>
       )}
     </div>

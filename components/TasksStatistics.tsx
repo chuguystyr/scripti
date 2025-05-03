@@ -1,14 +1,9 @@
-import { getTasks } from "server/fetchers"
+import { getStatistics } from "server/fetchers"
 import { Params } from "types/Utilities"
 
 const TaskStatistics: React.FC<Params> = async ({ params }) => {
   const { major } = await params
-  const { tasks, done } = await getTasks(+major)
-  const statistics = {
-    inProgress:
-      tasks.filter((task) => task.status === "in progress").length ?? 0,
-    waiting: tasks.filter((task) => task.status === "new").length ?? 0,
-  }
+  const { done, newTasks, inProgress } = await getStatistics(+major)
   return (
     <section
       id="statistics"
@@ -16,11 +11,11 @@ const TaskStatistics: React.FC<Params> = async ({ params }) => {
     >
       <p className="card text-center w-1/3">
         New <br />
-        {statistics.waiting}
+        {newTasks}
       </p>
       <p className="card text-center w-1/3">
         In progress <br />
-        {statistics.inProgress}
+        {inProgress}
       </p>
       <p className="card text-center w-1/3">
         Done <br />

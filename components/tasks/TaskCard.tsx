@@ -1,10 +1,10 @@
-import { FaCheckCircle } from "react-icons/fa"
 import { RiDeleteBin7Fill } from "react-icons/ri"
 import Task from "types/Task"
-import { checkTask, deleteTask } from "server/actions/tasks"
+import { deleteTask } from "server/actions/tasks"
 import EditLink from "components/EditLink"
 import { AiFillFire } from "react-icons/ai"
 import { RxDividerVertical } from "react-icons/rx"
+import TaskStatusSwitcher from "components/tasks/TaskStatusSwitcher"
 
 const TaskCard: React.FC<Task> = async ({
   _id,
@@ -26,12 +26,7 @@ const TaskCard: React.FC<Task> = async ({
       <div className="flex justify-between">
         <h1 className="font-bold w-3/4">{title}</h1>
         <EditLink _id={_id.toString()} itemType="task" />
-        <form action={checkTask}>
-          <input type="hidden" name="id" value={_id?.toString()} />
-          <button>
-            <FaCheckCircle className="inline cursor-pointer self-center" />
-          </button>
-        </form>
+        <TaskStatusSwitcher _id={_id.toString()} status={status} />
         <form action={deleteTask}>
           <input type="hidden" name="id" value={_id?.toString()} />
           <button>
@@ -46,7 +41,12 @@ const TaskCard: React.FC<Task> = async ({
         <RxDividerVertical className="inline" />
         <span className="font-serif">{status}</span>
       </h2>
-      <p className="line-clamp-1 md:line-clamp-4">{description}</p>
+      <div className="relative group">
+        <p className="line-clamp-1">{description}</p>
+        <span className="invisible group-hover:visible absolute left-0 top-full mt-1 z-10 bg-white border border-gray-300 p-2 text-sm whitespace-normal shadow-lg">
+          {description}
+        </span>
+      </div>
     </div>
   )
 }

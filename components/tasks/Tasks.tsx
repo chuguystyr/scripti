@@ -5,7 +5,7 @@ import Link from "next/link"
 
 const Tasks: React.FC<Params> = async ({ params }) => {
   const { major } = await params
-  const { tasks } = (await getTasks(+major)) ?? { tasks: [], done: 0 }
+  const tasks = (await getTasks(+major)) ?? []
   return (
     <section className="flex flex-col md:col-start-3 md:col-end-5 md:row-start-2 md:grid md:grid-cols-2 gap-5">
       {tasks && tasks.length === 0 && (

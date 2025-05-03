@@ -13,9 +13,15 @@ const MajorsSection = async () => {
   const { majors } = await User.findById(id).orFail()
   const majorStats = await Promise.all(
     majors.map(async (major) => {
+      console.log("major", major)
       const [courseCount, taskCount] = await Promise.all([
-        Course.countDocuments({ major }),
-        Task.countDocuments({ major }),
+        Course.countDocuments({ userId: id, major: major }),
+        Task.countDocuments({
+          userId: id,
+          course: {
+            $in: await Course.find({ userId: id, major: major }, { _id: 1 }),
+          },
+        }),
       ])
       return { major, courseCount, taskCount }
     }),
