@@ -25,7 +25,7 @@ const Modal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 flex items-center justify-center bg-black/50 z-10"
       onClick={closeModal}
     >
       <div

@@ -24,7 +24,7 @@ const EditLink: React.FC<{ _id: string; itemType: string }> = ({
   return (
     <Link
       href={url}
-      className="flex items-center"
+      className="h-fit w-fit pt-1.5"
       scroll={false}
       aria-label="Edit"
     >
