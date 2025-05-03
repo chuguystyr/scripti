@@ -26,7 +26,7 @@ describe("CourseCard", () => {
     expect(screen.getByText("Practices:")).toBeDefined()
     expect(screen.getByText("Jane Doe")).toBeDefined()
     expect(screen.getByText("Notes:")).toBeDefined()
-    expect(screen.getByText("Some notes here")).toBeDefined()
+    expect(screen.getAllByText("Some notes here").length).toBe(2)
     expect(screen.getByText("Notes:")).toBeDefined()
     const deleteButton = screen.getByRole("button")
     expect(deleteButton).toBeDefined()
